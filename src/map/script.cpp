@@ -26030,7 +26030,6 @@ struct script_function buildin_func[] = {
 	BUILDIN_DEF(identifyall,"??"),
 	BUILDIN_DEF(is_guild_leader,"?"),
 	BUILDIN_DEF(is_party_leader,"?"),
-	BUILDIN_DEF(identifyall, "??"),
 	BUILDIN_DEF(getexppercent, "ii?"),
 	BUILDIN_DEF(getrentalitembound, "viiiiiiiiii?"),
 	BUILDIN_DEF(isrentalitem,"i"),
