@@ -1,0 +1,9 @@
+/**
+*   Fonction qui écrit le nom du NPC dans les messages du NPC entourré de crochets
+*/
+function	script	F_NPC_NAME	{
+
+    mes "[" + strnpcinfo(1) + "]";
+
+    return;
+}

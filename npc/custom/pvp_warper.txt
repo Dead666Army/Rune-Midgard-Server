@@ -1,0 +1,385 @@
+prontera,145,168,5	script	PvP Warper	843,{
+	mes "[ ^ff0000PVP Warper^000000 ]";
+	if (#LANGUE == 1 ) {
+		mes "Do you want to warp to the PvP Arena and fight your enemies?";
+		menu "Sure, Bring it on!",L_Yes,"Nah, I'm not ready yet.",L_No;
+	}
+	else{
+		mes "Veux-tu entrer dans l'arène ?";
+		menu "Et comment, je veux du sang !",L_Yes,"Non, je ne suis pas prêt.",L_No;
+	}
+
+
+L_Yes:
+	next;
+	mes "[ ^ff0000PVP Warper^000000 ]";
+	if (#LANGUE == 1 ) {
+		mes "Which PvP Arena do you want to enter?";
+	}
+	else{
+		mes "Dans quelle arène veux-tu entrer ?";
+	}
+	menu "PvP Arena [ PvP - CONSO BG ] [" + getmapusers("guild_vs3.gat") + " / 20]",L2,
+		"PvP Arena [ PvP - NO CONSO ] [" + getmapusers("volpvp.gat") + " / 20]",L3,"PvP Arena [ GvG ] [" + getmapusers("guild_vs1.gat") + " / 20]",L1;
+
+L1:
+	if (getmapusers("guild_vs1.gat") >= 20) goto Lsorry;
+	sc_end sc_all;
+	warp "guild_vs1",0,0;
+	close;
+
+L2:
+	if (getmapusers("guild_vs3.gat") >= 20) goto Lsorry;
+	sc_end sc_all;
+	warp "guild_vs3",0,0;
+	close;
+
+L3:
+	if (getmapusers("volpvp.gat") >= 20) goto Lsorry;
+	sc_end sc_all;
+	pcblockitem getcharid(3), 1; // Block l'utilisation d'items
+	pcfreepvp getcharid(3), 1; // Permet d'utiliser skills sans les items
+	warp "volpvp",0,0;
+	close;
+
+Lsorry:
+	next;
+	mes "[ ^ff0000PVP Warper^000000 ]";
+	if (#LANGUE == 1 ) mes "Sorry but this PvP Arena is full, maybe you could try another one.";
+	else mes "Désolé mais il y a déjà trop de combattants dans cette arène, tu peux toujours en rejoindre une autre.";
+	close;
+
+Lsorry2:
+	next;
+	mes "[ ^ff0000PVP Warper^000000 ]";
+	if (#LANGUE == 1 ) mes "I'm sorry but you can't have any "+getitemname(607)+" when entering the pvp room, please storage them and try again.";
+	else mes "Désolé mais l'objet "+getitemname(607)+" que tu portes sur toi n'est pas règlementaire, il s'agirait de se battre à la loyale...";
+	close;
+
+L_No:
+	close;
+	
+OnInit:
+	initnpctimer;
+	end;
+OnTimer10000:
+	.@pvpplayers = getmapusers("guild_vs3.gat") + getmapusers("volpvp.gat") + getmapusers("guild_vs1.gat");
+	if (.@pvpplayers > 0){
+		delwaitingroom;
+		if (.@pvpplayers == 1)
+			waitingroom "PVP - "+.@pvpplayers+" Player",0;
+		else
+			waitingroom "PVP - "+.@pvpplayers+" Players",0;
+	}
+	else
+		delwaitingroom;
+	
+	initnpctimer; // Rotation if BG don't start... Comment if you don't want to use this method
+	end;	
+}
+
+//NPC Announcer
+guild_vs1,40,47,3	script	PVP Announcer#guild_vs1	843,{
+	callfunc("F_PVP_ANNOUNCE","GVG");
+}
+volpvp,68,80,4	script	PVP Announcer#volpvp	843,{
+	callfunc("F_PVP_ANNOUNCE","PVP - NO CONSO");
+}
+guild_vs3,29,69,4	script	PVP Announcer#guild_vs3	843,{
+	callfunc("F_PVP_ANNOUNCE","PVP - CONSO BG");
+}
+
+/**
+* Fait une annonce de recherche pvp avec un timer
+* .@map		:	map à annoncer
+* .delay	: temps avant d'envoyer une nouvelle annonce
+*/
+function	script	F_PVP_ANNOUNCE	{
+	set .@map$, getarg(0);
+	set .delay, 60;
+	set .@timer, gettimetick(2)-.q_timer;
+	set .@wait, .delay-.@timer;
+	if(.@timer < .delay)
+	{
+		mes "[PVP Announcer]";
+		mes "You have to wait "+.@wait+" seconds before making another announcement.";
+		close;
+		end;
+	}
+	else{
+		mes "[PVP Announcer]";
+		mes "Do you want to announce the world that you are waiting for other fighters ?";
+		switch(select("Yes:No")){
+			case 1:
+				set .q_timer, gettimetick(2);
+				announce strcharinfo(0)+" is waiting for fighters in the PVP room: "+.@map$+"!",0;
+				close;
+				break;
+			case 2:
+			default:
+				close;
+				break;
+		}
+	}
+	end;
+}
+
+volpvp,50,50,4	script	ppvp_custom	HIDDEN_WARP_NPC,{
+
+OnInit:
+	initnpctimer;
+	end;
+
+OnTimer1000:
+
+	stopnpctimer;
+	initnpctimer;
+	areapercentheal "volpvp",0,300,300,0,10,10;
+	killmonsterall "volpvp";
+	end;
+
+OnPCLogoutEvent:
+OnPCDieEvent:
+	if (strcharinfo(3) == "guild_vs3"){
+
+		sc_end sc_all;
+
+		end;
+	}
+	if (strcharinfo(3) == "volpvp"){
+		pcblockitem getcharid(3), 0; // Unblock l'utilisation d'items
+		pcfreepvp getcharid(3), 0; // Désactive la permission d'utiliser skills sans les items
+		sc_end sc_all;
+		sc_end NPC_DEFENDER;
+		set @kill_streak, 0;
+		set @case10, 0;
+		set @case9, 0;
+		set @case8, 0;
+		set @case7, 0;
+		set @case6, 0;
+		set @case5, 0;
+		set @case4, 0;
+		warp "SavePoint", 0, 0;
+		}
+
+	end;		
+
+OnPCKillEvent:
+	if (strcharinfo(3) == "volpvp"){
+		@kill_streak++;
+		switch(@kill_streak){
+			default:
+			case 17:
+				if (@case10 == 2){
+					unitskilluseid getcharid(3),"NPC_DEFENDER",1;
+				} else {
+					//sc_start4 NPC_INVISIBLE,60000,0,6,0,0;
+				}
+			case 16:
+				set @case9, 2;
+			case 15:
+				if (@case8 == 2){
+					sc_start SC_SPEEDUP1,5000,50;
+				} else {
+					sc_start SC_INCALLSTATUS,60000,0;
+				}
+			case 14:
+				if (@case7 == 2){
+					sc_start SC_AUTOGUARD,300000,10;
+				} else {
+					sc_start SC_ENERGYCOAT,300000,1;
+				}
+			case 13:
+				if (@case6 == 2){
+					sc_start SC_TRUESIGHT,30000,10;
+				} else {
+					sc_start SC_CONCENTRATION,240000,10;
+				}
+			case 12:
+				if (@case5 == 2){
+					sc_start SC_SUFFRAGIUM,10000,3;
+				} else {
+					sc_start SC_IMPOSITIO,60000,5;
+				}
+			case 11:
+				if (@case4 == 2){
+					sc_start SC_ASSUMPTIO,100000,5;
+				} else {
+					sc_start SC_MINDBREAKER,30000,5;
+				}
+			case 10:
+				if (@case10 == 0){
+					if (rand(1,2) == 1){
+						set @case10, 1;
+					} else {
+						set @case10, 2;
+					}
+				}
+				if (@case10 == 1){
+					unitskilluseid getcharid(3),"NPC_DEFENDER",1;
+				} else {
+					//sc_start4 NPC_INVISIBLE,60000,0,6,0,0;
+				}
+			case 9:
+				if (@case9 == 0){
+					if (rand(1,2) == 1){
+						set @case9, 1;
+					} else {
+						set @case9, 2;
+					}
+				}
+				if (@case9 == 1){
+					sc_start4 SC_ELEMENTALCHANGE,60000,1,Ele_Holy,1,0; 
+				} else {
+					sc_start4 SC_ELEMENTALCHANGE,60000,1,ELE_GHOST,1,0; 
+				}
+			case 8:
+				if (@case8 == 0){
+					if (rand(1,2) == 1){
+						set @case8, 1;
+					} else {
+						set @case8, 2;
+					}
+				}
+				if (@case8 == 1){
+
+				} else {
+					sc_start SC_INCALLSTATUS,60000,1;
+				}
+			case 7:
+				if (@case7 == 0){
+					if (rand(1,2) == 1){
+						set @case7, 1;
+					} else {
+						set @case7, 2;
+					}
+				}
+				if (@case7 == 1){
+					sc_start SC_AUTOGUARD,300000,10;
+				} else {
+					sc_start SC_ENERGYCOAT,300000,1;
+				}
+			case 6:
+				if (@case6 == 0){
+					if (rand(1,2) == 1){
+						set @case6, 1;
+					} else {
+						set @case6, 2;
+					}
+				}
+				if (@case6 == 1){
+					sc_start SC_TRUESIGHT,30000,10;
+				} else {
+					sc_start SC_CONCENTRATION,240000,10;
+				}
+			case 5:
+				if (@case5 == 0){
+					if (rand(1,2) == 1){
+						set @case5, 1;
+					} else {
+						set @case5, 2;
+					}
+				}
+				if (@case5 == 1){
+					sc_start SC_SUFFRAGIUM,10000,3;
+				} else {
+					sc_start SC_IMPOSITIO,60000,5;
+				}
+			case 4:
+				if (@case4 == 0){
+					if (rand(1,2) == 1){
+						set @case4, 1;
+					} else {
+						set @case4, 2;
+					}
+				}
+				if (@case4 == 1){
+					sc_start SC_ASSUMPTIO,100000,5;
+				} else {
+					sc_start SC_MINDBREAKER,30000,5;
+				}
+			case 3:
+				switch ( BaseClass ) {
+					case Job_Alchemist:                set .@spirit, 445; break;
+					case Job_Monk:                    set .@spirit, 447; break;
+					case Job_Star_Gladiator:        set .@spirit, 448; break;
+					case Job_Sage:                    set .@spirit, 449; break;
+					case Job_Crusader:                set .@spirit, 450; break;
+					case Job_SuperNovice:            set .@spirit, 451; break;
+					case Job_Knight:                set .@spirit, 452; break;
+					case Job_Wizard:                set .@spirit, 453; break;
+					case Job_Priest:                set .@spirit, 454; break;
+					case Job_Bard: case Job_Dancer:    set .@spirit, 455; break;
+					case Job_Rogue:                    set .@spirit, 456; break;
+					case Job_Assassin:                set .@spirit, 457; break;
+					case Job_Blacksmith:            set .@spirit, 458; break;
+					case Job_Hunter:                set .@spirit, 460; break;
+					case Job_Soul_Linker:            set .@spirit, 461; break;
+					default:
+					if ( upper == 1 && baselevel < 70 )
+						set .@spirit, 494;
+				}
+				sc_start4 sc_spirit, 3500000, 5, .@spirit,0,0;
+				sc_start SC_Intravision,30000,0;
+			case 2:
+				sc_start SC_BLESSING,240000,10;
+			case 1:
+				sc_start SC_INCREASEAGI,240000,10;
+				break;
+		}
+	}
+	end;		
+}
+
+volpvp,32,57,4	script	speed_pot#1	HIDDEN_WARP_NPC,3,3,{
+	end;
+
+OnTouch:
+	sc_start SC_SPEEDUP1,5000,50;
+	end;
+
+}
+
+volpvp,57,31,0	duplicate(speed_pot#1)	speed_pot#2	HIDDEN_WARP_NPC,3,3
+volpvp,127,101,0	duplicate(speed_pot#1)	speed_pot#3	HIDDEN_WARP_NPC,3,3
+volpvp,101,127,0	duplicate(speed_pot#1)	speed_pot#4	HIDDEN_WARP_NPC,3,3
+
+volpvp,127,31,0	warp	volpvp_1	1,1,volpvp,31,122
+volpvp,31,127,0	warp	volpvp_2	1,1,volpvp,127,35
+
+guild_vs1	mapflag	nosave	SavePoint
+guild_vs1	mapflag	noteleport
+guild_vs1	mapflag	nowarp
+guild_vs1	mapflag	nowarpto
+guild_vs1	mapflag	nomemo
+guild_vs1	mapflag	notrade
+guild_vs1	mapflag	noreturn
+guild_vs1	mapflag	nobranch
+guild_vs1	mapflag	nopenalty
+
+guild_vs3	mapflag	nosave	SavePoint
+guild_vs3	mapflag	noteleport
+guild_vs3	mapflag	nowarp
+guild_vs3	mapflag	nowarpto
+guild_vs3	mapflag	nomemo
+guild_vs3	mapflag	notrade
+guild_vs3	mapflag	noreturn
+guild_vs3	mapflag	nobranch
+guild_vs3	mapflag	nopenalty
+guild_vs3	mapflag	pvp
+guild_vs3	mapflag	pvp_noguild
+guild_vs3	mapflag	bg_consume
+
+volpvp	mapflag	nosave	SavePoint
+volpvp	mapflag	noteleport
+volpvp	mapflag	nowarp
+volpvp	mapflag	nowarpto
+volpvp	mapflag	nomemo
+volpvp	mapflag	notrade
+volpvp	mapflag	noreturn
+volpvp	mapflag	nobranch
+volpvp	mapflag	nopenalty
+volpvp	mapflag	pvp
+volpvp	mapflag	pvp_noguild
+volpvp	mapflag	noloot
+volpvp	mapflag	nopenalty

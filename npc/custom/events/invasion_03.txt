@@ -1,0 +1,345 @@
+-	script	pinvasion_03	-1,{
+
+//====LEVEL OF GM CAN CONTROL THE EVENT=========\\
+//OnInit:
+set $gmcontrol,20;
+end;
+//---------------END OF SETUP-------------------\\
+
+OnWhisperGlobal:
+	if (getgmlevel() >= $gmcontrol) {
+		$case = 0;
+		donpcevent "invasion_halloween01::OnWed2100";
+		end;
+	}
+end;
+}
+
+-	script	invasion_halloween01	-1,{
+OnInit:
+
+	end;
+
+OnWed2100:
+
+
+	announce "From the ramparts and the highest towers of Prontera, guards have reported sightings of fog, which isn't natural for this season.",0,0xFFA000;
+	announce "As the gloomy veil spreads swiftly towards the fortifications, guards ring the tocsin for the small folk to take cover.",0,0xFFA000;
+	announce "Depuis les remparts et les plus hautes tours de Prontera, les gardes ont repéré un brouillard qui n'est pas normal en cette saison.",0,0xFF0000;
+	announce "Alors que ce voile ténébreux se rapproche subitement des murailles, les gardes font sonner le tocsin pour que la population se mette à l'abri.",0,0xFF0000;
+
+	$Halloween_01 = 1;
+
+	sleep 10000;
+
+	announce "Guards patrolling on the SouthEastern wall berely have time to sound the alarm before being submerged by a wave of undead monsters",0,0xFFA000;
+	announce "Les gardes du mur Sud-Est ont à peine le temps de donner l'alerte qu'ils se font submerger par une vague de morts-vivants.",0,0xFF0000;
+
+	areamonster "prontera",156,28,284,119,getmonsterinfo(1015,0),1015,40,"invasion_halloween01::OnWing";
+	areamonster "prontera",156,28,284,119,getmonsterinfo(1036,0),1036,40,"invasion_halloween01::OnWing";
+	areamonster "prontera",156,28,284,119,getmonsterinfo(1117,0),1117,40,"invasion_halloween01::OnWing";
+	areamonster "prontera",156,28,284,119,getmonsterinfo(1192,0),1192,40,"invasion_halloween01::OnWing";
+	areamonster "prontera",156,28,284,119,getmonsterinfo(1302,0),1302,20,"invasion_halloween01::OnWing";
+	areamonster "prontera",156,28,284,119,getmonsterinfo(1208,0),1208,20,"invasion_halloween01::OnWing";
+	areamonster "prontera",156,28,284,119,getmonsterinfo(1061,0),1061,30,"invasion_halloween01::OnWing";
+	areamonster "prontera",156,28,284,119,getmonsterinfo(1130,0),1130,20,"invasion_halloween01::OnWing";
+
+	end;
+
+OnWing:
+	.@maps$ ="prontera";
+	
+	.@rand = rand(100);
+	if (.@rand<10){
+		getmapxy( .@map$,.@x,.@y, 0 );
+		makeitem 6658,1,.@map$,.@x,.@y;
+	}
+	.@rand = rand(100);
+	if (.@rand<5){
+		getmapxy( .@map$,.@x,.@y, 0 );
+		makeitem 35001,1,.@map$,.@x,.@y;
+	}
+	.mobcount = mobcount("prontera","invasion_halloween01::OnWing");
+	if (.mobcount<1){
+		switch($Halloween_01){
+			case 1:
+				.mob_dead_announce_fr$ = "Servent : Quoi ? Vous êtes venus à bout de mon armée ? Si c'est comme ça, c'est moi que vous affronterez, à l'attaque !";
+				.mob_dead_announce_en$ = "Servent: What? You defeated my army? Well then you'll be facing me now, attack!";
+				areamonster "prontera",237,69,237,69,getmonsterinfo(3405,0),3405,1,"invasion_halloween01::OnBoss",2;
+				areamonster "prontera",217,49,257,89,getmonsterinfo(1036,0),1036,20,"",2;
+				areamonster "prontera",217,49,257,89,getmonsterinfo(1117,0),1117,20,"",2;
+				break;
+			case 2:
+				.mob_dead_announce_fr$ = "Lord of Death : Servent était un incapable, je me demande encore pourquoi on lui a confié une armée... Mais vous n'aurez aucune chance contre moi !";
+				.mob_dead_announce_en$ = "Lord of Death: Servent was incompetent, I still wonder why he was given an army to command... But you won't stand a chance against me!";
+				areamonster "prontera",107,92,107,92,getmonsterinfo(1373,0),1373,1,"invasion_halloween01::OnBoss",2;
+				areamonster "prontera",87,72,127,112,getmonsterinfo(1507,0),1507,8,"",2;
+				areamonster "prontera",87,72,127,112,getmonsterinfo(1219,0),1219,10,"",2;
+				break;
+			case 3:
+				.mob_dead_announce_fr$ = "Lord of Hate : Vous êtes coriaces pour de simples demi-humains... Abandonnez tout espoir !";
+				.mob_dead_announce_en$ = "Lord of Hate: You are tough for mere demi-humans... Give up hope !";
+
+				areamonster "prontera",52,339,52,339,getmonsterinfo(3404,0),3404,1,"invasion_halloween01::OnBoss",2;
+				areamonster "prontera",32,319,72,359,getmonsterinfo(1200,0),1200,10,"",2;
+				areamonster "prontera",32,319,72,359,getmonsterinfo(1202,0),1202,10,"",2;
+				break;
+			case 4:
+				.mob_dead_announce_fr$ = "Shadow of Hate : Vous osez nous résister ? Je vais me nourrir de vos peurs et de votre souffrance, Prontera tombera sous ma fureur !";
+				.mob_dead_announce_en$ = "Shadow of Hate: You really dare resisting us ? I will feast upon your fear and suffering before reaping your broken bodies!";
+
+				areamonster "prontera",264,347,264,347,getmonsterinfo(3403,0),3403,1,"invasion_halloween01::OnBoss",2;
+				areamonster "prontera",244,327,284,367,getmonsterinfo(1192,0),1192,15,"",2;
+				break;
+			case 5:
+				.mob_dead_announce_fr$ = "Aline : Misérables vermines ! Je vois bien que vous faiblissez mais je ne vais pas abréger vos souffrances !";
+				.mob_dead_announce_en$ = "Aline: Filthy scum! I can see you are weakening but I won't abbreviate your suffering!";
+				areamonster "prontera",272,203,272,203,getmonsterinfo(3417,0),3417,1,"invasion_halloween01::OnBoss",2;
+				areamonster "prontera",252,183,292,223,getmonsterinfo(1257,0),1257,10,"",2;
+				areamonster "prontera",252,183,292,223,getmonsterinfo(1196,0),1196,10,"",2;
+				break;
+			case 6:
+				.mob_dead_announce_fr$ = "Celine Kimi : Hihihihihihihihi ! Sombrez dans la folie et rejoignez-moi... dans la mort !";
+				.mob_dead_announce_en$ = "Celine Kimi: Hee-hee-hee-hee-hee-hee-hee-hee! Sink into madness and join me... in death!";
+				areamonster "prontera",158,115,158,115,getmonsterinfo(2996,0),2996,1,"invasion_halloween01::OnBoss",2;
+				areamonster "prontera",138,95,178,135,getmonsterinfo(1507,0),1507,15,"",2;
+				areamonster "prontera",138,95,178,135,getmonsterinfo(1505,0),1505,15,"",2;
+				break;
+			case 7:
+				.mob_dead_announce_fr$ = "Fallen Bishop : Vous êtes fatigants, vous me donnez mal à la tête... Je vais tous vous exterminer pour avoir la paix !";
+				.mob_dead_announce_en$ = "Fallen Bishop: You are exhausting and giving me a headache... I'm going to exterminate all of you to have some rest!";
+				areamonster "prontera",41,204,41,204,getmonsterinfo(1871,0),1871,1,"invasion_halloween01::OnBoss",2;
+				areamonster "prontera",21,184,61,224,getmonsterinfo(1867,0),1867,20,"",2;
+				areamonster "prontera",21,184,61,224,getmonsterinfo(1864,0),1864,20,"",2;
+				break;
+			case 8:
+				.mob_dead_announce_fr$ = "Hera's Resentment : Vous vous êtes bien battus, aventuriers. Vous êtes venus à bout de toutes les armées que j'avais rassemblées. Mais c'est ici et maintenant que tout se termine, je vais anéantir cette ville, et vous avec !";
+				.mob_dead_announce_en$ = "Hera's Resentment: You have fought well, adventurers. You defeated every single army I gathered. But everything ends here and now, I'm going to annihilate this city!";
+				areamonster "prontera",156,322,156,322,getmonsterinfo(3400,0),3400,1,"invasion_halloween01::OnFinal",2;
+				areamonster "prontera",136,302,176,342,getmonsterinfo(1870,0),1870,10,"",2;
+				areamonster "prontera",136,302,176,342,getmonsterinfo(1867,0),1867,10,"",2;
+				areamonster "prontera",136,302,176,342,getmonsterinfo(1507,0),1507,10,"",2;
+				areamonster "prontera",136,302,176,342,getmonsterinfo(1505,0),1505,5,"",2;
+				break;						
+		}
+
+		announce .mob_dead_announce_en$,0,0xFFA000;
+		announce .mob_dead_announce_fr$,0,0xFF0000;
+			
+	} else {
+		switch(.mobcount){
+			case 100:
+				announce "You have already defeated half of your opponents.",0,0xFFA500;
+				announce "Vous avez déjà vaincu la moitié de vos adversaires.",0,0xFF0000;
+				break;
+			case 25:
+				announce "There are still a few packs of enemies.",0,0xFFA500;
+				announce "Il reste encore quelques groupes d'ennemis.",0,0xFF0000;
+				break;
+			case 5:
+				announce "A handful of attackers is still standing.",0,0xFFA500;
+				announce "Une poignée d'assaillants résiste encore.",0,0xFF0000;
+				break;
+			default:
+				break;
+		}
+	}
+
+	end;
+
+OnBoss:
+	$Halloween_01++;
+
+	.@maps$ ="prontera";
+	
+	.@rand = rand(100);
+	if (.@rand<10){
+		getmapxy( .@map$,.@x,.@y, 0 );
+		makeitem 6658,1,.@map$,.@x,.@y;
+	}
+	.@rand = rand(100);
+	if (.@rand<5){
+		getmapxy( .@map$,.@x,.@y, 0 );
+		makeitem 35001,1,.@map$,.@x,.@y;
+	}
+
+	switch($Halloween_01){
+		case 2: 
+
+			.msgen$ = "Everybody has barely time to breathe before the SouthWestern is stormed. Guards narrowly manage to escape.";
+			.msgfr$ = "Tout le monde a à peine le temps de souffler que le mur Sud-Ouest est pris d'assaut. Les gardes arrivent à s'échapper de justesse.";
+
+			areamonster "prontera",27,26,155,125,getmonsterinfo(1510,0),1510,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,26,155,125,getmonsterinfo(1508,0),1508,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,26,155,125,getmonsterinfo(1506,0),1506,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,26,155,125,getmonsterinfo(1504,0),1504,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,26,155,125,getmonsterinfo(1503,0),1503,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,26,155,125,getmonsterinfo(1507,0),1507,15,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,26,155,125,getmonsterinfo(1505,0),1505,15,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,26,155,125,getmonsterinfo(1132,0),1132,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,26,155,125,getmonsterinfo(1208,0),1208,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,26,155,125,getmonsterinfo(1219,0),1219,20,"invasion_halloween01::OnWing";
+
+			break;
+		case 3:
+			.msgen$ = "This time, guards don't have enough time to evacuate the NorthWestern wall. Some of them die as monsters invade the city.";
+			.msgfr$ = "Cette fois, les gardes n'ont pas le temps d'évacuer à temps le mur Nord-Ouest, certains y laissent la vie alors que les monstres envahissent la ville.";
+
+			areamonster "prontera",27,273,145,365,getmonsterinfo(1046,0),1046,1,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,273,145,365,getmonsterinfo(1204,0),1204,5,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,273,145,365,getmonsterinfo(1260,0),1260,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,273,145,365,getmonsterinfo(1295,0),1295,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,273,145,365,getmonsterinfo(1197,0),1197,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,273,145,365,getmonsterinfo(1201,0),1201,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,273,145,365,getmonsterinfo(1257,0),1257,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,273,145,365,getmonsterinfo(1196,0),1196,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,273,145,365,getmonsterinfo(1200,0),1200,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,273,145,365,getmonsterinfo(1202,0),1202,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,273,145,365,getmonsterinfo(1163,0),1163,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,273,145,365,getmonsterinfo(1186,0),1186,20,"invasion_halloween01::OnWing";
+
+			break;
+		case 4:
+			.msgen$ = "The next assault is brutal, the NorthEastern wall guards face their deaths as a new wave of abominations breaks into the city.";
+			.msgfr$ = "L'assaut suivant est brutal, les gardes du mur Nord-Est voient la mort en face tandis qu'une nouvelle vague de morts-vivants déferle dans la ville.";
+
+			areamonster "prontera",170,273,284,365,getmonsterinfo(1117,0),1117,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",170,273,284,365,getmonsterinfo(1192,0),1192,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",170,273,284,365,getmonsterinfo(1302,0),1302,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",170,273,284,365,getmonsterinfo(1864,0),1864,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",170,273,284,365,getmonsterinfo(1865,0),1865,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",170,273,284,365,getmonsterinfo(1870,0),1870,30,"invasion_halloween01::OnWing";
+
+			break;
+		case 5:
+			.msgen$ = "Several heavy blows resound before the Eastern gate shatters, destroyed by a new pack of undead attackers.";
+			.msgfr$ = "Plusieurs coups lourds retentissent avant que la porte Est ne vole en éclats, détruite par de nouveaux assaillants morts-vivants.";
+
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1204,0),1204,15,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1260,0),1260,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1295,0),1295,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1132,0),1132,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1208,0),1208,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1219,0),1219,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1197,0),1197,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1201,0),1201,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1257,0),1257,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1196,0),1196,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1200,0),1200,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1202,0),1202,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1046,0),1046,1,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1389,0),1389,1,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1015,0),1015,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1036,0),1036,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1117,0),1117,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1192,0),1192,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1302,0),1302,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",233,140,284,257,getmonsterinfo(1208,0),1208,20,"invasion_halloween01::OnWing";
+
+			break;
+		case 6:
+			.msgen$ = "The Southern gate collapses with a roar as new visions of horror invade the city.";
+			.msgfr$ = "La porte Sud s'effondre avec fracas alors que de nouvelles visions d'horreur envahissent la ville.";
+
+			areamonster "prontera",95,31,216,152,getmonsterinfo(1510,0),1510,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",95,31,216,152,getmonsterinfo(1508,0),1508,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",95,31,216,152,getmonsterinfo(1506,0),1506,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",95,31,216,152,getmonsterinfo(1504,0),1504,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",95,31,216,152,getmonsterinfo(1503,0),1503,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",95,31,216,152,getmonsterinfo(1507,0),1507,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",95,31,216,152,getmonsterinfo(1505,0),1505,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",95,31,216,152,getmonsterinfo(1295,0),1295,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",95,31,216,152,getmonsterinfo(1373,0),1373,1,"invasion_halloween01::OnWing";
+			areamonster "prontera",95,31,216,152,getmonsterinfo(1272,0),1272,1,"invasion_halloween01::OnWing";
+			areamonster "prontera",95,31,216,152,getmonsterinfo(1036,0),1036,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",95,31,216,152,getmonsterinfo(1061,0),1061,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",95,31,216,152,getmonsterinfo(1192,0),1192,40,"invasion_halloween01::OnWing";
+
+			break;
+		case 7:
+			.msgen$ = "The Western gate gets blown to the central fountain under the might of the new assault, and other terror faces enter the city.";
+			.msgfr$ = "La porte Ouest vole jusqu'à la fontaine centrale sous la puissance du nouvel assaut et d'autres figures d'épouvante pénèrent dans la ville.";
+
+			areamonster "prontera",27,140,78,257,getmonsterinfo(1268,0),1268,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,140,78,257,getmonsterinfo(1208,0),1208,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,140,78,257,getmonsterinfo(1864,0),1864,40,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,140,78,257,getmonsterinfo(1865,0),1865,40,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,140,78,257,getmonsterinfo(1866,0),1866,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,140,78,257,getmonsterinfo(1867,0),1867,40,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,140,78,257,getmonsterinfo(1869,0),1869,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,140,78,257,getmonsterinfo(1870,0),1870,30,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,140,78,257,getmonsterinfo(1219,0),1219,20,"invasion_halloween01::OnWing";
+			areamonster "prontera",27,140,78,257,getmonsterinfo(1202,0),1202,20,"invasion_halloween01::OnWing";
+
+			break;
+		case 8:
+			.msgen$ = "While everyone is wondering where a new attack might come from, a warp portal opens, spilling a last horde of monsters.";
+			.msgfr$ = "Alors que tout le monde se demande d'où pourrait venir une nouvelle attaque, un portail warp s'ouvre, déversant une ultime horde de monstres.";
+
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1117,0),1117,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1192,0),1192,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1302,0),1302,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1272,0),1272,1,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1204,0),1204,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1260,0),1260,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1295,0),1295,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1208,0),1208,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1219,0),1219,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1197,0),1197,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1201,0),1201,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1257,0),1257,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1196,0),1196,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1200,0),1200,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1202,0),1202,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1163,0),1163,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1186,0),1186,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1864,0),1864,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1865,0),1865,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1866,0),1866,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1867,0),1867,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1869,0),1869,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1870,0),1870,15,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1507,0),1507,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1505,0),1505,10,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1373,0),1373,1,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1046,0),1046,1,"invasion_halloween01::OnWing";
+			areamonster "prontera",114,309,197,351,getmonsterinfo(1389,0),1389,1,"invasion_halloween01::OnWing";
+
+			break;					
+	}
+
+	announce .msgen$,0,0xFFA500;
+	announce .msgfr$,0,0xFF0000;
+
+	end;
+
+OnFinal:
+
+	announce "Hera's Resentment: I...think I have underestimated you... But you aren't done with me, we shall meet again!",0,0xFFA500;
+	announce "Hera's Resentment : Je... pense que je vous ai sous-estimés... Mais vous n'en avez pas fini avec moi, nous nous reverrons !",0,0xFF0000;
+
+	sleep 1000;
+
+	announce "Hera throws herself into a portal, which quickly vanishes thereafter.",0,0xFFA500;
+	announce "Hera disparait dans un portail warp qui se referme rapidement derrière elle.",0,0xFF0000;
+
+	sleep 1000;
+
+	announce "Gabriel Valentine : Adventurers, an infiltrated Lude revealed us Hera has been sighted in Niflheim, don't lose her track!",0,0xFFA500;
+	announce "Gabriel Valentine : Aventuriers, un Lude infiltré nous a révélé que Hera aurait été aperçue à Niflheim, ne perdez pas sa trace !",0,0xFF0000;
+
+	end;
+
+
+}
+
+
+
+prontera	mapflag	monster_noteleport
+prontera	mapflag	nosave
+prontera	mapflag	nomemo
+prontera	mapflag	nobranch
+prontera	mapflag	noloot
+prontera	mapflag	nopenalty
+prontera	mapflag	noicewall
+prontera	mapflag	restricted	6

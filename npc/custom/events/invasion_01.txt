@@ -1,0 +1,400 @@
+-	script	pinvasion_boss	-1,{
+
+//====LEVEL OF GM CAN CONTROL THE EVENT=========\\
+//OnInit:
+set $gmcontrol,20;
+end;
+//---------------END OF SETUP-------------------\\
+
+OnWhisperGlobal:
+	if (getgmlevel() >= $gmcontrol) {
+		$case = 0;
+		donpcevent "Auberon::OnWarp";
+		end;
+	}
+end;
+}
+
+2@nyd,204,332,4	script	Auberon	628,{
+	mes "[Auberon]";
+	if (#invasion_01 == 0){
+		set #invasion_01,1;
+		getitem 35001,5;
+		if (#LANGUE == 1 ) {
+			mes "Thanks for participating, take this little gift as a reward for your bravery.";
+			next;
+			mes "Do you want to get out of here?";
+			if (select("Yes:No") == 1)
+				warp "prontera",155,180;
+			close;
+	}
+	else {
+		mes "Merci d'avoir participé, voici un petit cadeau pour récompenser votre bravoure."; 
+		next;
+		mes "Voulez-vous sortir d'ici ?";
+		if (select("Oui:Non") == 1)
+				warp "prontera",155,180;
+			close;
+	}
+	}
+	if (#LANGUE == 1 ) {
+			mes "Thanks for participating.";
+			next;
+			mes "Do you want to get out of here?";
+			if (select("Yes:No") == 1)
+				warp "prontera",155,180;
+			close;
+	}
+	else {
+		mes "Merci d'avoir participé."; 
+		next;
+		mes "Voulez-vous sortir d'ici ?";
+		if (select("Oui:Non") == 1)
+				warp "prontera",155,180;
+			close;
+	}
+	end;
+
+OnWarp:
+	enablenpc("WarpToBosses");
+OnMyMobDead:
+	switch($case){
+	case 1:
+		announce "Ce premier combat n'était qu'une mise en bouche, Eddga a eu vent du génocide de Bigfoot commis. Il est venu se venger en personne !",0;
+		announce "This first battle acted as an appetizer, Eddga had gotten wind of the Bigfoot genocide you've done. He came here himself to get revenge.",0;
+		getmapxy( .@map$,.@x,.@y, 0 );
+		makeitem 35004,1,.@map$,.@x,.@y;
+		break;
+	case 2:
+		announce "Bien joué. Mais ne vous réjouissez pas trop vite, Stormy Knight est furieux que son armée de Goblins ait été décimée. Préparez-vous à subir !",0;
+		announce "Well done. But do not cry for victory too soon, Stormy Knight is furious after you decimated his Goblins army. Be prepared to suffer!",0;
+		getmapxy( .@map$,.@x,.@y, 0 );
+		makeitem 35004,1,.@map$,.@x,.@y;
+		makeitem 35004,1,.@map$,.@x+1,.@y+1;
+		break;
+	case 3:
+		announce "Hein ?! Des bruits sourds se font entendre... Ce sont les pas d'Orc Hero, vous n'avez quand même pas tué les orcs qui se trouvaient dans le labyrinthe ?!",0;
+		announce "Huh?! You can hear thudding sounds... Those are Orc hero's step noises, tell me you didn't kill the orcs passing by in the labyrinth?!",0;
+		getmapxy( .@map$,.@x,.@y, 0 );
+		makeitem 35004,1,.@map$,.@x,.@y;
+		makeitem 35004,1,.@map$,.@x+1,.@y+1;
+		makeitem 35004,1,.@map$,.@x-1,.@y-1;
+		break;
+	case 4:
+		announce "Vous avez réveillé le démon, je ne peux plus rien faire pour vous... Fuyez tant qu'il en est encore temps, Baphomet sera là d'un seconde à l'autre !",0;
+		announce "You awakened the demon, I cannot do anything more for you... Escape while it's still time, Baphomet will be there from second to second.",0;
+		getmapxy( .@map$,.@x,.@y, 0 );
+		makeitem 35004,1,.@map$,.@x,.@y;
+		makeitem 35004,1,.@map$,.@x+2,.@y-2;
+		makeitem 35004,1,.@map$,.@x+1,.@y+1;
+		makeitem 35004,1,.@map$,.@x-1,.@y-1;
+		break;
+	case 5:
+		announce "J'espère que vous êtes fiers de vous pour avoir abattu Orc Hero, mais à présent son frère est venu vous envoyer dans l'autre monde... Je vous en conjure ne faites pas face à Orc Lord !",0;
+		announce "I hope that you are proud for having slain Orc Hero, but now his brother came to send you in the other world... I beg you not to face Orc Lord!",0;
+		getmapxy( .@map$,.@x,.@y, 0 );
+		makeitem 35004,1,.@map$,.@x,.@y;
+		makeitem 35004,1,.@map$,.@x+1,.@y+1;
+		makeitem 35004,1,.@map$,.@x-1,.@y-1;
+		makeitem 35004,1,.@map$,.@x+2,.@y+2;
+		makeitem 35004,1,.@map$,.@x-2,.@y-2;
+		break;
+	case 6:
+		announce "Je n'arrive pas à croire que vous soyez arriver si loin. Mais c'est la fin pour nous, les Hydro n'étaient pas réellement morts et sont partis se plaindre à Detale, il arrive à grands pas !",0;
+		announce "I cannot believe you made it so far. Though this is the end for all of us, the Hydros weren't really dead, they escaped to complain to Detale, and he is looming!",0;
+		getmapxy( .@map$,.@x,.@y, 0 );
+		makeitem 35004,1,.@map$,.@x,.@y;
+		makeitem 35004,1,.@map$,.@x+1,.@y+1;
+		makeitem 35004,1,.@map$,.@x-1,.@y-1;
+		makeitem 35004,1,.@map$,.@x+2,.@y+2;
+		makeitem 35004,1,.@map$,.@x+3,.@y+3;
+		makeitem 35004,1,.@map$,.@x-2,.@y-2;
+		break;
+	case 7:
+		announce "Impressionant... Je ne sais même plus quoi dire à part que l'essence de la glace en personne, Ktullanux, a senti une baisse de puissance avec la mort de tous ces Ice Titans, il est venu tout détruire !",0;
+		announce "Impressive... I don't even know what to say besides that the ice essence itself, Ktullanux, felt his power decreasing with the death of all these Ice Titans, he came to  destroy everything!",0;
+		getmapxy( .@map$,.@x,.@y, 0 );
+		makeitem 35004,1,.@map$,.@x,.@y;
+		makeitem 35004,1,.@map$,.@x+1,.@y+1;
+		makeitem 35004,1,.@map$,.@x-1,.@y-1;
+		makeitem 35004,1,.@map$,.@x+2,.@y+2;
+		makeitem 35004,1,.@map$,.@x+3,.@y+3;
+		makeitem 35004,1,.@map$,.@x-2,.@y-2;
+		makeitem 35004,1,.@map$,.@x-3,.@y-3;
+		break;
+	case 8:
+		announce "Félicitations, vous avez ga.... HEIN ??? Les éléments se sont déchaînés pendant la bataille, le maître des éléments, le grand Gloom Under Night, je sens sa présence, il arrive !!",0;
+		announce "Congratulations, you wo... WHAT??? The elements went wild during the battle, the master of elements, the great Gloom Under Night, i can feel his presence, he's coming!!",0;
+		getmapxy( .@map$,.@x,.@y, 0 );
+		makeitem 35004,1,.@map$,.@x,.@y;
+		makeitem 35004,1,.@map$,.@x,.@y;
+		makeitem 35004,1,.@map$,.@x+1,.@y+1;
+		makeitem 35004,1,.@map$,.@x-1,.@y-1;
+		makeitem 35004,1,.@map$,.@x+2,.@y+2;
+		makeitem 35004,1,.@map$,.@x+3,.@y+3;
+		makeitem 35004,1,.@map$,.@x-2,.@y-2;
+		makeitem 35004,1,.@map$,.@x-3,.@y-3;
+		makeitem 35004,1,.@map$,.@x+4,.@y+4;
+		makeitem 35004,1,.@map$,.@x-4,.@y-4;
+		break;
+	case 9:
+	announce "Auberon : Cette fois c'est vraiment fini... Bravo à tous vous avez été remarquables, venez me parler pour recevoir votre récompense.",0;
+	announce "Auberon : This time it really is over... Congrats to you all, you were remarkable, come talk to me to get your reward.",0;
+	getmapxy( .@map$,.@x,.@y, 0 );
+		for (.@i = 0;.@i<100;.@i++){
+			.@j = rand(20);
+			makeitem 35003,1,.@map$,.@x+.@j,.@y+.@j;
+			makeitem 35003,1,.@map$,.@x-.@j,.@y-.@j;
+	}
+	hideoffnpc("Auberon");
+	sleep 60000;
+	hideonnpc("Invasion");
+	break;
+	}
+OnGo:
+	$case++;
+	switch($case){
+	case 1:
+		announce "Nous vous félicitons d'être arrivés jusqu'ici. Il semblerait cependant que les ennuis ne fassent que commencer, Moonlight Flower a accouru suite aux cris de ses bébés.",0;
+		announce "We commend you for having got so far. It seems however that your troubles are only starting, Moonlight Flower immediatly went after hearing her babies crying.",0;
+		areamonster "2@nyd",281,270,281,270,"Moonlight Flower",1150,1,"Auberon::OnMyMobDead";
+		break;
+	case 2:
+		areamonster "2@nyd",118,270,118,270,"Eddga",1115,1,"Auberon::OnMyMobDead",2;
+		break;
+	case 3:
+		areamonster "2@nyd",118,377,118,377,"Stormy Knight",1251,1,"Auberon::OnMyMobDead",2;
+		break;
+	case 4:
+		areamonster "2@nyd",283,377,283,377,"Orc Hero",1087,1,"Auberon::OnMyMobDead",2;
+		break;
+	case 5:
+		areamonster "2@nyd",281,270,281,270,"Baphomet",1039,1,"Auberon::OnMyMobDead",2;
+		break;
+	case 6:
+		areamonster "2@nyd",283,377,283,377,"Orc Lord",1190,1,"Auberon::OnMyMobDead",2;
+		break;
+	case 7:
+		areamonster "2@nyd",118,270,118,270,"Detale",1719,1,"Auberon::OnMyMobDead",2;
+		break;	
+	case 8:
+		areamonster "2@nyd",118,377,118,377,"Ktullanux",1779,1,"Auberon::OnMyMobDead",2;
+		break;		
+	case 9:
+		areamonster "2@nyd",200,328,200,328,"Master of Elements",1768,1,"Auberon::OnMyMobDead",2;
+		break;		
+	}
+	end;
+}
+
+prontera,155,171,4	script	Invasion	657,{
+	if (#LANGUE == 1){
+		mes "Hi, do you want me to teleport you inside the Invasion event?";
+		.@message$ = "Yes please!:No I'm scared.";
+	}
+	else {
+		mes "Bonjour, veux-tu être téléporté dans l'event Invasion ?";
+		.@message$ = "Oui !:Non j'ai peur.";
+	}
+	if (select(.@message$) == 1)
+		warp "2@nyd",$x,$y;
+	close;
+	
+}
+
+2@nyd,199,178,0	warp	WarpToBosses	2,2,2@nyd,199,258
+
+-	script	invasion_01	-1,{
+OnInit:
+	hideonnpc("Invasion");
+	end;
+OnClock2100:
+	$x = 199;
+	$y = 17;
+	hideoffnpc("Invasion");
+	announce "Lancement de l'Event Invasion ! Veuillez parler au NPC \"Invasion\" pour y accéder !",0;
+	announce "Starting of the Invasion Event! Please talk to the \"Invasion\" NPC to get there!",0;
+	announce "Ce labyrinthe est infesté de monstres, il semble que vous deviez en venir à bout sans en oublier un seul !",0;
+	announce "This labyrinth is infested with monsters, it seems that you need to kill everything inside without skipping a single one!",0;
+	$nine = 0;
+	$big = 0;
+	$garm = 0;
+	$gob = 0;
+	$high = 0;
+	$bapho = 0;
+	$orc = 0;
+	$hydro = 0;
+	$ice = 0;
+	$agav = 0;
+	$echo = 0;
+	hideonnpc("Auberon");
+	disablenpc("WarpToBosses");
+	areamonster "2@nyd",14,8,171,185,"Nine Tails",1180,55,"invasion_01::OnNineTailsDead";
+	areamonster "2@nyd",14,8,171,185,"Bigfoot",1060,80,"invasion_01::OnBigFootDead";
+	areamonster "2@nyd",14,8,171,185,"Garm Baby",1515,40,"invasion_01::OnGarmBabyDead";
+	areamonster "2@nyd",14,8,171,185,"Christmas Goblin",1825,80,"invasion_01::OnChristmasGoblinDead";
+	areamonster "2@nyd",14,8,171,185,"High Orc",1213,55,"invasion_01::OnHighOrcDead";
+	areamonster "2@nyd",14,8,171,185,"Baphomet Jr.",1101,55,"invasion_01::OnBaphoDead";
+	areamonster "2@nyd",14,8,171,185,"Orc Archer",1189,55,"invasion_01::OnOrcDead";
+	areamonster "2@nyd",14,8,171,185,"Hydrolancer",1720,2,"invasion_01::OnHydroDead";
+	areamonster "2@nyd",14,8,171,185,"Ice Titan",1777,40,"invasion_01::OnIceTitanDead";
+	areamonster "2@nyd",14,8,171,185,"Agav",1769,30,"invasion_01::OnAgavDead";
+	areamonster "2@nyd",14,8,171,185,"Echio",1770,30,"invasion_01::OnEchoDead";
+	
+	areamonster "2@nyd",171,30,228,114,"Nine Tails",1180,22,"invasion_01::OnNineTailsDead";
+	areamonster "2@nyd",171,30,228,114,"Bigfoot",1060,32,"invasion_01::OnBigFootDead";
+	areamonster "2@nyd",171,30,228,114,"Garm Baby",1515,16,"invasion_01::OnGarmBabyDead";
+	areamonster "2@nyd",171,30,228,114,"Christmas Goblin",1825,32,"invasion_01::OnChristmasGoblinDead";
+	areamonster "2@nyd",171,30,228,114,"High Orc",1213,20,"invasion_01::OnHighOrcDead";
+	areamonster "2@nyd",171,30,228,114,"Baphomet Jr.",1101,20,"invasion_01::OnBaphoDead";
+	areamonster "2@nyd",171,30,228,114,"Orc Archer",1189,20,"invasion_01::OnOrcDead";
+	areamonster "2@nyd",171,30,228,114,"Hydrolancer",1720,1,"invasion_01::OnHydroDead";
+	areamonster "2@nyd",171,30,228,114,"Ice Titan",1777,16,"invasion_01::OnIceTitanDead";
+	areamonster "2@nyd",171,30,228,114,"Agav",1769,12,"invasion_01::OnAgavDead";
+	areamonster "2@nyd",171,30,228,114,"Echio",1770,12,"invasion_01::OnEchoDead";
+	
+	areamonster "2@nyd",228,8,385,185,"Nine Tails",1180,55,"invasion_01::OnNineTailsDead";
+	areamonster "2@nyd",228,8,385,185,"Bigfoot",1060,80,"invasion_01::OnBigFootDead";
+	areamonster "2@nyd",228,8,385,185,"Garm Baby",1515,40,"invasion_01::OnGarmBabyDead";
+	areamonster "2@nyd",228,8,385,185,"Christmas Goblin",1825,80,"invasion_01::OnChristmasGoblinDead";
+	areamonster "2@nyd",228,8,385,185,"High Orc",1213,55,"invasion_01::OnHighOrcDead";
+	areamonster "2@nyd",228,8,385,185,"Baphomet Jr.",1101,55,"invasion_01::OnBaphoDead";
+	areamonster "2@nyd",228,8,385,185,"Orc Archer",1189,55,"invasion_01::OnOrcDead";
+	areamonster "2@nyd",228,8,385,185,"Hydrolancer",1720,2,"invasion_01::OnHydroDead";
+	areamonster "2@nyd",228,8,385,185,"Ice Titan",1777,40,"invasion_01::OnIceTitanDead";
+	areamonster "2@nyd",228,8,385,185,"Agav",1769,30,"invasion_01::OnAgavDead";
+	areamonster "2@nyd",228,8,385,185,"Echio",1770,30,"invasion_01::OnEchoDead";
+	
+	end;
+OnNineTailsDead:
+OnBigFootDead:
+OnGarmBabyDead:
+OnChristmasGoblinDead:
+OnHighOrcDead:
+OnBaphoDead:
+OnOrcDead:
+OnHydroDead:
+OnIceTitanDead:
+OnAgavDead:
+OnEchoDead:
+	.@rand = rand(100);
+	if (.@rand<30){
+		getmapxy( .@map$,.@x,.@y, 0 );
+		makeitem 35003,1,.@map$,.@x,.@y;
+	}
+	if (.@rand<1){
+		getmapxy( .@map$,.@x,.@y, 0 );
+		makeitem 35001,1,.@map$,.@x,.@y;
+	}
+	
+	.@count_nine = mobcount("2@nyd","invasion_01::OnNineTailsDead");
+	if ($nine == 0 &&  .@count_nine == 0){
+		$nine = 1;
+		announce "L'esprit des chats résonne dans la salle...",0;
+		announce "The cat spirit resonate in the room...",0;
+	}
+	.@count_big = mobcount("2@nyd","invasion_01::OnBigFootDead");
+	if ($big == 0 &&  .@count_big == 0){
+		$big = 1;
+		announce "Il y a comme une odeur de tabac dans l'air...",0;
+		announce "There's like a tobacco smell in the air....",0;
+	}
+	.@count_garm = mobcount("2@nyd","invasion_01::OnGarmBabyDead");
+	.@count_gob = mobcount("2@nyd","invasion_01::OnChristmasGoblinDead");
+	if ($garm == 0 &&  .@count_garm == 0 && $gob == 0 &&  .@count_gob == 0){
+		$garm = 1;
+		$gob = 1;
+		announce "Une tempête approche...",0;
+		announce "A storm is coming...",0;
+	}
+
+	.@count_high = mobcount("2@nyd","invasion_01::OnHighOrcDead");
+	if ($high == 0 &&  .@count_high == 0){
+		$high = 1;
+		announce "Vous entendez des bruits sourds s'approcher en rythme...",0;
+		announce "You hear fast-paced thudding sounds approaching...",0;
+	}
+	
+	.@count_bapho = mobcount("2@nyd","invasion_01::OnBaphoDead") ;
+	if ($bapho == 0 &&  .@count_bapho == 0){
+		$bapho = 1;
+		announce "Un cri de démon vous perce les tympans...",0;
+		announce "An ear-splitting demon scream is happening...",0;
+	}
+	.@count_orc = mobcount("2@nyd","invasion_01::OnOrcDead");
+	if ($orc == 0 &&  .@count_orc == 0){
+		$orc = 1;
+		announce "Aucun bruit ? Aucune sensation ? Etrange...",0;
+		announce "No sound? No feeling? Weird...",0;
+	}
+	.@count_hydro = mobcount("2@nyd","invasion_01::OnHydroDead");
+	if ($hydro == 0 &&  .@count_hydro == 0){
+		$hydro = 1;
+		announce "Vous pensiez avoir tué tous les Hydros, pourtant vous avez un mauvais préssentiment...",0;
+		announce "You thought you killed all Hydros, though you have a bad feeling...",0;
+	}
+	.@count_ice = mobcount("2@nyd","invasion_01::OnIceTitanDead");
+	if ($ice == 0 &&  .@count_ice == 0){
+		$ice = 1;
+		announce "Une vague de froid glacial vous traverse...",0;
+		announce "A freezing cold wave goes through you...",0;
+	}
+	.@count_agav = mobcount("2@nyd","invasion_01::OnAgavDead");
+	.@count_echo = mobcount("2@nyd","invasion_01::OnEchoDead");
+	if ($agav == 0 && $echo == 0 &&  .@count_agav  == 0 && .@count_echo ==0){
+		$agav = 1;
+		$echo = 1;
+		announce "Vous avez des frissons...",0;
+		announce "You got shivers....",0;
+	}
+
+	.@mob_count = .@count_nine + .@count_big + .@count_garm  +.@count_gob +.@count_high +.@count_bapho+.@count_orc+.@count_hydro+.@count_ice+ .@count_agav + .@count_echo;
+	switch (.@mob_count){
+	case 1000 :
+	case 800 :
+	case 500 :
+	case 300 :
+	case 200 :
+	case 100 :
+	case 50 :
+	case 40 :
+	case 30 :
+	case 20 :
+	case 10 :
+	case 9 :
+	case 8 :
+	case 7 :
+	case 6 :
+	case 5 :
+	case 4 :
+	case 3 :
+	case 2 :
+		announce "Il reste " + .@mob_count + " monstres à exterminer.",0;
+		announce "There are " + .@mob_count + " monsters left to kill.",0;
+		break;
+	case 1 :
+		announce "Il reste " + .@mob_count + " monstre à exterminer.",0;
+		announce "There are " + .@mob_count + " monster left to kill.",0;
+		break;	
+		
+	}
+	if (.@mob_count<1){
+		announce "Tous les monstres de la map ont été tués, un warp est apparu au nord.",0;
+		announce "All the monsters have been slain, a warp appeared in the north.",0;
+		$case = 0;
+		$x = 199;
+		$y = 258;
+		donpcevent("Auberon::OnWarp");
+	}
+	end;
+}
+
+
+
+2@nyd	mapflag	noteleport
+2@nyd	mapflag	nosave
+2@nyd	mapflag	nomemo
+2@nyd	mapflag	nobranch
+2@nyd	mapflag	noloot
+2@nyd	mapflag	nopenalty
+2@nyd	mapflag	noicewall

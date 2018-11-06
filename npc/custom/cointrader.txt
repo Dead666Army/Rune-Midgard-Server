@@ -1,0 +1,473 @@
+moc_para01,28,36,4	script	Coin Trader	922,{
+	if (#LANGUE== 1){
+		setArray .@Msg$[0],
+		"What do you want to do?",
+		"Buy Rune Coins:Sell Rune Coins:Nothing, thanks.",
+		"What do you want to sell?",
+		"^000000:Nothing, thanks",
+		 "Right now, a Rune Coin is worth ",
+		"You can buy a maximum of 5 Coins at a time, how many do you want ? ",
+		"I told you between 0 and 5",
+		"Thank you, bye",
+		"Thank you, bye",
+		"Right now, a Rune Coin is worth ",
+		"You can buy a maximum of 5 Coins at a time, how many do you want ? ",
+		"I told you between 0 and 5",
+		"Thank you, bye",
+		"Thank you, bye",
+		"Right now, a Rune Coin is worth",
+		"You can buy a maximum of 5 Coins at a time, how many do you want ? ",
+		"I told you between 0 and 5",
+		"Thank you, bye",
+		"Thank you, bye",
+		"Thank you, bye",
+		"What do you want to buy ? ",
+		"^000000:Nothing, thanks",
+		"Right now, a Rune Coin is worth ",
+		"You can trade a maximum of 5 Coins at a time",
+		"I told you between 0 and 5",
+		"Thank you, bye",
+		"Thank you, bye",
+		"Right now, a Rune Coin is worth ",
+		"You can trade a maximum of 5 Coins at a time",
+		"I told you between 0 and 5",
+		"Thank you, bye",
+		"Thank you, bye",
+		"Right now, a Rune Coin is worth ",
+		"You can trade a maximum of 5 Coins at a time",
+		"Input 0 for leaving",
+		"I told you between 0 and 5",
+		"Thank you, bye",
+		"Thank you, bye",
+		"Thank you, bye",
+		"Thank you, bye"
+		;
+	}
+	else{
+		setArray .@Msg$[0],
+		"Que voulez vous faire ?",
+		"Acheter des Rune Coin:Vendre des Rune Coin:Rien, merci",
+		"Que voulez-vous vendre ? ",
+		"^000000:Rien, merci",
+		"En ce moment, un Rune Coin vaut ",
+		"Vous pouvez acheter au maximum 5 coins à  la fois, combien en souhaitez-vous ? ",
+		"Je vous ai dit entre 0 et 5",
+		"Merci, au revoir",
+		"Merci, au revoir",
+		"En ce moment, un Rune Coin vaut ",
+		"Vous pouvez acheter au maximum 5 coins à  la fois, combien en souhaitez-vous ? ",
+		"Je vous ai dit entre 0 et 5",
+		"Merci, au revoir",
+		"Merci, au revoir",
+		"En ce moment, un Rune Coin vaut ",
+		"Vous pouvez acheter au maximum 5 coins à  la fois, combien en souhaitez-vous ? ",
+		"Je vous ai dit entre 0 et 5",
+		"Merci, au revoir",
+		"Merci, au revoir",
+		"Merci, au revoir",
+		 "Que voulez-vous acheter ? ",
+		 "^000000:Rien, merci",
+		 "En ce moment, un Rune Coin vaut ",
+		 "Vous pouvez échanger au maximum 5 coins à la fois",
+		 "Je vous ai dit entre 0 et 5",
+		 "Merci, au revoir",
+		 "Merci, au revoir",
+		 "En ce moment, un Rune Coin vaut ",
+		 "Vous pouvez échanger au maximum 5 coins à la fois",
+		 "Je vous ai dit entre 0 et 5",
+		 "Merci, au revoir",
+		 "Merci, au revoir",
+		 "En ce moment, un Rune Coin vaut ",
+		 "Vous pouvez échanger au maximum 5 coins à la fois",
+		 "Mettez 0 pour quitter",
+		 "Je vous ai dit entre 0 et 5",
+		 "Merci, au revoir",
+		 "Merci, au revoir",
+		  "Merci au revoir !",
+		  "Merci au revoir !"
+			;
+	}
+	.@shards = 100;
+	.@tickets = 3;
+	.@badges = 120;
+	mes "[Coin Trader]";
+	mes .@Msg$[0];
+	switch(select(.@Msg$[1])) {
+	case 1:
+		next;
+		mes "[Coin Trader]";
+		mes .@Msg$[2];
+		query_sql("select sum(amount) from inventory where nameid = 35003", .@item1);
+		query_sql("select sum(amount) from storage where nameid  = 35003", .@item4 );
+		.@item1 += .@item4;
+		query_sql("select sum(amount) from inventory where nameid = 7828", .@item2); 
+		query_sql("select sum(amount) from storage where nameid = 7828", .@item5 );
+		.@item2 += .@item5;
+		query_sql("select sum(amount) from inventory where nameid = 35001",.@item3); 
+		query_sql("select sum(amount) from storage where nameid = 35001",.@item6);
+		.@item3 += .@item6;
+		
+		.@stockitem1 =  (.@item1 * 100) / .@shards;
+		.@stockitem2 =  (.@item2 * 100) / .@badges ;
+		.@stockitem3 =  (.@item3 * 100) / .@tickets;
+		
+		.@denominateur = .@stockitem1 + .@stockitem2 + .@stockitem3;
+		.@proportionitem1 = (.@stockitem1 * 100) / .@denominateur + 1;
+		.@proportionitem2 = (.@stockitem2 * 100) /.@denominateur + 1;
+		.@proportionitem3 = (.@stockitem3* 100) /.@denominateur + 1;
+		
+		.@coursitem1 = .@proportionitem1 -33;
+		.@coursitem2 = .@proportionitem2 -33;
+		.@coursitem3 = .@proportionitem3 -33;
+		
+		.@valueitem1 = .@shards + .@shards * .@coursitem1 / 100 ;
+		.@valueitem2 = .@badges + .@badges * .@coursitem2 / 100 ;
+		.@valueitem3 = .@tickets + .@tickets * .@coursitem3 / 100 ;
+
+		
+		if (.@coursitem1> .@coursitem2 && .@coursitem1 > .@coursitem3)
+			.@colorItem1$ = "^FF0000"; //red
+		if (.@coursitem2> .@coursitem1 && .@coursitem2 >.@coursitem3)
+			.@colorItem2$ = "^FF0000"; //red
+		if (.@coursitem3 > .@coursitem2 && .@coursitem3 > .@coursitem1)
+			.@colorItem3$ = "^FF0000"; //red
+			
+		if (.@coursitem1<.@coursitem2 && .@coursitem1 < .@coursitem3)
+			.@colorItem1$ = "^00FF00"; //green
+		if (.@coursitem2<.@coursitem1 && .@coursitem2 < .@coursitem3)
+			.@colorItem2$ = "^00FF00"; //green
+		if (.@coursitem3<.@coursitem2 && .@coursitem3 < .@coursitem1)
+			.@colorItem3$ = "^00FF00"; //green
+			
+		if (.@colorItem1$ == "" )
+			.@colorItem1$ = "^FFA500"; // orange
+		if (.@colorItem2$ == "" )
+		.@colorItem2$ = "^FFA500"; // orange
+		if (.@colorItem3$ == "" )
+		.@colorItem3$ = "^FFA500"; // orange
+		//DEBUGGING
+		//mes "Il y a en tout " + .@item1 +" Shard of Potential sur le serveur ";
+		//mes "Il y a en tout " + .@item2 + " Battle Badge sur le serveur ";
+		//mes "Il y a en tout " + .@item3 + " Event Ticket sur le serveur ";
+		.@runeValue = 0;
+		switch(select(.@colorItem1$ + "Shards" + " :" + .@colorItem2$ +  "Badges" + ":" +.@colorItem3$ + "Event tickets" + .@Msg$[3])) {
+		case 1:
+			next;
+			mes "[Coin Trader]";
+			mes .@Msg$[4] + .@valueitem1 + " Shards of Potential";
+			.@runeValue = .@valueitem1;
+			mes .@Msg$[5];
+			input .@value;
+			.@currentCurrency = countitem(35003);
+			next; 
+			if (.@value < 0 || .@value > 5){
+				mes "[Coin Trader]";
+				mes .@Msg$[6];
+			}
+			else if (.@value == 0 ){
+				mes "[Coin Trader]";
+				mes .@Msg$[7];
+				close;
+			}
+			else{
+				if (.@value*.@runeValue > .@currentCurrency )
+					.@value = .@currentCurrency / .@runeValue;
+				delitem 35003,.@value*.@runeValue;
+				getitem 35000,.@value;
+				mes "[Coin Trader]";
+				mes .@Msg$[8];
+			}
+			close;
+			break;
+		case 2:
+			next;
+			mes "[Coin Trader]";
+			mes .@Msg$[9] + .@valueitem2 + " Badges.";
+			.@runeValue = .@valueitem2;
+			mes .@Msg$[10];
+			input .@value;
+			.@currentCurrency = countitem(7828);
+			next; 
+			if (.@value < 0 || .@value > 5){
+				mes "[Coin Trader]";
+				mes .@Msg$[11];
+			}
+			else if (.@value == 0 ){
+				mes "[Coin Trader]";
+				mes .@Msg$[12];
+				close;
+			}
+			else{
+				if (.@value*.@runeValue > .@currentCurrency )
+					.@value = .@currentCurrency / .@runeValue;
+				delitem 7828,.@value*.@runeValue;
+				getitem 35000,.@value;
+				mes "[Coin Trader]";
+				mes .@Msg$[13];
+			}
+			close;
+			break;
+		case 3:
+				next;
+			mes "[Coin Trader]";
+			mes .@Msg$[14] + .@valueitem3 + " Event Tickets.";
+			.@runeValue = .@valueitem3;
+			mes .@Msg$[15];
+			input .@value;
+			.@currentCurrency = countitem(35001);
+			next; 
+			if (.@value < 0 || .@value > 5){
+				mes "[Coin Trader]";
+				mes .@Msg$[16];
+			}
+			else if (.@value == 0 ){
+				mes "[Coin Trader]";
+				mes .@Msg$[17];
+				close;
+			}
+			else{
+				if (.@value*.@runeValue > .@currentCurrency )
+					.@value = .@currentCurrency / .@runeValue;
+				delitem 35001,.@value*.@runeValue;
+				getitem 35000,.@value;
+				mes "[Coin Trader]";
+				mes .@Msg$[18];
+			}
+			close;
+			break;
+		case 4:
+			next;
+			mes "[Coin Trader]";
+			mes .@Msg$[19];
+			close;
+			break;
+		}
+		close;
+		break;
+	case 2:
+		next;
+		mes "[Coin Trader]";
+		mes .@Msg$[20];
+		query_sql("select sum(amount) from inventory where nameid = 35003", .@item1);
+		query_sql("select sum(amount) from storage where nameid  = 35003", .@item4 );
+		.@item1 += .@item4;
+		query_sql("select sum(amount) from inventory where nameid = 7828", .@item2); 
+		query_sql("select sum(amount) from storage where nameid = 7828", .@item5 );
+		.@item2 += .@item5;
+		query_sql("select sum(amount) from inventory where nameid = 35001",.@item3); 
+		query_sql("select sum(amount) from storage where nameid = 35001",.@item6);
+		.@item3 += .@item6;
+		
+		.@stockitem1 =  (.@item1 * 100) / .@shards;
+		.@stockitem2 =  (.@item2 * 100) / .@badges ;
+		.@stockitem3 =  (.@item3 * 100) / .@tickets;
+		
+		.@denominateur = .@stockitem1 + .@stockitem2 + .@stockitem3;
+		.@proportionitem1 = (.@stockitem1 * 100) / .@denominateur + 1;
+		.@proportionitem2 = (.@stockitem2 * 100) /.@denominateur + 1;
+		.@proportionitem3 = (.@stockitem3* 100) /.@denominateur + 1;
+		
+		.@coursitem1 = .@proportionitem1 -33;
+		.@coursitem2 = .@proportionitem2 -33;
+		.@coursitem3 = .@proportionitem3 -33;
+		
+		.@valueitem1 = .@shards + .@shards * .@coursitem1 / 100 ;
+		.@valueitem2 = .@badges + .@badges * .@coursitem2 / 100 ;
+		.@valueitem3 = .@tickets + .@tickets * .@coursitem3 / 100 ;
+		
+		.@valueitem1 *= 9;
+		.@valueitem1 /= 10;
+		.@valueitem2 *= 9;
+		.@valueitem2 /= 10;
+		.@valueitem3 *= 9;
+		.@valueitem3 /= 10;
+		
+		if (.@coursitem1>.@coursitem2 && .@coursitem1 > .@coursitem3)
+			.@colorItem1$ = "^00FF00"; //green
+		if (.@coursitem2> .@coursitem1 && .@coursitem2 > .@coursitem3)
+			.@colorItem2$ = "^00FF00"; //green
+		if (.@coursitem3> .@coursitem2 && .@coursitem3 > .@coursitem1)
+			.@colorItem3$ = "^00FF00"; //green
+			
+		if (.@coursitem1<.@coursitem2 && .@coursitem1 < .@coursitem3)
+			.@colorItem1$ = "^FF0000"; //red
+		if (.@coursitem2<.@coursitem1 && .@coursitem2 < .@coursitem3)
+			.@colorItem2$ = "^FF0000"; //red
+		if (.@coursitem3<.@coursitem2 && .@coursitem3 < .@coursitem1)
+			.@colorItem3$ = "^FF0000"; //red
+			
+		if (.@colorItem1$ == "" )
+			.@colorItem1$ = "^FFA500"; // orange
+		if (.@colorItem2$ == "" )
+		.@colorItem2$ = "^FFA500"; // orange
+		if (.@colorItem3$ == "" )
+		.@colorItem3$ = "^FFA500"; // orange
+		//DEBUGGING
+		//mes "Il y a en tout " + .@item1 +" Shard of Potential sur le serveur ";
+		//mes "Il y a en tout " + .@item2 + " Battle Badge sur le serveur ";
+		//mes "Il y a en tout " + .@item3 + " Event Ticket sur le serveur ";
+		.@runeValue = 0;
+		switch(select(.@colorItem1$ + "Shards" + " :" + .@colorItem2$ +  "Badges" + ":" +.@colorItem3$ + "Event tickets" + .@Msg$[21])) {
+		case 1:
+			next;
+			mes "[Coin Trader]";
+			mes .@Msg$[22] + .@valueitem1 + " Shards of Potential.";
+			.@runeValue = .@valueitem1;
+			mes .@Msg$[23];
+			input .@value;
+			.@currentCurrency = countitem(35000);
+			next; 
+			if (.@value < 0 || .@value > 5){
+				mes "[Coin Trader]";
+				mes .@Msg$[24];
+			}
+			else if (.@value == 0 ){
+				mes "[Coin Trader]";
+				mes .@Msg$[25];
+				close;
+			}
+			else{
+				if (.@value> .@currentCurrency )
+					.@value = .@currentCurrency;
+				getitem 35003,.@value*.@runeValue;
+				delitem 35000,.@value;
+				mes "[Coin Trader]";
+				mes .@Msg$[26];
+			}
+			close;
+			break;
+		case 2:
+			next;
+			mes "[Coin Trader]";
+			mes .@Msg$[27] + .@valueitem2 + " Badges.";
+			.@runeValue = .@valueitem2;
+			mes .@Msg$[28];
+			input .@value;
+			.@currentCurrency = countitem(35000);
+			next; 
+			if (.@value < 0 || .@value > 5){
+				mes "[Coin Trader]";
+				mes  .@Msg$[29];
+			}
+			else if (.@value == 0 ){
+				mes "[Coin Trader]";
+				mes .@Msg$[30];
+				close;
+			}
+			else{
+				if (.@value > .@currentCurrency )
+					.@value = .@currentCurrency;
+				getitem 7828,.@value*.@runeValue;
+				delitem 35000,.@value;
+				mes "[Coin Trader]";
+				mes .@Msg$[31];
+			}
+			close;
+			break;
+		case 3:
+				next;
+			mes "[Coin Trader]";
+			mes .@Msg$[32] + .@valueitem3 + " Event Tickets.";
+			.@runeValue = .@valueitem3;
+			mes .@Msg$[33];
+			mes .@Msg$[34];
+			input .@value;
+			.@currentCurrency = countitem(35000);
+			next; 
+			if (.@value < 0 || .@value > 5){
+				mes "[Coin Trader]";
+				mes .@Msg$[35];
+			}
+			else if (.@value == 0 ){
+				mes "[Coin Trader]";
+				mes .@Msg$[36];
+				close;
+			}
+			else{
+				if (.@value > .@currentCurrency )
+					.@value = .@currentCurrency;
+				getitem 35001,.@value*.@runeValue;
+				delitem 35000,.@value;
+				mes "[Coin Trader]";
+				mes .@Msg$[37];
+			}
+			close;
+			break;
+		case 4:
+			next;
+			mes "[Coin Trader]";
+			mes .@Msg$[38];
+			close;
+			break;
+		}
+		close;
+		break;
+	case 3:
+		next;
+		mes "[Coin Trader]";
+		mes .@Msg$[39];
+		close;
+		break;
+	}
+	close;
+}
+
+
+
+prontera,162,193,6	script	Market Info	837,{
+		if (#LANGUE== 1){
+			setArray .@Msg$[0],
+				"Right now buying a Rune Coin costs :",
+				"or "	;
+		}
+		else{
+			setArray .@Msg$[0], 
+		  "En ce moment un Rune Coin à l'achat vaut :",
+		  "ou ";
+		  }
+		.@shards = 100;
+		.@tickets = 3;
+		.@badges = 120;
+		query_sql("select sum(amount) from inventory where nameid = 35003", .@item1);
+		query_sql("select sum(amount) from storage where nameid  = 35003", .@item4 );
+		.@item1 += .@item4;
+		query_sql("select sum(amount) from inventory where nameid = 7828", .@item2); 
+		query_sql("select sum(amount) from storage where nameid = 7828", .@item5 );
+		.@item2 += .@item5;
+		query_sql("select sum(amount) from inventory where nameid = 35001",.@item3); 
+		query_sql("select sum(amount) from storage where nameid = 35001",.@item6);
+		.@item3 += .@item6;
+		
+		.@stockitem1 =  (.@item1 * 100) / .@shards;
+		.@stockitem2 =  (.@item2 * 100) / .@badges ;
+		.@stockitem3 =  (.@item3 * 100) / .@tickets;
+		
+		.@denominateur = .@stockitem1 + .@stockitem2 + .@stockitem3;
+		.@proportionitem1 = (.@stockitem1 * 100) / .@denominateur + 1;
+		.@proportionitem2 = (.@stockitem2 * 100) /.@denominateur + 1;
+		.@proportionitem3 = (.@stockitem3* 100) /.@denominateur + 1;
+		
+		.@coursitem1 = .@proportionitem1 -33;
+		.@coursitem2 = .@proportionitem2 -33;
+		.@coursitem3 = .@proportionitem3 -33;
+		
+		.@valueitem1 = .@shards + .@shards * .@coursitem1 / 100 ;
+		.@valueitem2 = .@badges + .@badges * .@coursitem2 / 100 ;
+		.@valueitem3 = .@tickets + .@tickets * .@coursitem3 / 100 ;
+
+	
+			
+		if (.@colorItem1$ == "" )
+			.@colorItem1$ = "^FFA500"; // orange
+		if (.@colorItem2$ == "" )
+		.@colorItem2$ = "^FFA500"; // orange
+		if (.@colorItem3$ == "" )
+		.@colorItem3$ = "^FFA500"; // orange
+		
+		mes "[Market Info]";
+		mes .@Msg$[0];
+		mes .@valueitem1 + " Shards of Potential,";
+		mes .@Msg$[1] + .@valueitem2 + " Badges,";
+		mes .@Msg$[1] + .@valueitem3 + " Event Tickets.";
+		close;
+}

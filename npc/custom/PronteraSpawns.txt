@@ -1,0 +1,106 @@
+//===== rAthena Script ============================================
+//= Rune-Midgard Spawn prontera
+//===== By: =======================================================
+//= Snotra
+//===== Current Version: ==========================================
+//= 1.0
+//===== Compatible With: ==========================================
+//= rAthena Project
+//===== Description: ==============================================
+//= Différents spawn de prontera
+//===== Additional Comments: ======================================
+//NPCs:
+//Warpa
+//Kafra
+//Healer
+//Tool dealer
+//=================================================================
+
+//=====================Prontera Nord============================
+prontera,152,326,5	script	Kafra Employee::kaf_pronteraN	112,{
+	cutin "kafra_06",2;
+	callfunc "F_KafSet";
+	mes "[Kafra Employee]";
+	mes "Welcome to the";
+	mes "Kafra Corporation~";
+	mes "The Kafra Services are";
+	mes "always here to support";
+	mes "you. So how can I be";
+	mes "of service today?";
+	callfunc "F_Kafra",5,11,0,40,800;
+	savepoint "prontera",155,324,0,0;
+	callfunc "F_KafEnd",0,1,"in the city of Prontera";
+}
+prontera,159,326,4	duplicate(Healer)	Healer#prt_N	402
+prontera,153,329,5	script	Warpra#prt_N	10209,{ callfunc "QWS_Town_Warpra",0,"Prontera Town"; close; }
+prontera,158,329,4	duplicate(Tool Dealer#prt_cus)	Tool Dealer#prt_N	73
+
+//=====================Prontera Est=============================
+prontera,282,200,2	script	Kafra Employee::kaf_pronteraE	114,{
+	cutin "kafra_04",2;
+	callfunc "F_KafSet";
+	mes "[Kafra Employee]";
+	mes "Welcome!";
+	mes "The Kafra Corporation";
+	mes "will always support the";
+	mes "adventurers of Rune-Midgard";
+	mes "with its excellent service. So";
+	mes "what can I do for you today?";
+	callfunc "F_Kafra",5,11,0,40,800;
+	savepoint "prontera",278,205,0,0;
+	callfunc "F_KafEnd",0,1,"in the city of Prontera";
+}
+prontera,278,210,5	duplicate(Healer)	Healer#prt_E	402
+prontera,282,208,3	script	Warpra#prt_E	10209,{ callfunc "QWS_Town_Warpra",0,"Prontera Town"; close; }
+prontera,274,210,5	duplicate(Tool Dealer#prt_cus)	Tool Dealer#prt_E	73
+
+//=====================Prontera Sud=============================
+prontera,152,29,0	script	Kafra Employee::kaf_pronteraS	115,{
+	cutin "kafra_03",2;
+	callfunc "F_KafSet";
+	mes "[Kafra Employee]";
+	mes "Welcome~!";
+	mes "The Kafra Services";
+	mes "are always on your side.";
+	mes "So how can I help you?";
+	callfunc "F_Kafra",5,11,0,40,800;
+	savepoint "prontera",156,31,0,0;
+	callfunc "F_KafEnd",0,1,"in the city of Prontera";
+}
+prontera,152,33,5	duplicate(Healer)	Healer#prt_S	402
+prontera,160,29,1	script	Warpra#prt_S	10209,{ callfunc "QWS_Town_Warpra",0,"Prontera Town"; close; }
+prontera,160,33,3	duplicate(Tool Dealer#prt_cus)	Tool Dealer#prt_S	73
+
+//=====================Prontera Ouest===========================
+prontera,29,207,6	script	Kafra Employee::kaf_pronteraW	113,{
+	cutin "kafra_05",2;
+	callfunc "F_KafSet";
+	mes "[Kafra Employee]";
+	mes "The Kafra Corporation";
+	mes "is always working to provide";
+	mes "you with convenient services.";
+	mes "How may I be of assistance?";
+	callfunc "F_Kafra",5,11,0,40,800;
+	savepoint "prontera",33,208,0,0;
+	callfunc "F_KafEnd",0,1,"in the city of Prontera";
+}
+prontera,30,211,5	duplicate(Healer)	Healer#prt_W	402
+prontera,33,211,4	script	Warpra#prt_W	10209,{ callfunc "QWS_Town_Warpra",0,"Prontera Town"; close; }
+prontera,36,211,3	duplicate(Tool Dealer#prt_cus)	Tool Dealer#prt_W	73
+
+//=====================Prontera Fontaine haut===================
+prontera,153,237,6	script	Kafra Employee::kaf_pronteraFH	113,{
+	cutin "kafra_05",2;
+	callfunc "F_KafSet";
+	mes "[Kafra Employee]";
+	mes "The Kafra Corporation";
+	mes "is always working to provide";
+	mes "you with convenient services.";
+	mes "How may I be of assistance?";
+	callfunc "F_Kafra",5,11,0,40,800;
+	savepoint "prontera",155,232,0,0;
+	callfunc "F_KafEnd",0,1,"in the city of Prontera";
+}
+prontera,159,235,5	duplicate(Healer)	Healer#prt_FH	402
+prontera,158,237,4	script	Warpra#prt_FH	10209,{ callfunc "QWS_Town_Warpra",0,"Prontera Town"; close; }
+prontera,152,235,3	duplicate(Tool Dealer#prt_cus)	Tool Dealer#prt_FH	73

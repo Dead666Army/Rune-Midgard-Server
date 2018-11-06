@@ -1,0 +1,284 @@
+// Reward
+quiz_02,59,345,5	script	The Baaam#qz	856,{
+
+	mes "[The Baaam]";
+	
+	if (#LANGUE == 1 ) {
+		mes "Ha! You were really good back there!";
+		mes "Here's a reward for entertaining me.";
+		next;
+		mes "You have received 2 ^00FF00"+getitemname($bombring_reward)+"^000000!";
+		getitem $bombring_reward,2;
+		next;
+		mes "[The Baaam]";
+		mes "Now get out of here before I make you explode!";
+		next;
+	} else {
+		mes "Ha! Vous avez été très performant là-bas!";
+		mes "Voici une r?compense pour m'avoir diverti.";
+		next;
+		mes "Vous avez reçu 2 ^00FF00"+getitemname($bombring_reward)+"^000000!";
+		getitem $bombring_reward,2;
+		next;
+		mes "[The Baaam]";
+		mes "Maintenant sortez d'ici avant que je vous fasse exploser!";
+		next;
+	}
+	
+	atcommand "@speed 50000";
+	warp "prontera",155,180;
+	
+	end;
+	
+OnInit:
+
+	disablenpc("The Baaam#qz");
+	
+	end;	
+}
+
+// T?l?porte ? l'event
+prontera,160,160,5	script	The Baaam#prt	879,{
+
+	mes "[The Baaam]";
+	
+	if (#LANGUE == 1 ) {
+		mes "Hi! Wanna join the Bombring event?";
+		Switch(Select("Yes!:What is it about?:Nah, not interested.")) {
+		case 1:
+			mes "[The Baaam]";
+			mes "Alright! Get ready!";
+			next;
+			sc_end sc_all;
+			atcommand "@speed 100";
+			warp "quiz_02",59,345;	
+			break;
+		case 2:
+			mes "[The Baaam]";
+			mes "Well all you have to do is stay alive.";
+			mes "That is by dodging exploding ^00FF00Bombrings^000000!";
+			next;
+			mes "[The Baaam]";
+			mes "If you win, you will get:";
+			mes "2x ^00FF00"+getitemname($bombring_reward)+"^000000!";
+			close;
+			break;
+		case 3:
+			mes "[The Baaam]";
+			mes "Alright, see you around!";
+			close;
+			break;
+		}
+	}	else {
+		mes "Bonjour! Tu veux rejoindre l'event Bombring?";
+		Switch(Select("Oui!:Qu'est ce que c'est?:Non, pas intéressé.")) {
+		case 1:
+			next;
+			mes "[The Baaam]";
+			mes "Très bien! Soyez prêts!";
+			next;
+			sc_end sc_all;
+			atcommand "@speed 100";
+			warp "quiz_02",59,345;	
+			break;
+		case 2:
+			next;
+			mes "[The Baaam]";
+			mes "Bien tout ce que vous avez à faire c'est de rester en vie.";
+			mes "En évitant les explosions ^00FF00Bombrings^000000!";
+			next;
+			mes "[The Baaam]";
+			mes "Si vous gagnez, vous aurez:";
+			mes "2x ^00FF00"+getitemname($bombring_reward)+"^000000!";
+			close;
+			break;
+		case 3:
+			next;
+			mes "[The Baaam]";
+			mes "Très bien, à un de ces quatre!";
+			close;
+			break;
+		}
+	}
+	
+	end;
+
+OnInit:
+
+	disablenpc("The Baaam#prt");
+	
+	end;
+}
+
+/**
+*	Script de Bombring Auto
+*/
+-	script	Bombring#Auto	-1,{
+	end;
+	
+OnInit:
+
+	set .eventstarted, 0;
+	set $bombring_reward,35001;
+	disablenpc "The Baaam#qz";
+	disablenpc "The Baaam#prt";
+	
+	end;
+
+OnStart:
+
+	set .eventstarted, 0;
+	initnpctimer;
+	enablenpc "The Baaam#prt";
+	disablenpc "The Baaam#qz";
+	
+	end;
+	
+OnTimer180000:
+	if (.eventstarted == 1) 
+		end;
+	disablenpc "The Baaam#prt";
+	stopnpctimer;
+	callsub OnStart1;
+	end;
+	
+OnStart1:
+
+	set .totalplayers, getmapusers ("quiz_02");
+	
+	mapannounce "quiz_02","The Baaam: Okay écoutez, c'est comme ça que ça fonctionne.",bc_all;
+	mapannounce "quiz_02","The Baaam: Okay listen up, this is how it works.",bc_all;
+	sleep 2000;
+	
+	mapannounce "quiz_02","The Baaam: Les Bombrings vont sévirs dans cette zone.",bc_all;
+	mapannounce "quiz_02","The Baaam: Bombrings will run rampant in this area.",bc_all;
+	sleep 2000;
+	
+	mapannounce "quiz_02","The Baaam: Et ils vont tous exploser booooooom!",bc_all;
+	mapannounce "quiz_02","The Baaam: and all of them will go booooooom!",bc_all;
+	sleep 2000;
+	
+	mapannounce "quiz_02","The Baaam: tout ce que vous avez à faire est de les éviter et de rester en vie :P",bc_all;
+	mapannounce "quiz_02","The Baaam: all you have to do is avoid them and stay alive :P",bc_all;
+	sleep 2000;
+	
+	 mapannounce "quiz_02","The Baaam: Cela durera 30 secondes, pour 5 manches au total.",bc_all;
+	mapannounce "quiz_02","The Baaam: This will run for 30 seconds for 5 total rounds.",bc_all;
+	sleep 2000;
+	
+	mapannounce "quiz_02","The Baaam: Aloooooooors, prêt ou pas ils arrivent!!!", bc_all;
+	mapannounce "quiz_02","The Baaam: Sooooooooooo, ready or not here they come!!!", bc_all;
+	
+	for ( .round=1 ; .round <= 5 ; .round++ ) {
+		set .totalplayers, getmapusers ("quiz_02");
+		callsub OnBombringSummon;
+		sleep 10000;
+	}
+
+	if ( getmapusers("quiz_02") > 0){
+		enablenpc "The Baaam#qz";
+		mapannounce "quiz_02","The Baaam: Wooooow! C'est rare! Nous avons des survivants! :D",bc_all;
+		mapannounce "quiz_02","The Baaam: Wooooow! That's rare! People won! :D",bc_all;
+	}
+	
+	end;
+		
+OnBombringSummon:
+
+	set .eventstarted, 1;
+	initnpctimer;
+	
+	mapannounce "quiz_02","The Baaam: Round "+.round+"!!",bc_all;
+	
+	while (.eventstarted == 1) {
+	
+		if (3*.totalplayers>60){
+			set .monsters_number,60;
+		} else {
+			set .monsters_number,3*.totalplayers;
+		}
+		
+		areamonster "quiz_02",48,334,71,357,"Run for you life!",1904,.monsters_number;
+		
+		if(.round == 1) {
+			sleep 4000;
+		} else if (.round == 2) {
+			sleep 3000;
+		} else if (.round == 3) {
+			sleep 2000;
+		} else if (.round == 4) {
+			sleep 1500;
+		} else if (.round == 5) {
+			sleep 1000;
+		}
+	}
+	
+	if (.eventstarted == 1){
+		mapannounce "quiz_02","The Baaam: Manche "+.round+" est terminée!!",bc_all;
+		mapannounce "quiz_02","The Baaam: Round "+.round+" has finished!!",bc_all;
+	}
+		
+	if (.round < 5){
+		mapannounce "quiz_02","The Baaam: Prochaine manche dans 10 secondes.",bc_all;
+		mapannounce "quiz_02","The Baaam: Next round in 10 seconds.",bc_all;
+	}
+	
+	return;
+	
+OnTimer31000:
+
+	if (.eventstarted != 0){
+		set .eventstarted, 0;
+		killmonsterall "quiz_02";
+		cleanmap "quiz_02";
+		stopnpctimer;
+	}
+	end;
+	
+OnPCDieEvent:
+
+	if (strcharinfo(3) == "quiz_02") {
+	
+		mapannounce "quiz_02","The Baaam: "+strcharinfo(0)+" s'est fait détruire!!",bc_all;
+		mapannounce "quiz_02","The Baaam: "+strcharinfo(0)+" has been blown up!!",bc_all;
+		
+		atcommand "@speed 50000"; // on remet la vitesse à la normale
+		warp "prontera",155,180;
+		
+		if (getmapusers("quiz_02") <= 1) {
+			stopnpctimer;
+			set .eventstarted, 0;
+			set .round, 6;
+			
+			killmonsterall "quiz_02";
+			cleanmap "quiz_02";
+			hideoffnpc "The Baaam#qz";
+			
+			if (getmapusers("quiz_02") == 1){
+				mapannounce "quiz_02","The Baaam: Okay! Nous avons un gagnant!!",bc_all;
+				mapannounce "quiz_02","The Baaam: Alright! We have a winner!!",bc_all;
+			}
+		} 	
+	}
+	end;
+	
+OnGMStop:
+
+	set .eventstarted, 0;
+	killmonsterall "quiz_02";
+	cleanmap "quiz_02";
+	disablenpc "The Baaam#qz";	
+	
+	end;
+}
+
+
+quiz_02	mapflag	nowarp
+quiz_02	mapflag	nowarpto
+quiz_02	mapflag	noteleport
+quiz_02	mapflag	nosave	SavePoint
+quiz_02	mapflag	nomemo
+quiz_02	mapflag	nobranch
+quiz_02	mapflag	noloot
+quiz_02	mapflag	nopenalty
+quiz_02	mapflag	noskill

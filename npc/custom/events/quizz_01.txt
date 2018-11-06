@@ -1,0 +1,67 @@
+-	script	pquizz01	-1,{
+
+//====LEVEL OF GM CAN CONTROL THE EVENT=========\\
+//OnInit:
+set $gmcontrol,60;
+end;
+//---------------END OF SETUP-------------------\\
+
+OnWhisperGlobal:
+	if (getgmlevel() >= $gmcontrol) {
+		$case = 0;
+		hideonnpc("WarpToQuizz#1");
+		disablenpc("WarpToQuizz#1");
+		hideonnpc("WarpToQuizz#2");
+		disablenpc("WarpToQuizz#2");
+		hideoffnpc("Auberon#5");
+		end;
+	}
+end;
+}
+
+prontera,156,173,0	warp	WarpToQuizz#1	2,2,5@tower,81,84
+5@tower,68,70,0	warp	WarpToQuizz#2	2,2,prontera,155,182
+
+5@tower,104,107,4	script	Auberon#5	994,{
+	mes "[Auberon]";
+	if (#LANGUE == 1){
+		if (#REWARD_QUIZZ01 == 0 ) {
+			set #REWARD_QUIZZ01,1;
+			getitem 35001,3;
+			mes "Merci d'avoir participé à l'event, voici votre récompense.";
+			next;
+			warp "prontera",155,182;
+		}
+		else{
+			mes "Je vous ai déjà donné votre récompense.";
+		}
+	}
+	else {
+			if (#REWARD_QUIZZ01 == 0 ) {
+				set #REWARD_QUIZZ01,1;
+				getitem 35001,3;
+				mes "Thanks for participating, here's your reward.";
+				next;
+				warp "prontera",155,182;
+			}
+			else{
+				mes "I already gave you your reward.";
+			}
+	}
+	close;
+OnClock2100:
+	announce "Début de l'event Quizz, un warp est apparu à Prontera pour vous y rendre !",0;
+	announce "Start of the Quizz event, a warp appeared in Prontera for you to get there!",0;
+	hideoffnpc("WarpToQuizz#1");
+	enablenpc("WarpToQuizz#1");
+	hideoffnpc("WarpToQuizz#2");
+	enablenpc("WarpToQuizz#2");
+	end;
+OnInit:
+	hideonnpc(strnpcinfo(0));
+	hideonnpc("WarpToQuizz#1");
+	disablenpc("WarpToQuizz#1");
+	hideonnpc("WarpToQuizz#2");
+	disablenpc("WarpToQuizz#2");
+	end;
+}

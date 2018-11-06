@@ -1,0 +1,183 @@
+prontera,155,155,4	script	Greedy Greed#Auto	795,{
+	mes "[Greedy Greed]";
+	if (.EventOn == 1 ) {
+		mes "Voulez vous aller au Greedy Greed Event ?";
+		switch(select("Oui:Non")){
+		case 1: 
+			set $charidarray[$number],getcharid(3);
+			$number++;
+			warp "greedy",24,80;
+			atcommand "@speed 60";
+			sc_end -1;
+			if (countitem(7577) > 0 ) delitem 7577,countitem(7577);
+			if (countitem(7576) > 0 ) delitem 7576,countitem(7576);
+			if (countitem(7575) > 0 ) delitem 7575,countitem(7575);
+			if (countitem(14529) > 0 ) delitem 14529,countitem(14529);
+			getitem 14529,100;
+		case 2:
+			close;
+		}
+	}
+	end;
+  
+OnGMStop:  
+  cleanmap "greedy";
+  announce "Un Gamemaster a arrêté l'Event Greedy Greed",0;
+	announce "A Gamemaster has stopped the Greedy Greed Event",0;
+  
+  for (.@i = 0;.@i<$number;.@i++){
+		if (attachrid($charidarray[.@i])){
+			.@value = 10*countitem(7577)+countitem(7576)-10*countitem(7575);
+			
+			if (.@value > .@max_point){
+				set .@max_point,.@value;
+				set .@winner$,strcharinfo(0);
+				set .@winnerid,getcharid(3);
+			}
+			if (countitem(7577) > 0 ) delitem 7577,countitem(7577);
+			if (countitem(7576) > 0 ) delitem 7576,countitem(7576);
+			if (countitem(7575) > 0 ) delitem 7575,countitem(7575);
+			if (countitem(14529) > 0 ) delitem 14529,countitem(14529);
+      
+      atcommand "@speed 50000";
+      
+			detachrid;
+		}
+	}
+  end;
+  
+OnStart:
+	hideoffnpc "Greedy Greed#Auto";
+	set .EventON,1;
+	set .Timer,1;
+	set .Wait,1;
+	setnpctimer 0; initnpctimer;
+	hideonnpc("Prontera Warper");
+	end;
+  
+OnTimer180000:
+	set .EventON,0;
+	if (.Timer!=1) end;
+	hideonnpc "Greedy Greed#Auto";
+	end;
+  
+OnTimer181000:
+	mapannounce  "greedy","Greedy Greed: Bienvenue dans la salle du Greedy-greed ! Laissez-moi vous expliquer rapidement ce qui va suivre.",0;
+	mapannounce  "greedy","Greedy Greed: Welcome in the Greedy-greed room! Let me explain you shortly what is going to happen.",0;
+	mapannounce  "greedy","Greedy Greed: D'ici peu, des milliers de joyaux tomberont au sol, votre but est de ramasser un maximum de bleus (1 point) et de jaunes (10 points). ",0;
+	mapannounce  "greedy","Greedy Greed: Attention à ne pas ramasser trop de joyaux rouges qui vous feront perdre 10 points chacun !",0;
+	mapannounce  "greedy","Greedy Greed: Bien, nous allons pouvoir commencer, dàbut de l'Event dans 15 secondes.",0;
+	mapannounce  "greedy","Greedy Greed: Soon, thousands of jewels will be dropped on the floor. Your goal is to gather a maximum of blues (1 point) and yellows (10 points). ",0;
+	mapannounce  "greedy","Greedy Greed: Careful though not to gather too much reds, you will lose 10 points for each.",0;
+	mapannounce  "greedy","Greedy Greed: Good, we are going to start, begining of the event in 15 seconds.",0;
+	end;
+  
+OnTimer196000:
+	mapannounce  "greedy","Greedy Greed: C'est parti !",0;
+	mapannounce  "greedy","Greedy Greed: Lets go !",0;
+	donpcevent "StartShower::OnStart";
+	end;
+  
+OnTimer226000:
+	cleanmap "greedy";
+	mapannounce  "greedy","Greedy Greed: Time !",0;
+	end;
+  
+OnTimer231000:
+	donpcevent("Prontera Warper::OnReward");
+	atcommand "@speed 50000";
+	hideoffnpc("Prontera Warper");
+	set .Timer,0; stopnpctimer;
+	end;
+	
+OnInit:
+	hideonnpc "Greedy Greed#Auto";
+	set .EventON,0;
+	end;
+}
+
+//---------------------------------------------------------------------
+
+greedy,22,79,4	script	Prontera Warper	795,{
+	if (countitem(7577) > 0 ) delitem 7577,countitem(7577);
+	if (countitem(7576) > 0 ) delitem 7576,countitem(7576);
+	if (countitem(7575) > 0 ) delitem 7575,countitem(7575);
+	if (countitem(14529) > 0 ) delitem 14529,countitem(14529);
+	atcommand "@speed 50000";
+	warp "prontera",156,187;
+	end;
+OnReward:
+	set .@max_point,0;
+	for (.@i = 0;.@i<$number;.@i++){
+		if (attachrid($charidarray[.@i])){
+			.@value = 10*countitem(7577)+countitem(7576)-10*countitem(7575);
+			
+			if (.@value > .@max_point){
+				set .@max_point,.@value;
+				set .@winner$,strcharinfo(0);
+				set .@winnerid,getcharid(3);
+			}
+			if (countitem(7577) > 0 ) delitem 7577,countitem(7577);
+			if (countitem(7576) > 0 ) delitem 7576,countitem(7576);
+			if (countitem(7575) > 0 ) delitem 7575,countitem(7575);
+			if (countitem(14529) > 0 ) delitem 14529,countitem(14529);
+			detachrid;
+		}
+	}
+
+	if (attachrid(.@winnerid)){
+			getitem 35001,3;
+			detachrid;
+	}
+	mapannounce  "greedy","Greedy Greed: "+.@winner$ + " est le vainqueur !",0;
+	mapannounce  "greedy","Greedy Greed: "+.@winner$ + " is the winner !",0;
+	$number = 0;
+	deletearray $charidarray;
+	end;	
+OnPCLogoutEvent:
+	if (countitem(7577) > 0 ) delitem 7577,countitem(7577);
+	if (countitem(7576) > 0 ) delitem 7576,countitem(7576);
+	if (countitem(7575) > 0 ) delitem 7575,countitem(7575);
+	if (countitem(14529) > 0 ) delitem 14529,countitem(14529);
+  end;
+}
+
+//---------------------------------------------------------------------
+
+-	script	startShower	-1,{
+	OnStart:
+		freeloop(1);
+		for (.@i =0;.@i<.amount;.@i++){
+					.@x1 = rand(10,37);
+					.@y1 = rand(34,109);
+					.@x2 = rand(10,37);
+					.@y2 = rand(34,109);
+					.@x3 = rand(10,37);
+					.@y3 = rand(34,109);
+				if (rand(0,10) == 1 ) makeitem .item_id1,1,.map$,.@x1,.@y1;
+				makeitem .item_id2,1,.map$,.@x2,.@y2;
+				if (rand(0,10) == 1 ) makeitem .item_id3,1,.map$,.@x3,.@y3;
+    }
+		freeloop(0);
+    end;
+
+	OnInit:
+		set .amount, 2000; // amount of item to shower
+		
+		set .item_id1, 7577; // item id to shower +10
+		set .item_id2, 7576; // item id to shower +1
+		set .item_id3, 7575; // item id to shower -10
+		set .map$, "greedy"; // map to debugmes "setmes2 \""+ .@mes2_var$ +"\", \""+ .@mes2_text$ +"\";";shower
+    end;
+	
+}
+
+//==================Mapflags========================\\
+greedy	mapflag	nowarp
+greedy	mapflag	nowarpto
+greedy	mapflag	noteleport
+greedy	mapflag	nosave	SavePoint
+greedy	mapflag	nomemo
+greedy	mapflag	nobranch
+greedy	mapflag	noloot
+greedy	mapflag	nopenalty

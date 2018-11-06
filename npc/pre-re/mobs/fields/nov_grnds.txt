@@ -1,0 +1,8 @@
+nov_grnds,92,129,10,10	monster	Pupa	1230,20
+nov_grnds,155,276,70,100 	monster	Poring	1002,50
+nov_grnds,155,276,70,100 	monster	Lunatic	1063,50
+nov_grnds,155,276,70,100 	monster	Spore	1014,15
+nov_grnds,155,276,70,100 	monster	Roda Frog	1012,15
+nov_grnds,155,276,70,100 	monster	Condor	1009,15
+nov_grnds,155,276,70,100 	monster	Fabre	1184,25
+nov_grnds,155,276,70,100 	monster	Chonchon	1183,5

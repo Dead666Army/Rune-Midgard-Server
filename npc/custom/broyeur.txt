@@ -1,0 +1,58 @@
+cave,62,77,6	script	Broyeur 	1674,{
+	mes "[Broyeur]";
+	if (#LANGUE == 1){
+		 mes "It seems that this scary thing is capable of mashing anything. Do you want to insert some Shards of Potential inside?";
+		 switch(select("Let's do it! :I'd rather not...")){
+			case 1:
+			next;
+			mes "[Broyeur]";
+			mes "How many Shards do you want to put inside?"; 
+			input .@pc;
+			.@value = countitem(35003);
+			if (.@pc <= .@value){
+				.@value = .@pc;
+			}	
+			getitem 35002,rand(.@value,3*.@value);
+			delitem 35003,.@value;
+			next;
+			mes "[Broyeur]";
+			mes "You hurt yourself using the Broyeur.";
+			percentheal -20,0;
+			sc_start SC_Bleeding,60000,5;
+			close;
+			break;
+		case 2:
+			mes "[Broyeur]";
+			close;
+			break;
+		}
+	}
+	else{
+		mes "Il semblerait que cette édifice soit capable de broyer n'importe quoi. Voulez-vous y insérer des Shards of Potential ?";
+		switch(select("Allons-y :Je ne préfère pas prendre le risque")){
+			case 1:
+			next;
+			mes "[Broyeur]";
+			mes "Combien de Shards voulez-vous insérer ?"; 
+			input .@pc;
+			.@value = countitem(35003);
+			if (.@pc <= .@value){
+				.@value = .@pc;
+			}	
+			getitem 35002,rand(.@value,3*.@value);
+			delitem 35003,.@value;
+			next;
+			mes "[Broyeur]";
+			mes "Vous vous êtes blessé en utilisant le Broyeur.";
+			percentheal -20,0;
+			sc_start SC_Bleeding,60000,5;
+			close;
+			break;
+			case 2:
+				mes "[Broyeur]";
+				close;
+				break;
+		}
+	}
+	close;
+}

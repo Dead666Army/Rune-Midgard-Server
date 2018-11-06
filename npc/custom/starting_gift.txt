@@ -1,0 +1,23 @@
+prontera,141,180,4	script	Starting Gift	505,{
+	mes "[Starting Gift]";
+	if (#gift_rm == 0){
+		set #gift_rm,1;
+		if (#LANGUE == 1 ){
+			mes "There is a starting gift for you, it should help you to move forward more easily in your journey!";
+		}
+		else {
+			mes "Voici un cadeau de départ qui devrait vous aider à avancer plus facilement dans votre périple !";
+		}
+		getitem 35005,3;
+		close;
+	}
+	else{
+		if (#LANGUE == 1 ){
+			mes "I already gave you your reward. Have fun!";
+		}
+		else {
+			mes "Je vous ai déjà donné votre récompense. Bon jeu !";
+		}
+		close;
+	}
+}

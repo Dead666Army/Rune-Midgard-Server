@@ -1,0 +1,164 @@
+//===== rAthena Script =======================================
+//= Morroc Town
+//===== By: ==================================================
+//= kobra_k88; L0ne_W0lf
+//===== Current Version: =====================================
+//= 2.2
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: =========================================
+//= [Official Conversion]
+//= Morroc Town NPCs
+//===== Additional Comments: =================================
+//= Fully working
+//= Fixed Lapidary sprite, Implemented ANTHELL trigger
+//= (in both NPC/Warps) [Lupus]. Removed it from NPC and put in Warp
+//= 1.3 Removed some NPC due to Assassin Job Quest [kobra_k88]
+//= 1.3b mobs name corrected [Lupus], 1.3c - Adv classes support
+//= 1.4 Fixed typos [Nexon]
+//= 1.5 Added a lvl 4 weapon quest related NPC [MasterOfMuppets]
+//= 1.6 Added Bartender NPC, made by Persian69 [Vicious_Pucca]
+//= 1.7 Removed Duplicates [Silent]
+//= 1.8 Rescripted to Aegis 10.3 Standards. [L0ne_W0lf]
+//= 1.9 Removed duplicate NPC, changed temp char vars to temp npc. [L0ne_W0;f]
+//= 2.0 Fixed bad NPC header data to comply with rev. 11603. [L0ne_W0lf]
+//= 2.0a Fixed outdated info about Milk [Lupus]
+//= 2.1 Updated/Added NPCs for episode 12.1. [L0ne_W0lf]
+//= 2.2 Removed duplicate bartender NPC. (bugreport:4555) [L0ne_W0lf]
+//============================================================
+
+// Morroc
+//============================================================
+morocc_mem,150,120,5	script	Soldier - Morroc_mem#01::MomSoldier	707,3,3,{
+	mes "[Morroc Soldier]";
+	mes "Hey, you! Stop there.";
+	next;
+	mes "[Morroc Soldier]";
+	mes "This is a restricted area. You can't come any further!";
+	close;
+
+OnTouch_:
+	mes "[Morroc Soldier]";
+	mes "Hey, you! Stop there.";
+	next;
+	mes "[Morroc Soldier]";
+	mes "This is a restricted area. You can't come any further!";
+	close;
+}
+
+morocc_mem,202,244,0	script	Volunteer - Morroc#01_mem	745,{
+	mes "[Morroc Volunteer]";
+	mes "After that terrible incident wiped out the entire Morroc, Rune-Midgard Kingdom has gathered us volunteers to help restorations.";
+	next;
+	mes "[Morroc Volunteer]";
+	mes "As important as it seems, everyone's being careful but there are always some that really don't realize the situation, don't you think?";
+	close;
+}
+
+morocc_mem,88,133,3	script	Volunteer - Morroc#02_mem	748,{
+	mes "[Morroc Volunteer]";
+	mes "We're... We're flooded with work...";
+	next;
+	mes "[Morroc Volunteer]";
+	mes "This work's like never-ending, no matter how hard we try!!!";
+	mes "People of Rune-Midgard!! Please lend us a helping hand!!";
+	next;
+	mes "[Morroc Volunteer]";
+	mes "Haw.... Whew... Ugh...";
+	close;
+}
+
+morocc_mem,202,110,0	script	Volunteer - Morroc#03_mem	730,{
+	mes "[Morroc Volunteer]";
+	mes "We're still unable to estimate the overall damage.";
+	next;
+	mes "[Morroc Volunteer]";
+	mes "Adventurers' Union and Prontera Kingdom are putting their efforts on restorations as well as restraints of the original cause of the disaster.";
+	next;
+	mes "[Morroc Volunteer]";
+	mes "Unless we settle the original cause, the damage will even spread out of Morroc. The only thing left is to get worse.";
+	close;
+}
+
+morocc_mem,268,287,3	script	Volunteer - Morroc#04_mem	727,{
+	mes "[Morroc Volunteer]";
+	mes "As bad as it seems, we can't even ask for more support.";
+	mes "This sure must be the worst thing ever happened in Rune-Midgard's history.";
+	next;
+	mes "[Morroc Volunteer]";
+	mes "I wish I knew how bad the damage is, but we can't even estimate it. It's like shovelling sand against the tide..";
+	close;
+}
+
+morocc_mem,37,287,0	script	Volunteer - Morroc#05_mem	79,{
+	mes "[Morroc Volunteer]";
+	mes "The town's all shattered, but the real problem is the towners.";
+	next;
+	mes "[Morroc Volunteer]";
+	mes "It's a real pity to see those victims of the destroyed town, but the witnesses of the disaster are so much shocked. They're simply not normal now.";
+	next;
+	mes "[Morroc Volunteer]";
+	mes "People are scared to death, but those are fortunate at least.. cause.. many others got mentally ill and stuff..";
+	close;
+}
+
+morocc_mem,223,102,0	script	Volunteer - Morroc#06_mem::MomVolunteer	741,{
+	mes "[Morroc Volunteer]";
+	mes "Ugh.. It's kinda spooky, here.. Even this dry wind of the desert seems to have a dark nature.";
+	next;
+	mes "[Morroc Volunteer]";
+	mes "Ooh!! Something... I can feel something! The dark and gloomy air flowing around this town is actually giving me a musical motiff!";
+	next;
+	mes "[Morroc Volunteer]";
+	mes "Right, I think you should hear it! The title is.. 'The Rhapsody of Morroc Satan's Rebirth'!!";
+	next;
+	mes "[Morroc Volunteer]";
+	mes "When finally wake up, it's just the same darkness";
+	mes "Failed to be reborn at the same place,";
+	mes "Gotta try harder and harder, never ever give up,";
+	mes "But even after hundreds and thousands of trying,";
+	mes "The great Satan of Morroc can't revive~";
+	next;
+	mes "[Morroc Volunteer]";
+	mes "My stupid button men are useless,";
+	mes "Against those adventurers,";
+	mes "This time I must revive,";
+	mes "Cracking the time and the space,";
+	mes "Will be saved for the last~~~";
+	next;
+	mes "[Ringing Voice]";
+	mes "Be quiet! Can't you see what's going on?!";
+	specialeffect EF_HIT2,AREA,"Volunteer - Morroc#06";
+	next;
+	mes "[Morroc Volunteer]";
+	mes "Heyyy, you're being too harsh, Senyorita. Your fist may be as fragile as you are, but it sure can hurt somebody.";
+	next;
+	mes "[Ringing Voice]";
+	mes "Anyways, isn't that a crib? I think I heard something like that before..";
+	next;
+	mes "[Morroc Volunteer]";
+	mes "No, No way!? It,, sure is not!";
+	close;
+}
+
+morocc_mem,226,102,4	duplicate(MocVolunteer)	Volunteer - Morroc#07_mem	726
+
+morocc_mem,54,251,0	script	Young Man#mom02	89,{
+	mes "[Drunken Young Man]";
+	mes "Wait a second..! Are you perhaps an adventurer? Welcome! How's your trip?";
+	mes "Heh heh~ Let me tell you a story. You know I just got out of that Tavern, there, huh?";
+	next;
+	mes "[Drunken Young Man]";
+	mes "I heard the Satan Morroc has revived. It just got out of cracking the time and the space blar... hic~";
+	next;
+	mes "[Drunken Young Man]";
+	mes "Ah... I kinda wanna see that Satan with my own eyes, but! I really shouldn't. I shouldn't even dream of seeing that Satan in person.";
+	next;
+	mes "[Drunken Young Man]";
+	mes "But I think there'd be nothing to lose if you, a person of bravery, who came through the wile desert try to find it, don't you think? Teehee~ Don't forget to buy me a drink when you find it!";
+	mes "Hic!";
+	next;
+	mes "[Drunken Young Man]";
+	mes "Anyway, do you know where we are? I just had a little drink at a tavern, but all of a sudden, the whole town's disappeared when I got out.. or, some five hundred years have passed???!";
+	close;
+}

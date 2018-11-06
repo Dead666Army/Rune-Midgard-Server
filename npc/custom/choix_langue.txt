@@ -1,0 +1,19 @@
+prontera,147,189,4	script	Language Config#prt	857,{
+	switch(select("Français:English:Annuler")){
+	case 1:
+		set #LANGUE,0;
+		mes "Votre langue a été paramétré en Français.";
+		mes "Tous les NPCS custom vous parlerons en français.";
+		mes "Bonne journée.";
+		close;
+	case 2:
+		set #LANGUE,1;
+		mes "[Langue]";
+		mes "Your language has been set to English.";
+		mes "Every custom NPC should now talk to you in english.";
+		mes "Have a good day.";
+		close;
+	case 3:
+		close;
+	}
+}

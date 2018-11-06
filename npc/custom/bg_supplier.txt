@@ -1,0 +1,373 @@
+//===== eAthena Script =======================================
+//= BattleGround Supplier
+//===== By: ==================================================
+//= Brian
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= eAthena SVN (+ source edits)
+//===== Description: =========================================
+//= Sells consumables that can ONLY be used on 'bg_consume' maps.
+//===== Additional Comments: =================================
+//= http://www.eathena.ws/board/index.php?showtopic=268355
+//= 1. To use, create a char named "Battleground"
+//= 2. edit the #define BG_CHARID in battleground.h
+//= 3. edit the 'set .@BG_CHARID' in this file (line 43)
+//============================================================
+
+bat_room,165,146,3	script	Telma	701,{
+	mes "[Telma]";
+	if (#LANGUE == 1 ) {
+		mes "Welcome, mighty warrior.";
+		mes "Do you need supplies for your battles?";
+		mes "I can exchange supplies for your badges...";
+	}
+	else  {
+		mes "Bienvenue puissant guerrier.";
+		mes "Tu as besoin de fournitures pour tes batailles ?";
+		mes "Je peux t'en échanger contre des badges...";
+	}
+	next;
+	
+	switch(select("150 Battleground's Condensed White Potion:150 Battleground's Light Blue Potion:10 Battleground's Poison Bottle:50 Battleground's Fire Bottle:50 Battleground's Acid Bottle:50 Battleground's Glistening Coat:100 Battleground's Yellow Gemstone:100 Battleground's Red Gemstone:100 Battleground's Blue Gemstone:50 Battleground's Speed Potion:50 Battleground's Cobweb:25 Battleground's Box Of Gloom:1 Battleground's Box of Sunlight :25 Battleground's Box of Resentment:25 Battleground's Box of Drowsiness:25 Battleground's Box of Panting:25 Battleground's Box of Thunder:25 Battleground's Box of Storms:100 Battleground's Holy Water:100 Battleground's Cursed Water:50 Battleground's Crystal Fragment:50 Battleground's Authoritative Badge:20 Battleground's Fire Elemental Converter:20 Battleground's Water Elemental Converter:20 Battleground's Earth Elemental Converter:20 Battleground's Wind Elemental Converter:5 Battleground's Whole Roast:5 Battleground's Special Royal Jelly Herbal Tea:5 Battleground's Sumptuous Feast:5 Battleground's Steamed Alligator with Vegetable:5 Battleground's Soul Haunted Bread:5 Battleground's Assorted Shish Kebob:50 Battleground's Plant Bottle:50 Battleground's Marine Sphere Bottle")) {
+		case 1:		callsub S_BuyConsumableBG,547,150;	// Condensed White Potion
+		case 2:		callsub S_BuyConsumableBG,11502,150;// Blue Potion
+		case 3:		callsub S_BuyConsumableBG,678,10;		// Poison Bottle
+		case 4:		callsub S_BuyConsumableBG,7135,50;	// Fire Bottle
+		case 5:		callsub S_BuyConsumableBG,7136,50;	// Acid Bottle
+		case 6:		callsub S_BuyConsumableBG,7139,50;	// Glistening Coat
+		case 7:		callsub S_BuyConsumableBG,715,100;	// Yellow Gemstone
+		case 8:		callsub S_BuyConsumableBG,716,100;	// Red Gemstone
+		case 9:		callsub S_BuyConsumableBG,717,100;	// Blue Gemstone
+		case 10:	callsub S_BuyConsumableBG,12016,50;	// Speed Potion
+		case 11:	callsub S_BuyConsumableBG,1025,50;	// Cobweb
+		case 12:	callsub S_BuyConsumableBG,12029,25;	// Box Of Gloom
+		case 13:	callsub S_BuyConsumableBG,12033,1;	// Box of Sunlight 
+		case 14:	callsub S_BuyConsumableBG,12030,25;	// Box of Resentment
+		case 15:	callsub S_BuyConsumableBG,12031,25;	// Box of Drowsiness
+		case 16:	callsub S_BuyConsumableBG,12034,25;	// Box of Panting
+		case 17:	callsub S_BuyConsumableBG,12028,25;	// Box of Thunder
+		case 18:	callsub S_BuyConsumableBG,12032,25;	// Box of Storms
+		case 19:	callsub S_BuyConsumableBG,523,100;	// Holy Water
+		case 20:	callsub S_BuyConsumableBG,12020,100;// Cursed Water
+		case 21:	callsub S_BuyConsumableBG,7321,50;	// Crystal Fragment
+		case 22:	callsub S_BuyConsumableBG,662,50;		// Authoritative Badge
+		case 23:	callsub S_BuyConsumableBG,12114,20;	// Scroll Enchant Fire
+		case 24:	callsub S_BuyConsumableBG,12115,20;	// Scroll Enchant Water
+		case 25:	callsub S_BuyConsumableBG,12116,20;	// Scroll Enchant Earth
+		case 26:	callsub S_BuyConsumableBG,12117,20;	// Scroll Enchant Wind
+		case 27:	callsub S_BuyConsumableBG,12072,5;	// Whole Roast
+		case 28:	callsub S_BuyConsumableBG,12077,5;	// Special Royal Jelly Herbal Tea
+		case 29:	callsub S_BuyConsumableBG,12082,5;	// Sumptuous Feast
+		case 30:	callsub S_BuyConsumableBG,12087,5;	// Steamed Alligator with Vegetable
+		case 31:	callsub S_BuyConsumableBG,12092,5;	// Soul Haunted Bread
+		case 32:	callsub S_BuyConsumableBG,12097,5;	// Assorted Shish Kebob
+		case 33:	callsub S_BuyConsumableBG,7137,50;	// Plant Bottle
+		case 34:	callsub S_BuyConsumableBG,7138,50;	// Marine Sphere Bottle
+		
+	}
+	end;
+
+S_BuyConsumableBG:
+	set .@BG_CHARID, 999996; // character named "Battleground"
+S_BuyConsumable:
+	set .@item_id, getarg(0);
+	set .@amt, getarg(1);
+	
+	mes "[Telma]";
+	if (#LANGUE == 1){
+		mes "How many sets of ^0000FF"+ .@amt +" "+ getitemname(.@item_id) +"s^000000 do you want?";
+		mes "1 = "+ .@amt   + " supplies = 1 badge";
+		mes "2 = "+ .@amt*2 + " supplies = 2 badges";
+		mes "3 = "+ .@amt*3 + " supplies = 3 badges";
+		mes "etc..";
+	}
+	else{
+		mes "Combien d'exemplaires de ^0000FF"+ .@amt +" "+ getitemname(.@item_id) +"s^000000 souhaites-tu ?";
+		mes "1 = "+ .@amt   + " " + getitemname(.@item_id) + " = 1 badge";
+		mes "2 = "+ .@amt*2 + " " + getitemname(.@item_id) + " = 2 badges";
+		mes "3 = "+ .@amt*3 + " " + getitemname(.@item_id) + " = 3 badges";
+		mes "etc..";
+	}
+	next;
+	input .@sets;
+	mes "[Telma]";
+	if (.@sets < 1) {
+		if (#LANGUE == 1){
+			mes "Enter a positive amount, greater than zero.";
+		}
+		else{
+			mes "Entrer une valeur supérieure à 0.";
+		}
+		close;
+	}
+	
+	if (#LANGUE == 1){
+		mes "So you want ^0000FF"+ (.@amt*.@sets) +" "+ getitemname(.@item_id) +"s^000000...";
+		if (.@BG_CHARID) mes "Remember these can only be used in Battlegrounds.";
+		mes "It will cost you "+ .@sets +" badge(s)...";
+		
+	}
+	else{
+		mes "Vous voulez donc ^0000FF"+ (.@amt*.@sets) +" "+ getitemname(.@item_id) +"s^000000...";
+		if (.@BG_CHARID)	mes "Notez bien que ces objets ne peuvent étre utilisés qu'en Battlegrounds";
+		mes "Cela vous coûtera "+ .@sets +" badge(s)...";
+	}
+	next;
+	if (#LANGUE == 1){
+		switch(select("Give her "+ .@sets +" Battle Badge(s)")) {
+			case 1: set .@badge,7828; set .@cost,1; break;
+		}
+	}
+	else{
+		switch(select("Donnez lui "+ .@sets +" Battle Badge(s)")) {
+		case 1: set .@badge,7828; set .@cost,1; break;
+		}
+	}
+	mes "[Telma]";
+	if (countitem(.@badge) < (.@cost*.@sets)) {
+		if (#LANGUE == 1){
+			mes "You do not have enough ^FF0000"+getitemname(.@badge)+"s^000000 to buy "+(.@amt*.@sets)+" "+getitemname(.@item_id)+"s.";
+		}
+		else{
+			mes "Vous n'avez pas assez de ^FF0000"+getitemname(.@badge)+"s^000000 pour acheter "+(.@amt*.@sets)+" "+getitemname(.@item_id)+"s.";
+		}
+
+	} else if (!checkweight(.@item_id, .@amt*.@sets)) {
+		if (#LANGUE == 1){
+			mes "You are overweight or have too many items in your inventory.";
+		}
+		else{
+			mes "Vous étes trop lourds ou vous avez trop d'objets différents dans votre inventaire.";
+		}
+	} else {
+		delitem .@badge, .@cost*.@sets;
+		if (.@BG_CHARID) { // Battleground's Consumables
+			getitem2 .@item_id,(.@amt*.@sets),1,0,0, 254, 0, .@BG_CHARID & 0xFFFF, .@BG_CHARID >> 0x10;
+		} else {
+			getitem .@item_id,(.@amt*.@sets);
+		}
+		if (#LANGUE == 1){
+		mes "Here are your: ^0000FF"+(.@amt*.@sets)+" "+getitemname(.@item_id)+"s^000000!";
+		if (.@BG_CHARID) mes "Remember, they can only be used in Battlegrounds.";
+		}
+		else{
+			mes "Voici vos ^0000FF"+(.@amt*.@sets)+" "+getitemname(.@item_id)+"s^000000!";
+			mes "Notez bien que ces objets ne peuvent étre utilisés qu'en Battlegrounds";
+		}
+	}
+	close;
+}
+
+//CONSO PAS BG
+
+bat_room,165,154,3	script	Amlet	630,{
+	mes "[Amlet]";
+	if (#LANGUE == 1 ) {
+		mes "Welcome, mighty warrior.";
+		mes "Do you need supplies for your battles?";
+		mes "I can exchange supplies for your badges...";
+	}
+	else  {
+		mes "Bienvenue puissant guerrier.";
+		mes "Tu as besoin de fournitures pour tes batailles ?";
+		mes "Je peux t'en échanger contre des badges...";
+	}
+	next;
+	
+	switch(select("3 Mastela:2 Blue Potion")) {
+		case 1:		callsub S_BuyConsumable,40008,3;	// Mastela 
+		case 2:		callsub S_BuyConsumable,40009,2;	// Blue Potion 
+	}
+	end;
+
+S_BuyConsumable:
+	set .@item_id, getarg(0);
+	set .@amt, getarg(1);
+	
+	mes "[Amlet]";
+	if (#LANGUE == 1){
+		mes "How many sets of ^0000FF"+ .@amt +" "+ getitemname(.@item_id) +"s^000000 do you want?";
+		mes "1 = "+ .@amt   +" supplies = 1 badge";
+		mes "2 = "+ .@amt*2 +" supplies = 2 badges";
+		mes "3 = "+ .@amt*3 +" supplies = 3 badges";
+		mes "etc..";
+	}
+	else{
+		mes "Combien d'exemplaires de ^0000FF"+ .@amt +" "+ getitemname(.@item_id) +"s^000000 souhaites-tu ?";
+		mes "1 = "+ .@amt   +" "+ getitemname(.@item_id)+" = 1 badge";
+		mes "2 = "+ .@amt*2 +" "+getitemname(.@item_id)+ " = 2 badges";
+		mes "3 = "+ .@amt*3 +" "+getitemname(.@item_id)+" = 3 badges";
+		mes "etc..";
+	}
+
+	next;
+	input .@sets;
+	mes "[Amlet]";
+	if (.@sets < 1) {
+		if (#LANGUE == 1){
+			mes "Enter a positive amount, greater than zero.";
+		}
+		else{
+			mes "Entrer une valeur supérieure à 0.";
+		}
+		close;
+	}
+	
+	if (#LANGUE == 1){
+		mes "So you want ^0000FF"+ (.@amt*.@sets) +" "+ getitemname(.@item_id) +"s^000000...";
+		mes "It will cost you "+ .@sets +" badge(s)...";
+		
+	}
+	else{
+		mes "Vous voulez donc ^0000FF"+ (.@amt*.@sets) +" "+ getitemname(.@item_id) +"s^000000...";
+		mes "Cela vous coûtera "+ .@sets +" badge(s)...";
+	}
+	next;
+	if (#LANGUE == 1){
+		switch(select("Give her "+ .@sets +" Battle Badge(s)")) {
+			case 1: set .@badge,7828; set .@cost,1; break;
+		}
+	}
+	else{
+		switch(select("Donnez lui "+ .@sets +" Battle Badge(s)")) {
+		case 1: set .@badge,7828; set .@cost,1; break;
+		}
+	}
+	mes "[Amlet]";
+	if (countitem(.@badge) < (.@cost*.@sets)) {
+		if (#LANGUE == 1){
+			mes "You do not have enough ^FF0000"+getitemname(.@badge)+"s^000000 to buy "+(.@amt*.@sets)+" "+getitemname(.@item_id)+"s.";
+		}
+		else{
+			mes "Vous n'avez pas assez de ^FF0000"+getitemname(.@badge)+"s^000000 pour acheter "+(.@amt*.@sets)+" "+getitemname(.@item_id)+"s.";
+		}
+
+	} else if (!checkweight(.@item_id, .@amt*.@sets)) {
+		if (#LANGUE == 1){
+			mes "You are overweight or have too many items in your inventory.";
+		}
+		else{
+			mes "Vous étes trop lourds ou vous avez trop d'objets différents dans votre inventaire.";
+		}
+	} else {
+		delitem .@badge, .@cost*.@sets;
+		getitem .@item_id,(.@amt*.@sets);
+		if (#LANGUE == 1){
+			mes "Here are your: ^0000FF"+(.@amt*.@sets)+" "+getitemname(.@item_id)+"s^000000!";
+		}
+		else{
+			mes "Voici vos ^0000FF"+(.@amt*.@sets)+" "+getitemname(.@item_id)+"s^000000!";
+		}
+	}
+	close;
+}
+
+//GYM PASS
+bat_room,160,150,3	script	Gerard	827,{
+	mes "[Gerard]";
+	if (#LANGUE == 1 ) {
+		mes "Hi small warrior, haven't you ever dreamt of becoming stronger?";
+		next;
+		mes "[Gerard]";
+		mes "I can provide tickets for you to go to the gym if you want, though I will need a little something in return.";
+		next;
+		switch(select("I want some:Nop.")) {
+		case 1:		callsub S_BuyConsumable,7776,1;	// Gym Pass
+		}
+	}
+	else  {
+		mes "Salut frêle combattant, tu n'as jamais rêvé de devenir plus fort ? ";
+		next;
+		mes "[Gerard]";
+		mes "Je peux te fournir des tickets pour aller t'entraîner à la salle si tu veux mais pour ça, tu devras me donner un petit quelque chose en échange.";
+		next;
+		switch(select("J'en veux:Nop.")) {
+		case 1:		callsub S_BuyConsumable,7776,1;	// Gym Pass
+		}
+	}
+	
+	
+	end;
+
+S_BuyConsumable:
+	set .@item_id, getarg(0);
+	set .@amt, getarg(1);
+	
+	mes "[Gerard]";
+	if (#LANGUE == 1){
+		mes "How many sets of ^0000FF"+ .@amt +" "+ getitemname(.@item_id) +"s^000000 do you want?";
+		mes "1 = "+ .@amt   +" supplies = 500 badges";
+		mes "2 = "+ .@amt*2 +" supplies = 1000 badges";
+		mes "3 = "+ .@amt*3 +" supplies = 1500 badges";
+		mes "etc..";
+	}
+	else{
+		mes "Combien d'exemplaires de ^0000FF"+ .@amt +" "+ getitemname(.@item_id) +"s^000000 souhaites-tu ?";
+		mes "1 = "+ .@amt   +" "+ getitemname(.@item_id)+" = 500 badges";
+		mes "2 = "+ .@amt*2 +" "+getitemname(.@item_id)+ " = 1000 badges";
+		mes "3 = "+ .@amt*3 +" "+getitemname(.@item_id)+" = 1500 badges";
+		mes "etc..";
+	}
+
+	next;
+	input .@sets;
+	mes "[Gerard]";
+	if (.@sets < 1) {
+		if (#LANGUE == 1){
+			mes "Enter a positive amount, greater than zero.";
+		}
+		else{
+			mes "Entrer une valeur supérieure à 0.";
+		}
+		close;
+	}
+	
+	if (#LANGUE == 1){
+		mes "So you want ^0000FF"+ (.@amt*.@sets) +" "+ getitemname(.@item_id) +"s^000000...";
+		mes "It will cost you "+ .@sets*500 +" badges...";
+		
+	}
+	else{
+		mes "Vous voulez donc ^0000FF"+ (.@amt*.@sets) +" "+ getitemname(.@item_id) +"s^000000...";
+		mes "Cela vous coûtera "+ .@sets*500 +" badges...";
+	}
+	next;
+	if (#LANGUE == 1){
+		switch(select("Give her "+ .@sets*500 +" Battle Badge(s)")) {
+			case 1: set .@badge,7828; set .@cost,500; break;
+		}
+	}
+	else{
+		switch(select("Donnez lui "+ .@sets *500+" Battle Badge(s)")) {
+		case 1: set .@badge,7828; set .@cost,500; break;
+		}
+	}
+	mes "[Gerard]";
+	if (countitem(.@badge) < (.@cost*.@sets)) {
+		if (#LANGUE == 1){
+			mes "You do not have enough ^FF0000"+getitemname(.@badge)+"s^000000 to buy "+(.@amt*.@sets)+" "+getitemname(.@item_id)+"s.";
+		}
+		else{
+			mes "Vous n'avez pas assez de ^FF0000"+getitemname(.@badge)+"s^000000 pour acheter "+(.@amt*.@sets)+" "+getitemname(.@item_id)+"s.";
+		}
+
+	} else if (!checkweight(.@item_id, .@amt*.@sets)) {
+		if (#LANGUE == 1){
+			mes "You are overweight or have too many items in your inventory.";
+		}
+		else{
+			mes "Vous étes trop lourds ou vous avez trop d'objets différents dans votre inventaire.";
+		}
+	} else {
+		delitem .@badge, .@cost*.@sets;
+		getitem .@item_id,(.@amt*.@sets);
+		if (#LANGUE == 1){
+			mes "Here are your: ^0000FF"+(.@amt*.@sets)+" "+getitemname(.@item_id)+"s^000000!";
+		}
+		else{
+			mes "Voici vos ^0000FF"+(.@amt*.@sets)+" "+getitemname(.@item_id)+"s^000000!";
+		}
+	}
+	close;
+}

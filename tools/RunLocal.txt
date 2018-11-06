@@ -1,0 +1,13 @@
+>Server\conf\subnet_athena.conf
+subnet: 255.0.0.0:127.0.0.1:127.0.0.1
+
+>Server\conf\map_athena.conf
+char_ip: 127.0.0.1
+map_ip: 127.0.0.1
+
+>Server\conf\char_athena.conf
+login_ip: 127.0.0.1
+char_ip: 127.0.0.1
+
+>Client\data\clientinfo.xml
+<address>127.0.0.1</address>

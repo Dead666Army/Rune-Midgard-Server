@@ -1,0 +1,862 @@
+-	script	pinvasion_02	-1,{
+
+//====LEVEL OF GM CAN CONTROL THE EVENT=========\\
+//OnInit:
+set $gmcontrol,20;
+end;
+//---------------END OF SETUP-------------------\\
+
+OnWhisperGlobal:
+	if (getgmlevel() >= $gmcontrol) {
+		$case = 0;
+		donpcevent "invasion_02::OnSun2100";
+		end;
+	}
+end;
+}
+
+que_qsch01,345,27,4	script	Auberon#invasion_02	628,{
+	mes "[Auberon]";
+	if (#invasion_02 == 0){
+		set #invasion_02,1;
+		getitem 35001,5;
+		if (#LANGUE == 1 ) {
+			mes "Thanks for participating, take this little gift as a reward for your bravery.";
+			next;
+			mes "Do you want to get out of here?";
+			if (select("Yes:No") == 1)
+				warp "prontera",155,180;
+			close;
+	}
+	else {
+		mes "Merci d'avoir participé, voici un petit cadeau pour récompenser votre bravoure."; 
+		next;
+		mes "Voulez-vous sortir d'ici ?";
+		if (select("Oui:Non") == 1)
+				warp "prontera",155,180;
+			close;
+	}
+	}
+	if (#LANGUE == 1 ) {
+			mes "Thanks for participating.";
+			next;
+			mes "Do you want to get out of here?";
+			if (select("Yes:No") == 1)
+				warp "prontera",155,180;
+			close;
+	}
+	else {
+		mes "Merci d'avoir participé."; 
+		next;
+		mes "Voulez-vous sortir d'ici ?";
+		if (select("Oui:Non") == 1)
+				warp "prontera",155,180;
+			close;
+	}
+}
+
+prontera,155,171,4	script	Invasion#invasion_02	657,{
+	if (#LANGUE == 1){
+		mes "Hi, do you want me to teleport you inside the Invasion event?";
+		.@message$ = "Yes please!:No I'm scared.";
+	}
+	else {
+		mes "Bonjour, veux-tu être téléporté dans l'event Invasion ?";
+		.@message$ = "Oui !:Non j'ai peur.";
+	}
+	if (select(.@message$) == 1)
+		warp "que_qsch01",$x_invasion_02,$y_invasion_02;
+	close;
+	
+}
+
+
+que_qsch01,132,170,0	warp	Warp_invasion02_1	2,2,que_qsch01,114,159
+que_qsch01,114,164,0	warp	Warp_invasion02_2	2,2,que_qsch01,136,171
+que_qsch01,149,105,0	warp	Warp_invasion02_3	2,2,que_qsch01,125,103
+que_qsch01,129,103,0	warp	Warp_invasion02_4	2,2,que_qsch01,149,110
+que_qsch01,251,365,0	warp	Warp_invasion02_5	2,2,que_qsch01,346,76
+que_qsch01,346,81,0	warp	Warp_invasion02_6	2,2,que_qsch01,251,360
+
+
+-	script	invasion_02	-1,{
+OnInit:
+
+	hideonnpc("Invasion#invasion_02");
+	hideonnpc("Auberon#invasion_02");
+	disablenpc("Warp_invasion02_1");
+	disablenpc("Warp_invasion02_3");
+	disablenpc("Warp_invasion02_5");
+
+	end;
+OnSun2100:
+	$x_invasion_02 = 74;
+	$y_invasion_02 = 272;
+	hideoffnpc("Invasion#invasion_02");
+	announce "Lancement de l'Event Invasion ! Veuillez parler au NPC \"Invasion\" pour y accéder !",0;
+	announce "Starting of the Invasion Event! Please talk to the \"Invasion\" NPC to get there!",0;
+	announce "Cet endroit est infesté de monstres, il semble que vous deviez en venir à bout sans en oublier un seul !",0;
+	announce "This area is infested with monsters, it seems that you need to kill everything inside without skipping a single one!",0;
+	
+	areamonster "que_qsch01",118,309,118,309,"Checkpoint 01",1699,1,"invasion_02::OnCP1",2;
+	areamonster "que_qsch01",70,137,70,137,"Checkpoint 02",1699,1,"invasion_02::OnCP2",2;
+	areamonster "que_qsch01",169,90,169,90,"Checkpoint 03",1699,1,"invasion_02::OnCP3",2;
+	areamonster "que_qsch01",122,190,122,190,"Checkpoint 04",1699,1,"invasion_02::OnCP4",2;
+	areamonster "que_qsch01",252,228,252,282,"Checkpoint 05",1699,1,"invasion_02::OnCP5",2;
+
+	areamonster "que_qsch01",132,171,132,171,"General Alfred",2009,1,"invasion_02::OnGA",2;
+	areamonster "que_qsch01",149,105,149,105,"General Brutus",2008,1,"invasion_02::OnGB",2;
+
+
+	// Rectangle du haut
+	areamonster "que_qsch01",44,335,128,286,"Acidus",1713,13,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,335,128,286,"Garden Watcher",1933,1,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,335,128,286,"Duneyrr",2018,2,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,335,128,286,"Rata",2017,2,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,335,128,286,"Ancient Tree",2019,15,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,335,128,286,"Aqua Elemental",2016,2,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,335,128,286,"Rhyncho",2020,5,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,335,128,286,"Phylla",2021,5,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,335,128,286,"Hell Apocalips",1978,5,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,335,128,286,"Dame of Sentinel",1700,5,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,335,128,286,"Mega Super High Orc",1981,8,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,335,128,286,"Sword Guardian",1829,2,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,335,128,286,"Incarnation of Morroc",1919,1,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,335,128,286,"Incarnation of Morroc",1918,1,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,335,128,286,"Skeggiold",1755,5,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,335,128,286,"Skeggiold",1754,5,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,335,128,286,"Lady Solace",1703,5,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,335,128,286,"Dandelion",2026,1,"invasion_02::OnMyMobDead";
+
+	// Rectangle du bas
+	areamonster "que_qsch01",44,257,288,70,"Acidus",1713,78,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,257,288,70,"Garden Watcher",1933,6,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,257,288,70,"Duneyrr",2018,12,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,257,288,70,"Rata",2017,12,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,257,288,70,"Ancient Tree",2019,90,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,257,288,70,"Aqua Elemental",2016,30,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,257,288,70,"Rhyncho",2020,30,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,257,288,70,"Phylla",2021,30,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,257,288,70,"Hell Apocalips",1978,30,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,257,288,70,"Dame of Sentinel",1700,30,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,257,288,70,"Mega Super High Orc",1981,48,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,257,288,70,"Sword Guardian",1829,12,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,257,288,70,"Incarnation of Morroc",1919,10,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,257,288,70,"Incarnation of Morroc",1918,10,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,257,288,70,"Skeggiold",1755,30,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,257,288,70,"Skeggiold",1754,30,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,257,288,70,"Lady Solace",1703,30,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,257,288,70,"Dandelion",2026,6,"invasion_02::OnMyMobDead";
+	areamonster "que_qsch01",44,257,288,70,"Hydro",1813,3,"invasion_02::OnMyMobDead";
+
+	end;
+OnCP1:
+	if ($checkpoint_invasion02 == 0){
+		set $checkpoint_invasion02, 1;
+		getmapxy( .@map$,.@x_invasion_02,.@y_invasion_02, 0 );
+		$x_invasion_02 = .@x_invasion_02;
+		$y_invasion_02 = .@y_invasion_02;
+	}
+
+	end;
+
+OnCP2:
+	if ($checkpoint_invasion02 <= 1){
+		set $checkpoint_invasion02, 2;
+		getmapxy(.@map$, .@x_invasion_02,.@y_invasion_02,0);
+		$x_invasion_02 = .@x_invasion_02;
+		$y_invasion_02 = .@y_invasion_02;
+	}
+
+	end;	
+
+OnCP3:
+	if ($checkpoint_invasion02 <= 2){
+		set $checkpoint_invasion02, 3;
+		getmapxy(.@map$, .@x_invasion_02,.@y_invasion_02,0);
+		$x_invasion_02 = .@x_invasion_02;
+		$y_invasion_02 = .@y_invasion_02;
+	}
+
+	end;	
+
+
+OnCP4:
+	if ($checkpoint_invasion02 <= 3){
+		set $checkpoint_invasion02, 4;
+		getmapxy(.@map$, .@x_invasion_02,.@y_invasion_02,0);
+		$x_invasion_02 = .@x_invasion_02;
+		$y_invasion_02 = .@y_invasion_02;
+	}
+
+	end;
+
+
+OnCP5:
+	set $checkpoint_invasion02, 5;
+	$x_invasion_02 = 252;
+	$y_invasion_02 = 228;
+	announce "Vous entrez en territoire hostile, il paraît qu'une famille de fous furieux habite dans le coin...",0;
+	announce "You enter in a hostile territory, rumors say that a crazy family lives here around...",0;
+	areamonster "que_qsch01",276,297,276,297,"Laure",1150,1,"invasion_02::OnBoss2",2;
+
+	end;	
+
+
+OnGA:
+	enablenpc("Warp_invasion02_1");
+
+	end;
+
+OnGB:
+	enablenpc("Warp_invasion02_3");
+
+	end;
+
+OnBoss1:
+	announce "Arnaud le frère de Laure s'est enfin réveillé, il vient vous faire payer pour la mort de sa soeur !",0;
+	announce "Arnaud, the Laure's brother is finally awaken, he came to make you regret his sister's death!",0;
+	areamonster "que_qsch01",227,298,227,298,"Arnaud",1086,1,"invasion_02::OnBoss39",2;
+
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+
+	end;
+
+OnBoss2:
+	announce "Laura est vaincue ! Son frère Arnaud vient la venger... Arnaud ne s'est pas réveillé, c'est donc leur père Gerard qui vient s'en charger !",0;
+	announce "Laura was defeated! Her brother Arnaud comes to avenge her... Arnaud is still sleeping, thus it's their father Gerard who comes instead!",0;
+	areamonster "que_qsch01",227,298,227,298,"Gerard",1115,1,"invasion_02::OnBoss3",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+
+	end;
+
+OnBoss3:
+	announce "Gerard a reçu une dérouillée, il appelle sa maîtresse Leyla !",0;
+	announce "Gerard got screwed, he calls Leyla his paramour!",0;
+	areamonster "que_qsch01",276,297,276,297,"Leyla",1147,1,"invasion_02::OnBoss4",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss4:
+	announce "Leyla agonise, elle appelle son oncle transexuel non-binaire Dominique !",0;
+	announce "Leyla agonizes, she managed to call her non-binary transexual uncle.",0;
+	areamonster "que_qsch01",227,298,227,298,"Dominique",1159,1,"invasion_02::OnBoss5",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss5:
+	announce "Dominique n'a rien pu faire, cette personne envoie son fils Corentin à l'attaque !",0;
+	announce "Dominique couldn't do anything, he/she/it sends her/his/its son Corentin to battle!",0;
+	areamonster "que_qsch01",276,297,276,297,"Corentin",1583,1,"invasion_02::OnBoss6",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss6:
+	announce "Corentin, pourtant fan de jeux vidéoludiques, s'est fait casser ses lunettes, il demande de l'aide à son grand frère James !",0;
+	announce "Corentin, yet being a fan of video games, got his glasses destroyed, he asks his big brother James to send him some help!",0;
+	areamonster "que_qsch01",227,298,227,298,"James",1252,1,"invasion_02::OnBoss7",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss7:
+	announce "James a sous-estimé le combat à 1 contre 50, le racket à l'école était plus facile. Cependant sa copine Emma arrive !",0;
+	announce "James underestimated the 1 vs 50 battle, racketeering at school was much easier. However his girlfriend Emma is coming up!",0;
+	areamonster "que_qsch01",276,297,276,297,"Emma",1059,1,"invasion_02::OnBoss8",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss8:
+	announce "Emma s'est faite IM-PLO-SER, sa copine Lea qui traînait dans le coin vient la venger !",0;
+	announce "Emma was IM-PLO-DED, her friend Lea who was loitering around comes to avenge her!",0;
+	areamonster "que_qsch01",227,298,227,298,"Lea",1658,1,"invasion_02::OnBoss9",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss9:
+	announce "Lea n'a rien compris à ce qui lui est arrivé, son petit frère Emile se réjouit de sa défaite mais ses parents l'ont obligé à aller combattre !",0;
+	announce "Lea understood nothing of what happened to her, his little brother Emile is pretty glad of her loss though his parents forced him to fight!",0;
+	areamonster "que_qsch01",276,297,276,297,"Emile",1492,1,"invasion_02::OnBoss10",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss10:
+	announce "Emile n'était pas très motivé, il est allé pleurer auprès de Regis son papi chéri pour vous régler votre compte !",0;
+	announce "Emile hadn't much incentive, he went to cry to Regis, his beloved grandpa, to beat you up!",0;
+	areamonster "que_qsch01",227,298,227,298,"Regis",1251,1,"invasion_02::OnBoss11",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;		
+
+OnBoss11:
+	announce "Regis était trop vieux pour combattre, il envoie son fils Philippe, le père de Lea (Emile a été adopté mais il ne le sait pas), pour lui venir en aide !",0;
+	announce "Regis was too old to fight, he decides to send his son Philippe, father of Lea (Emile was adopted but he doesn't know it), to help him!",0;
+	areamonster "que_qsch01",276,297,276,297,"Philippe",1046,1,"invasion_02::OnBoss12",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss12:
+	announce "Philippe a disparu sous une pluie de coup, sa femme Bella est furieuse !",0;
+	announce "Philippe vanished under a rain of strokes, his wife Bella is furious!",0;
+	areamonster "que_qsch01",227,298,227,298,"Bella",1630,1,"invasion_02::OnBoss14",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+
+OnBoss14:
+	announce "Dans son dernier effort, Bella siffle Michel son escave sexuel pour lui venir en aide !",0;
+	announce "In a last effort, Bella summons Michel her sexual slave to help her!",0;
+	areamonster "que_qsch01",276,297,276,297,"Michel",1418,1,"invasion_02::OnBoss15",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss15:
+	announce "Michel a émit un cri de plaisir en mourrant, ça a alerté Pierre, Paul et Jacques, qui étaient de garde cette nuit là !",0;
+	announce "Michel threw a cry of pleasure when dying, it has alerted Pierre, Paul and Jacques who were on duty this night!",0;
+	areamonster "que_qsch01",227,298,227,298,"Pierre Paul Jacques",1885,1,"invasion_02::OnBoss16",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss16:
+	announce "Vous avez mis en colère Vladimir qui voulait faire de Michel, Pierre, Paul et Jacques son repas de ce soir !",0;
+	announce "You got Vladimir angry, he wanted to make of Michel, Pierre, Paul and Jacques his night meal!",0;
+	areamonster "que_qsch01",276,297,276,297,"Vladimir",1389,1,"invasion_02::OnBoss17",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;		
+
+OnBoss17:
+	announce "La soif de sang de Vladimir n'était pas à la hauteur de ses capacités à combattre, son maître d'armes Louis est outré que vous vous en soyez pris à son disciple.",0;
+	announce "Vladimir's blood thirst wasn't matching his fighting skills, his master Louis is upset that you attacked his little mentee.",0;
+	areamonster "que_qsch01",227,298,227,298,"Louis",1312,1,"invasion_02::OnBoss18",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss18:
+	announce "Albert, le défunt grand-père de Louis vous surveillait de loin, le voilà !",0;
+	announce "Albert, the Louis' deceased grand father was keeping an eye on you, here he is!Ok",0;
+	areamonster "que_qsch01",276,297,276,297,"Albert",1112,1,"invasion_02::OnBoss19",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss19:
+	announce "Lucas, le défunt grand-père de Albert, lui même défunt grand-père de Louis, est venu vous apprendre les bonnes manières !",0;
+	announce "Lucas, the Albert's deceased grand father, himself deceased grand father of Louis, came until here to teach you the good manners!",0;
+	areamonster "que_qsch01",227,298,227,298,"Lucas",1038,1,"invasion_02::OnBoss20",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss20:
+	announce "Adrien, le père de l'arrière arrière grand-père de Louis revient tout droit du royaume des morts pour vous mettre une raclée !",0;
+	announce "Adrien, the father of Louis' great great grand father came back straight from deads realm to beat you up!",0;
+	areamonster "que_qsch01",276,297,276,297,"Adrien",1708,1,"invasion_02::OnBoss21",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+	
+OnBoss21:
+	announce "Camille, le grand-père du père de l'arrière arrière grand-père de Louis est venu venger sa descendance !",0;
+	announce "Camille, the great great grand father's father's grand father of Louis went to avenge his legacy !k",0;
+	areamonster "que_qsch01",227,298,227,298,"Camille",1157,1,"invasion_02::OnBoss22",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss22:
+	announce "La mort de Camille (qui était déjà mort depuis un bout de temps) a réveillé Jade, la plante qui poussait depuis 300 ans sur son tombeau, par contre elle ne bouge pas.",0;
+	announce "Camille's death (who was already dead since a little while) awakened the plant",0;
+	areamonster "que_qsch01",276,297,276,297,"Jade",1688,1,"invasion_02::OnBoss23",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss23:
+	announce "Adam, le fossoyeur qui travaille dans le cimetierre où Camille a été déterrée, a vu une plante géante s'échapper et a décidé de la suivre, le voici !",0;
+	announce "Adam, the gravedigger working in the cemetery where Camille was dug up, saw a huge plant escaping and decided to follow it, here he is!",0;
+	areamonster "que_qsch01",227,298,227,298,"Adam",1623,1,"invasion_02::OnBoss24",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss24:
+	announce "Jules qui était venu déposer des fleurs sur la tombe de sa mère a entendu du grabuge près du cimetierre, il est venu voir ce qu'il se passe.",0;
+	announce "Jules who went to drop some flowers on his mother's grave heard the trouble next to the cemetery, he came to check what's happening.",0;
+	areamonster "que_qsch01",276,297,276,297,"Jules",1087,1,"invasion_02::OnBoss27",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+
+OnBoss27:
+	announce "Aurelien a été attiré par l'odeur de mort qui plane autour de la zone, méfiez-vous !",0;
+	announce "Aurelien was attracted by the smell of death looming over the area, brace yourself!",0;
+	areamonster "que_qsch01",227,298,227,298,"Aurelien",1373,1,"invasion_02::OnBoss28",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss28:
+	announce "Aurelien s'est fait détruire... Alexis qui passait par là a eu l'envie soudaine de désintégrer quelques humains, préparez-vous à combattre !",0;
+	announce "Aurelien got destroyed... Alexis was just passing by with the sudden desire of disintegrate a bunch of humans, prepare to fight!",0;
+	areamonster "que_qsch01",276,297,276,297,"Alexis",1685,1,"invasion_02::OnBoss29",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;	
+
+OnBoss29:
+	announce "La mort d'Alexis n'a pas attiré grand monde, en revanche Kevin est furieux que vous ayez fait du mal au maître de la mort, c'est le démon en personne qui vient se venger !",0;
+	announce "Alexis' death didn't bring a lot of people, however Kevin is furious you hurt the lord of death, it's the demon himself who's coming to avenge him!",0;
+	areamonster "que_qsch01",227,298,227,298,"Kevin",1039,1,"invasion_02::OnBoss30",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss30:
+	announce "Kevin a émit un rugissement démoniaque dans ses derniers instants pour prévenir son roi de la menace. Voici Guillaume !",0;
+	announce "Kevin threw a demonic roar in his last moments to warn his king of the threat. Here's Guillaume!",0;
+	areamonster "que_qsch01",276,297,276,297,"Guillaume",1272,1,"invasion_02::OnBoss31",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;	
+
+OnBoss31:
+	announce "Julien, autant en retard qu'un orc dans son état normal, est contrarié à cause de ce que vous avez fait à son frère... déjà qu'il ne peut plus profiter de sa femme là c'en est trop.",0;
+	announce "Julien, as late as an orc would be in his normal state, is upset after what you did to his brother... he already can't enjoy his wife anymore, this is too much.",0;
+	areamonster "que_qsch01",227,298,227,298,"Julien",1190,1,"invasion_02::OnBoss32",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss32:
+	announce "Toni, le chien de garde de Julien est venu venger son maître, attention il est féroce !",0;
+	announce "Toni, the Julien's hound, came to avenge his master, careful he is savage!",0;
+	areamonster "que_qsch01",276,297,276,297,"Toni",1719,1,"invasion_02::OnBoss33",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35001,1,.@map$,.@x,.@y;
+	end;	
+
+OnBoss33:
+	announce "Max, le chien de garde du chien de garde de Julien s'en mêle, attention il a un hachoir !",0;
+	announce "Max, Julien's hound's hound gets involved, careful he got a chopper!",0;
+	areamonster "que_qsch01",227,298,227,298,"Max",1785,1,"invasion_02::OnBoss34",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35000,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss34:
+	announce "Max a été vaincu... Voilà que Benjamin, le chef des mineurs arrive ! Bien qu'il n'ait rien à voir avec tout ça...",0;
+	announce "Max a été vaincu... Voilà que Benjamin, le chef des mineurs arrive ! Bien qu'il n'ait rien à voir avec tout ça...",0;
+	areamonster "que_qsch01",276,297,276,297,"Benjamin",1980,1,"invasion_02::OnBoss35",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35000,1,.@map$,.@x,.@y;
+	end;	
+
+OnBoss35:
+	announce "La mort de Benjamin a entraîné une révolte de mineurs, ce qui a réveillé Gaspard, l'arrière grand-père du grand-père du père de l'arrière arrière grand-père de Louis.",0;
+	announce "Benjamin's death resulted in a revolt of miners, which has awakened Gaspard, the great grand-father of the great great grand father's father's grand father of Louis.",0;
+	areamonster "que_qsch01",227,298,227,298,"Gaspard",1511,1,"invasion_02::OnBoss36",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35000,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss36:
+	announce "Marius a eu 438 ans aujourd'hui, mais il se souvient encore de son ancien maître... sa fidélité est inalterable !",0;
+	announce "Marius got 438 years old today, but he still recalls his old master... his loyalty is unalterable!",0;
+	areamonster "que_qsch01",276,297,276,297,"Marius",2068,1,"invasion_02::OnBoss37",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35000,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss37:
+	announce "Eliott, l'oncle de Gaspard, a eu vent de ce qu'il s'est passé et vient venger son neveu !",0;
+	announce "Eliott, the Gaspard's uncle, has heard of what happened and came to avenge his nephew!",0;
+	areamonster "que_qsch01",227,298,227,298,"Eliott",1734,1,"invasion_02::OnBoss38",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35000,1,.@map$,.@x,.@y;
+	end;	
+
+
+OnBoss38:
+	announce "L'âme d'Eliott était conservée précieusement par Axel, et il est furieux que vous en soyez venu à bout...",0;
+	announce "Eliott's soul was preciously preserved by Axel, and he is furious that you could master him...",0;
+	areamonster "que_qsch01",276,297,276,297,"Axel",1768,1,"invasion_02::OnBoss1",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35000,1,.@map$,.@x,.@y;
+	end;
+
+OnBoss39:
+	announce "Voilà Sacha ! C'est le grand-père de l'oncle de l'arrière grand-père du grand-père du père de l'arrière arrière grand-père de Louis la tortue de combat, méfiez-vous il est très vieux !",0;
+	announce "Here's Sacha ! He is the grand father of the uncle of the great grand-father of the great great grand father's father's grand father of Louis the fighting turtle, careful he is very old!",0;
+	areamonster "que_qsch01",276,297,276,297,"Sacha",1871,1,"invasion_02::OnBoss40",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35000,1,.@map$,.@x,.@y;
+	end;	
+
+OnBoss40:
+	announce "Tout ce sang... Toutes ces batailles... Vous avez réveillé le dragon ancestral, préparez-vous à affronter Jacob, c'est le plus puissant de tous !",0;
+	announce "All this blood... All these battles... You awakened the ancestral dragon, prepare yourself to face Jacob, he's the mightiest of all of them!",0;
+	areamonster "que_qsch01",251,340,251,340,"Jacob",2022,1,"invasion_02::OnBossMiddle",2;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35000,1,.@map$,.@x,.@y;
+	end;		
+
+OnBossMiddle:
+	announce "Félicitations, c'était le dernier ! Vous avez vaincu cette invasion, merci à tous de votre participation ! Prenez le warp au nord pour sortir et recevoir votre récompense.",0;
+	announce "Congratulations, this was the last one! You beat this invasion, thank you all for your involvement! Please take the warp on the north to get out and receive your reward.",0;
+	getmapxy( .@map$,.@x,.@y, 0 );
+	for (.@i = 0 ; .@i < 6 ; .@i++){
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x + pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y + pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y - pow(-.@i,.@i%2);
+		makeitem 35003,1,.@map$,.@x - pow(-.@i,.@i%2),.@y;
+		makeitem 35003,1,.@map$,.@x,.@y - pow(-.@i,.@i%2);
+	}
+	makeitem 35000,1,.@map$,.@x,.@y;
+	enablenpc("Warp_invasion02_5");
+	hideoffnpc("Auberon#invasion_02");
+	initnpctimer;
+
+	end;
+
+OnTimer30000:
+	stopnpctimer;
+	disablenpc("Invasion#invasion_02");
+
+	end;
+
+OnMyMobDead:
+	.@rand = rand(100);
+	if (.@rand<50){
+		getmapxy( .@map$,.@x,.@y, 0 );
+		makeitem 35003,1,.@map$,.@x,.@y;
+	}
+	if (.@rand<5){
+		getmapxy( .@map$,.@x,.@y, 0 );
+		makeitem 35001,1,.@map$,.@x,.@y;
+	}
+	
+	end;
+}
+
+
+
+que_qsch01	mapflag	noteleport
+que_qsch01	mapflag	nosave
+que_qsch01	mapflag	nomemo
+que_qsch01	mapflag	nobranch
+que_qsch01	mapflag	noloot
+que_qsch01	mapflag	nopenalty
+que_qsch01	mapflag	noicewall
+que_qsch01	mapflag	restricted	6

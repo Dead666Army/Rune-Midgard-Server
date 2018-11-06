@@ -1,0 +1,159 @@
+prontera,147,157,4	script	AutoEvent	795,{
+OnInit:
+  hideonnpc "AutoEvent";
+  set .eventEnabled,1;
+  set $gmcontrol,20;
+  setarray .eventList$[1],"Disguise","PoringCatcher","GreedyGreed","PoringRace","Bombring";
+  setarray .eventListDisplay$[1],"Disguise","Poring Catcher","Greedy Greed","Poring Race","Bombring";
+  set .EventSelect$, "";
+  for( .@i = 1; .@i < getarraysize(.eventListDisplay$); .@i++ ){ 
+    if (.@i != 1) {.EventSelect$ += ":";}
+    .EventSelect$ += .eventListDisplay$[.@i];
+  }
+  end;
+  
+function	EventLaunch; function getRandomEvent; function getDisplayName;
+
+OnWhisperGlobal:
+	if (getgmlevel() >= $gmcontrol) {
+    mes "^3399FF[Event Manager]^000000";	
+    mes "Hello GameMaster!";
+    if (.eventEnabled == 1 ){ mes "Events are: ^0DB40DEnabled^000000";}
+    else { mes "Events are: ^BE1C1CDisabled^000000";}
+    mes "What do you want to do?";
+    switch(select("Start Event:Stop Event:Toggle AutoEvents:Nothing"))
+    {
+      case 1: 
+      {
+        next;
+        switch(select("Random:Specific:Cancel")){
+          case 1: 
+          {
+            EventLaunch();
+            close;
+            break;
+          }
+          case 2: 
+          {
+            mes "^3399FF[Event Manager]^000000";
+            mes "Which one ?"; 
+            if (EventLaunch(.eventList$[select(.EventSelect$)])== 0) { mes "Unknown Event";}
+            close;
+            break;
+          }
+          case 3: 
+          {
+            close;
+          }
+        }
+        break;
+      }
+      case 2:
+      {
+        next;
+        mes "^3399FF[Event Manager]^000000";	
+        mes "Please confirm by typing STOP."; 
+        input .confirm$;          
+        if (.confirm$ == "STOP") 
+        {
+          donpcevent .event_DisplayName$+"#Auto::OnGMStop";
+          set .Timer,0; stopnpctimer;
+          close;
+        }
+        mes "Confirmation failed";
+        close;
+        break;
+      }
+      case 3: 
+        {
+          next;
+          if (.eventEnabled == 1 ){ 
+            mes "^3399FF[Event Manager]^000000";
+            mes "Auto events disabled.";
+            set .eventEnabled,0;}
+          else { 
+            mes "^3399FF[Event Manager]^000000";
+            mes "Auto events enabled.";
+            set .eventEnabled,1;}
+          close;
+          break;
+        }
+      case 4:
+      {
+        close;
+      }
+    }
+	}
+  end;
+
+OnClock0200: 
+OnClock0400: 
+OnClock0600: 
+OnClock0800: 
+OnClock1000: 
+OnClock1200: 
+OnClock1400: 
+OnClock1600: 
+OnClock1800: 
+OnClock2000: 
+OnClock2200:
+OnClock0000:  
+  if (.eventEnabled == 1 ){
+	  EventLaunch();
+  }
+  end;
+  
+OnAnnounce:
+  set .Timer,1;
+  setnpctimer 0; initnpctimer;
+  announce "L'event "+.event_DisplayName$+" va débuter dans 3 minutes.",bc_all | bc_yellow;
+	announce "Pour participer à l'event, venez me voir à Prontera.",bc_all | bc_yellow;
+	announce "The "+.event_DisplayName$+" Event will begin in 3 minutes.",bc_all | bc_yellow;
+	announce "To participate to the event, go and see me in Prontera.",bc_all | bc_yellow;
+  end;
+OnTimer60000:
+  if (.Timer!=1) end;
+  announce "L'event "+.event_DisplayName$+" va débuter dans 2 minutes.",bc_all | bc_yellow;
+  announce "Pour participer à l'event, venez me voir à Prontera.",bc_all | bc_yellow;
+  announce "The "+.event_DisplayName$+" Event will begin in 2 minutes.",bc_all | bc_yellow;
+  announce "To participate to the event, go and see me in Prontera.",bc_all | bc_yellow;
+  end;
+OnTimer120000:
+  if (.Timer!=1) end;
+  announce "L'event "+.event_DisplayName$+" va débuter dans 1 minute.",bc_all | bc_yellow;
+  announce "Pour participer à l'event, venez me voir à Prontera.",bc_all | bc_yellow;
+  announce "The "+.event_DisplayName$+" Event will begin 1 minute.",bc_all | bc_yellow;
+  announce "To participate to the event, go and see me in Prontera.",bc_all | bc_yellow;
+  end;
+OnTimer180000:
+  if (.Timer!=1) end;
+  announce "L'event "+.event_DisplayName$+" a commencé !",bc_all | bc_yellow;
+  announce "The "+.event_DisplayName$+" Event has begun!",bc_all | bc_yellow;
+  set .Timer,0; stopnpctimer;
+  end;
+  
+function getRandomEvent {
+	set .event_name$,.eventList$[rand(1,getarraysize(.eventList$)-1)];
+}
+
+function getDisplayName {
+	set .EventIndex,inarray(.eventList$,.event_name$);
+	if (.EventIndex >=0 ) {return .eventListDisplay$[.EventIndex]; end;}
+  else {return ""; end;}
+}
+
+//arg0 : npcname (if empty get random event)
+function	EventLaunch	{
+  if(agitcheck()) end;
+  if(getarg(0,"") == "") {getRandomEvent();}
+  else {.event_name$ = getarg(0,"");}
+  if (.event_name$ == "") {debugmes "Failed to get event"; return 0; end;} //Failed to get event
+  .event_DisplayName$ = getDisplayName();
+  if (.event_DisplayName$ == "") {debugmes "Unknown Event :" + .event_name$; return 0; end;} //Unknown Event
+  donpcevent .event_DisplayName$+"#Auto::OnStart";
+  donpcevent "AutoEvent::OnAnnounce";
+  return 1;
+  end;
+}
+
+}

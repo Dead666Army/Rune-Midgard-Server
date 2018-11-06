@@ -1,0 +1,1384 @@
+//===== rAthena Script ============================================
+//= Rune-Midgard Halloween Event 2018
+//===== By: =======================================================
+//= Snotra
+//===== Current Version: ==========================================
+//= 1.0
+//===== Compatible With: ==========================================
+//= rAthena Project
+//===== Description: ==============================================
+//= Rune-Midgard Halloween Event 2018
+//===== Additional Comments: ======================================
+//=================================================================
+
+//NPC BATEAU
+niflheim,180,34,8	script	Biev#nif	10061,{
+	emotion ET_PROFUSELY_SWEAT;
+	if (#LANGUE == 1 ){
+		mes "[Biev]";
+		mes "That was close... I saw Hera, she was soo scary...";
+		next;
+		mes "[Biev]";
+		mes "I am going back to Hollowtown, this place is too much for me.";
+		mes "Do you want to go with me?";
+		switch(select("Yes:No")){
+			case 1:
+				next;
+				mes "[Biev]";
+				mes "Okay, go aboard and don't touch anything!";
+				next;
+				warp "hollowtown",80,46;
+				break;
+			case 2:
+				next;
+				mes "As you want...";
+				close;
+				break;
+		}
+		close;
+	}
+	else{
+		mes "[Biev]";
+		mes "C'était moins une... J'ai vu Hera. Elle faisait tellement peur...";
+		next;
+		mes "[Biev]";
+		mes "Je rentre à Hollowtown, cette ville est beaucoup trop pour moi.";
+		mes "Tu veux venir avec moi ?";
+		switch(select("Oui:Non")){
+			case 1:
+				next;
+				mes "[Biev]";
+				mes "Okay, monte à bord mais ne touche a rien !";
+				if (accHollowTown == 0)
+					accHollowTown = 1;
+				next;
+				warp "hollowtown",80,46;
+				break;
+			case 2:
+				next;
+				mes "Comme tu veux...";
+				close;
+				break;
+		}
+	}
+}
+
+hollowtown,64,49,2	script	Biev#hol	10061,{
+	emotion ET_PANIC;
+	if (#LANGUE == 1 ){
+		mes "[Biev]";
+		mes "You want to go back to Niflheim?";
+		switch(select("Yes:No")){
+			case 1:
+				next;
+				mes "[Biev]";
+				mes "Okay, go aboard and don't touch anything!";
+				next;
+				warp "niflheim",180,39;
+				break;
+			case 2:
+				next;
+				mes "As you want...";
+				close;
+				break;
+		}
+		close;
+	}
+	else{
+		mes "[Biev]"; 
+		mes "Tu veux rentrer à Niflheim ?";
+		switch(select("Oui:Non")){
+			case 1:
+				next;
+				mes "[Biev]";
+				mes "Okay, monte à bord mais ne touche a rien !";
+				next;
+				warp "niflheim",180,39;
+				break;
+			case 2:
+				next;
+				mes "Comme tu veux...";
+				close;
+				break;
+		}
+	}
+}
+
+
+//SLOT MACHINE
+hollowtown,77,65,5	script	Capitaine John#hol	10120,{
+	if (#LANGUE == 1 ){
+		mes "[Capitaine John]";
+		mes "On that island, I discovered a wonderful place to spend the fruit of my labours.";
+		next;
+		mes "[Capitaine John]";
+		mes "I'm the only one to know where this place is located.";
+		set .Menu1$, "Discover that place";
+		set .Menu2$, "Learn more about the island";
+		set .Menu3$, "Leave";
+	}else{
+		mes "[Capitaine John]";
+		mes "J'ai découvert sur cette île un endroit merveilleux où dépenser le fruit de mon labeur.";
+		next;
+		mes "[Capitaine John]";
+		mes "Cet endroit, moi seul connais son emplacement.";
+		set .Menu1$, "J'aimerais découvrir cet endroit";
+		set .Menu2$, "En savoir plus sur l'île";
+		set .Menu3$, "Partir";
+	}
+	switch(select(.Menu1$+":"+.Menu2$+":"+.Menu3$)){
+		case 1:
+			next;
+			mes "[Capitaine John]";
+			if (hollow_town1 == 1){
+				if(countitem(535) < 10 || countitem(1041) < 5 || countitem(1059) < 10 || countitem(35001) < 1) {
+					if (#LANGUE == 1 ){
+						mes "Sorry but I won't be able to give you any clue unless you gather every item I have asked you for.";
+						next;
+						mes "[Capitaine John]";
+						mes "It's give-and-take, you know?";
+						next;
+						mes "[Capitaine John]";
+						mes "I told you to bring me: ";
+					}else{
+						mes "Désolé mais je ne pourrai pas te fournir d'indice tant que tu ne m'auras pas apporté tous les items que je t'ai demandés.";
+						next;
+						mes "[Capitaine John]";
+						mes "C'est donnant-donnant.";
+						next;
+						mes "[Capitaine John]";
+						mes "Je t'ai demandé de me ramener : ";
+					}
+					mes "";
+					mes "10 Pumpkins";
+					mes "5 Lanterns";
+					mes "10 Fabrics";
+					mes "1 event ticket";
+				}else{
+					delitem 535,10;
+					delitem 1041,5;
+					delitem 1059,10;
+					delitem 35001,1;
+					hollow_town1 = 2;
+					if (#LANGUE == 1 ){
+						mes "Thank you for your devotion, I'm going to give you the clue.";
+						next;
+						mes "[Capitaine John]";
+						mes "But don't tell anyone! It's our little secret.";
+						next;
+						mes "[Capitaine John]";
+						mes "You can find the slot machine in a remote house located in the NorthEastern part of the island.";
+						next;
+						mes "[Capitaine John]";
+						mes "I think this machine has been made by the devil himself as it induces a strong dependency but you will be able to get many surprises from it.";
+					}else{
+						mes "Je te remercie de ton dévouement, je vais maintenant te donner l'indice.";
+						next;
+						mes "[Capitaine John]";
+						mes "Par contre ne le répète à personne. C'est notre petit secret.";
+						next;
+						mes "[Capitaine John]";
+						mes "La machine à sous se trouve dans une maison retirée au Nord-Est de l'île.";
+						next;
+						mes "[Capitaine John]";
+						mes "Je pense que cette machine a été inventée par le diable parce qu'elle crée une forte dépendance mais tu pourras y trouver de nombreuses surprises.";
+					}
+				}
+				
+				close;
+			}	
+			if (hollow_town1 == 2){
+				if (#LANGUE == 1 ){
+						mes "Thank you for your devotion, I'm going to give you the clue.";
+						next;
+						mes "[Capitaine John]";
+						mes "But don't tell anyone! It's our little secret.";
+						next;
+						mes "[Capitaine John]";
+						mes "You can find the slot machine in a remote house located in the NorthEastern part of the island.";
+						next;
+						mes "[Capitaine John]";
+						mes "I think this machine has been made by the devil himself as it induces a strong dependency but you will be able to get many surprises from it.";
+					}else{
+						mes "Je te remercie de ton dévouement, je vais maintenant te donner l'indice.";
+						next;
+						mes "[Capitaine John]";
+						mes "Par contre ne le répète à personne. C'est notre petit secret.";
+						next;
+						mes "[Capitaine John]";
+						mes "La machine à sous se trouve dans une maison retirée au Nord-Est de l'île.";
+						next;
+						mes "[Capitaine John]";
+						mes "Je pense que cette machine a été inventée par le diable parce qu'elle crée une forte dépendance mais tu pourras y trouver de nombreuses surprises.";
+					}
+				close;
+			}
+			if (#LANGUE == 1 ){
+				mes "I could give you a clue but I'll need a few items for that.";
+			}else{
+				mes "Je pourrais te donner un indice, mais pour cela j'aurais besoin de quelques items.";
+			}
+			next;
+			mes "[Capitaine John]";
+			mes "";
+			mes "10 Pumpkins";
+			mes "5 Lanterns";
+			mes "10 Fabrics";
+			mes "1 event ticket";
+			hollow_town1 = 1;
+			close;
+			break;
+		case 2:
+			next;
+			mes "[Capitaine John]";
+			if (#LANGUE == 1 ){
+				mes "This island has several sides, it's up to you to find which one suites you the most...";
+				next;
+				mes "[Capitaine John]";
+				mes "If you enjoy sightseeing, you'll appreciate the island's unique scenery. ";
+				next;
+				mes "[Capitaine John]";
+				mes "If you're into meeting people, you'll have a great time with the inhabitants despite their weirdness.";
+				next;
+				mes "[Capitaine John]";
+				mes "If you prefer games if chance, a special slot machine will allow you to win some surprises.";
+				next;
+				mes "[Capitaine John]";
+				mes "There will certainly be something in for you on this island.";
+				next;
+				mes "[Capitaine John]";
+				mes "Don't hesitate to visit every nook of the island!";
+			}else{
+				mes "Cette île a plusieurs facettes, à toi de voir laquelle te plaira le plus...";
+				next;
+				mes "[Capitaine John]";
+				mes "Si tu apprécies le tourisme, elle est intéressante parce qu'elle présente un décor unique.";
+				next;
+				mes "[Capitaine John]";
+				mes "Si tu aimes les rencontres, tu apprécieras ses habitants malgré leur bizarrerie.";
+				next;
+				mes "[Capitaine John]";
+				mes "Si tu préfères le hasard, une machine a sous spéciale te permettra de gagner des surprises.";
+				next;
+				mes "[Capitaine John]";
+				mes "Tu trouveras sûrement quelque chose qui te plaît sur cette île.";
+				next;
+				mes "[Capitaine John]";
+				mes "N'hésite pas a visiter tous les recoins possibles !";
+			}
+			close;
+			break;
+		case 3:
+			next;
+			mes "[Capitaine John]";
+			if (#LANGUE == 1 ){
+				mes "Have a nice day. See you later.";
+			}else{
+				mes "Bonne journée. A la prochaine.";
+			}
+			close;
+			break;
+		}
+}
+
+hollow_in,96,141,5	script	Slot Machine#hol	563,{
+	if (#LANGUE == 1 ){
+		.mesQuest$ 	= "This looks like the slot machine the man was talking about.";
+		.mesWhat$ 	= "What to do?";
+		.mesInsert$ = "Insert an Halloween coin";
+		.mesQuit$ 	= "Quit";
+		.mesNoise1$ = "Clac...criiiiiiiiii...scritch-scritch...dziiiiiiiii...pof";
+		.mesNoise2$ = "Ding...dang...rumble...rumble...shuffle";
+		.mesNotEnough$ = "*I don't have any Halloween coin...*";
+	}else{
+		.mesQuest$ 	= "Ceci semble être la machine à sous dont l'homme me parlait.";
+		.mesWhat$ 	= "Que faire ?";
+		.mesInsert$ = "Insérer un Halloween coin";
+		.mesQuit$ 	= "Quitter";
+		.mesNoise1$ = "Clac...criiiiiiiiii...scritch-scritch...dziiiiiiiii...pof";
+		.mesNoise2$ = "Ding...dang...rumble...rumble...shuffle";
+		.mesNotEnough$ = "*Je n'ai plus d'Halloween coin...*";
+	}
+	if (hollow_town1 == 2){
+		mes .mesQuest$;
+		next;
+		hollow_town1 = 3;
+	}	
+	mes .mesWhat$;
+	switch(select(.mesInsert$+":"+.mesQuit$)){
+		case 1:
+			next;
+			if (countitem(6658) == 0){ 
+				mes .mesNotEnough$;
+				close;
+			}
+			mes "[Slot Machine]";
+			mes .mesNoise1$;
+			next;
+			mes "[Slot Machine]";
+			mes .mesNoise2$;
+			break;
+		case 2:
+			next;
+			close;
+			break;
+	}
+	
+	delitem 6658, 1;
+	callfunc("HT_GENERATE_ITEM");
+		
+	close;
+}
+
+/**
+* Génère l'item a donner
+*/
+function	script	HT_GENERATE_ITEM	{
+	.@result = rand(0,10000);
+	
+	if (.@result < 2500 ) {getitem 535,1;return;}
+	if (.@result < 4000 ) {getitem 502,1;return;}
+	if (.@result < 5500 ) {getitem 1062,1;return;}
+	if (.@result < 6500 ) {getitem 6658,1;return;}
+	if (.@result < 7100 ) {getitem 644,1;return;}
+	if (.@result < 7500 ) {getitem 35001,1;return;}
+	if (.@result < 7900 ) {getitem 603,1;return;}
+	if (.@result < 8300 ) {getitem 751,1;return;}
+	if (.@result < 8600 ) {getitem 750,1;return;}
+	if (.@result < 8900 ) {getitem 6658,5;return;}
+	if (.@result < 9200 ) {getitem 35001,2;return;}
+	if (.@result < 9400 ) {getitem 35000,1;return;}
+	if (.@result < 9600 ) {getitem 617,1;return;}
+	if (.@result < 9825 ) {getitem 678,1;return;}
+	if (.@result < 9975 ) {getitem 40007,1;return;}
+	if (.@result <= 10000 ) {getitem 35000,5;return;}
+}
+
+//NPC de base
+hollowtown,78,138,4	script	Warpra#hol	10209,{ callfunc "QWS_Town_Warpra",1,"Alberta Town"; close; }
+
+hollowtown,83,138,4	script	Kafra Employee::kaf_hollow	113,{
+	cutin "kafra_05",2;
+	callfunc "F_KafSet";
+	mes "[Kafra Employee]";
+	mes "Welcome to the";
+	mes "Kafra Corporation.";
+	mes "Even if it's a scary place, we are always here to help you.";
+	callfunc "F_Kafra",5,13,1,60,1000;
+	callfunc "F_KafEnd",0,1,"in Hollowtown";
+}
+
+//Hunting Quest
+hollow_in,40,139,5	script	Hunting Quest Easy	10021,{
+    .@min_level = 1;
+    .@max_level = 99;
+    .@credits_required = 1;
+    .@MobMenu$ = "Zombie:Skeleton:Soldier Skeleton:Archer Skeleton:Lude:Whisper:Marionette:Ghoul:Jakk";
+    .@index_to_start = 48;
+    .@reward = 3;
+    .@reward_id = 6658;
+    .@npc_number = 5;
+    
+    callfunc "F_VERIF_HUNTING",
+        .@min_level,
+        .@max_level,
+        .@credits_required,
+				.@reward_id,
+				"Halloween coins",
+				"We can give you Halloween coins in exchange of a few murders:Nous pouvons vous donner quelques Halloween coins en échange de quelques meurtres";
+
+    callfunc "F_APPLY_QUEST_MENU",
+        .@MobMenu$,
+        .@index_to_start,
+        .@credits_required,
+        .@reward,
+        .@npc_number,
+				.@reward_id,
+				"Halloween coins";
+}
+
+hollow_in,42,139,5	script	Hunting Quest Medium	10022,{
+    .@min_level = 1;
+    .@max_level = 99;
+    .@credits_required = 1;
+    .@MobMenu$ = "Injustice:Wraith:Bathory:Disguise:Evil Druid:Gibbet:Zombie Prisoner:Raydric:Khalitzburg:Dullahan:Nightmare";
+    .@index_to_start = 57;
+    .@reward = 4;
+    .@reward_id = 6658;
+    .@npc_number = 6;
+    
+    callfunc "F_VERIF_HUNTING",
+        .@min_level,
+        .@max_level,
+        .@credits_required,
+				.@reward_id,
+				"Halloween coins",
+				"We can give you Halloween coins in exchange of a few murders:Nous pouvons vous donner quelques Halloween coins en échange de quelques meurtres";
+
+    callfunc "F_APPLY_QUEST_MENU",
+        .@MobMenu$,
+        .@index_to_start,
+        .@credits_required,
+        .@reward,
+        .@npc_number,
+				.@reward_id,
+				"Halloween coins";
+}
+
+hollow_in,44,139,5	script	Hunting Quest Hard	10023,{
+    .@min_level = 1;
+    .@max_level = 99;
+    .@credits_required = 1;
+    .@MobMenu$ = "Wanderer:Rybio:Phendark:Nightmare Terror:Loli Ruri:Bloody Murderer:Ragged Zombie:Zombie Slaughter:Banshee";
+    .@index_to_start = 68;
+    .@reward = 5;
+    .@reward_id = 6658;
+    .@npc_number = 7;
+    
+    callfunc "F_VERIF_HUNTING",
+        .@min_level,
+        .@max_level,
+        .@credits_required,
+				.@reward_id,
+				"Halloween coins",
+				"We can give you Halloween coins in exchange of a few murders:Nous pouvons vous donner quelques Halloween coins en échange de quelques meurtres";
+
+    callfunc "F_APPLY_QUEST_MENU",
+        .@MobMenu$,
+        .@index_to_start,
+        .@credits_required,
+        .@reward,
+        .@npc_number,
+				.@reward_id,
+				"Halloween coins";
+}
+
+//Hat Quest NPC
+hollowtown,122,165,3	script	Corpse Kid#hol	787,{ //alarm_mask_halloween & alarm_mask_halloween2
+	mes "[Corpse Kid]";
+	if(countitem(1095) >= 300 && countitem(2607) >= 1 && countitem(7026) >= 1 && countitem(6658) >= 100) {
+		delitem 1095,300;
+		delitem 2607,1;
+		delitem 7026,1;
+		delitem 6658,100; 
+		getitem 35390,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[NPCHollotownHat2]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[NPCHollotownHat2]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "Masks are a reflection of our own soul... that's what we used to say in my former tribe. Would you be interested in an Alarm Mask Halloween costume? Here's the items I'd need:";
+	}else{
+		mes "Les Masques sont le reflet de notre âme... enfin dans mon ancienne tribut. Ca te dirait un Costume Alarm Mask ? Voici la liste d'item qu'il me faudrait :";
+	}
+	next;
+	mes "[Corpse Kid]";
+	mes "300 Needle of Alarm";
+	mes "1 Clip [1]";
+	mes "1 Key of Clock Tower";
+	mes "100 Halloween Coin";
+	close;
+}
+hollowtown,138,165,3	script	Corpse Kid#hol2	787,{ //alarm_mask_halloween & alarm_mask_halloween2
+	mes "[Corpse Kid]";
+	if(countitem(1095) >= 300 && countitem(2607) >= 1 && countitem(7026) >= 1 && countitem(6658) >= 100) {
+		delitem 1095,300;
+		delitem 2607,1;
+		delitem 7026,1;
+		delitem 6658,100; 
+		getitem 35391,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[NPCHollotownHat2]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[NPCHollotownHat2]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "I am making the same hat as my brother, but with a different color! Interested in an Orange Alarm Mask?";
+	}else{
+		mes "Je te propose le meme hat que mon frere, mais d'une couleur differente! Interessé par l'Alarm Mask Orange ?";
+	}
+	next;
+	mes "[Corpse Kid]";
+	mes "300 Needle of Alarm";
+	mes "1 Clip [1]";
+	mes "1 Key of Clock Tower";
+	mes "100 halloween coin";
+	close;
+}
+hollowtown,187,80,4	script	Ghostring#hol	950,{ //ghost_hat
+	mes "[Ghostring]";
+	if(countitem(5043) >= 1 && countitem(7220) >= 300 && countitem(695) >= 3 && countitem(6658) >= 100) {
+		delitem 5043,1;
+		delitem 7220,300;
+		delitem 695,3;
+		delitem 6658,100; 
+		getitem 35392,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[Ghostring]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[Ghostring]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "Long time ago, I used to be a Poring... Interested in a Ghost Hat costume? Here's the ingredients list:";
+	}else{
+		mes "Autrefois, j'étais un poring... Un Costume Ghost hat ca t'interesse ? Voici la liste des ingredients :";
+	}
+	next;
+	mes "[Ghostring]";
+	mes "1 Opera Phantom Mask";
+	mes "300 Ectoplasm";
+	mes "3 Level 5 Soul Strike";
+	mes "100 halloween coin";
+	close;
+}
+hollowtown,115,39,9	script	Jack Skellington#hol	1130,{ //glowing_pumpkin
+	mes "[Jack Skellington]";
+	if(countitem(1062) >= 50 && countitem(985) >= 10 && countitem(535) >= 100 && countitem(6658) >= 30) {
+		delitem 1062,50;
+		delitem 985,10;
+		delitem 535,100;
+		delitem 6658,30; 
+		getitem 35393,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[Jack Skellington]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[Jack Skellington]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "I am the master of this town... Do you want a Glowing Pumpkin costume to fit the theme? Here are the parts I would need to make one for you:";
+	}else{
+		mes "Je suis le maître de cette ville... Veux-tu un costume Glowing Pumpkin pour être dans le thème ? Voici les ingrédients dont j'aurai besoin pour te le faire :";
+	}
+	next;
+	mes "[Jack Skellington]";
+	mes "50 Jack o' Pumpkin";
+	mes "10 elunium";
+	mes "100 Pumpkin";
+	mes "30 halloween coin";
+	close;
+}
+hollowtown,67,84,5	script	Harlequin Demon#hol	1505,{ //halloween_01
+	mes "[Harlequin Demon]";
+	if(countitem(7214) >= 300 && countitem(748) >= 3 && countitem(638) >= 1 && countitem(6658) >= 100) {
+		delitem 7214,300;
+		delitem 748,3;
+		delitem 638,1;
+		delitem 6658,100; 
+		getitem 35394,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[Harlequin Demon]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[Harlequin Demon]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "I offer you this nice Bat Eats costume. These are the things I'd need to craft one:";
+	}else{
+		mes "Je te propose un joli costume Bat Ears. Voici les objets dont j'aurai besoin pour les créer :";
+	}
+	next;
+	mes "[Harlequin Demon]";
+	mes "300 Bat Cage";
+	mes "3 Witherless Rose";
+	mes "1 Silver Knife of Chastity";
+	mes "100 halloween coin";
+	close;
+}
+hollow_in,159,17,1	script	Elias Voorhees#hol	849,{ //halloween_07
+	mes "[Elias Voorhees]";
+	if(countitem(2288) >= 1 && countitem(958) >= 300 && countitem(1049) >= 5 && countitem(6658) >= 100) {
+		delitem 2288,1;
+		delitem 958,300;
+		delitem 1049,5;
+		delitem 6658,100; 
+		getitem 35395,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[Elias Voorhees]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[Elias Voorhees]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "I'm not dead... just having a little rest. Would you like a Hollow Mask costume in exchange for a few items?";
+	}else{
+		mes "Je ne suis pas mort...je fais juste une petite sieste. Désire tu un Hollow Mask en échange de quelques objets ?";
+	}
+	next;
+	mes "[Elias Voorhees]";
+	mes "1 Mr. Scream";
+	mes "300 Horrendous Mouth";
+	mes "5 Skirt of Virgin";
+	mes "100 halloween coin";
+	close;
+}
+hollowtown,185,79,1	script	Free Jefferson#hol	849,{ //hockey_mask
+	mes "[Free Jefferson]";
+	if(countitem(2288) >= 1 && countitem(7208) >= 300 && countitem(1015) >= 300 && countitem(6658) >= 100) {
+		delitem 2288,1;
+		delitem 7208,300;
+		delitem 1015,300;
+		delitem 6658,100; 
+		getitem 35400,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[Free Jefferson]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[Free Jefferson]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "I'm not dead, I was just playing with Jason... I took his Hockey Mask! If you want it, I can trade it for some items.";
+	}else{
+		mes "Je ne suis pas mort, je m'amusais juste avec Jason... je lui ai pris son Hockey Mask, si tu es interessé, je te l'échange contre ces objets :";
+	}
+	next;
+	mes "[Free Jefferson]";
+	mes "1 Mr. Scream";
+	mes "300 Rusty Kitchen Knife";
+	mes "300 Tongue";
+	mes "100 halloween coin";
+	close;
+}
+hollow_in,24,83,3	script	Mr Hyde#hol	64,{ //halloween_08
+	mes "[Mr Hyde]";
+	if(countitem(2252) >= 1 && countitem(509) >= 100 && countitem(1059) >= 300 && countitem(6658) >= 100) {
+		delitem 2252,1;
+		delitem 509,100;
+		delitem 1059,300;
+		delitem 6658,100; 
+		getitem 35396,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[Mr Hyde]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[Mr Hyde]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "Vagabond souls wander near me. I can catch a few ones and insert them into a Whisper Mage Hat costume. Of course, it won't be free of charge but that's a good deal.";
+	}else{
+		mes "Des âmes vagabondes se promènent près de moi. Je peux en attraper quelques-unes et les introduire dans in Costume Whisper Mage Hat. Le tout contre ces objets ? c'est un bon deal.";
+	}
+	next;
+	mes "[Mr Hyde]";
+	mes "1 Wizard Hat";
+	mes "100 white herb";
+	mes "300 fabric";
+	mes "100 halloween coin";
+	close;
+}
+hollow_in,51,49,3	script	Lock#hol	796,{ //halloween_worm
+	mes "[Lock]";
+	if(countitem(7220) >= 300 && countitem(7205) >= 300 && countitem(695) >= 3 && countitem(6658) >= 100) {
+		delitem 7220,300;
+		delitem 7205,300;
+		delitem 695,3;
+		delitem 6658,100; 
+		getitem 35397,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[Lock]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[Lock]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "Oh, you must be here for the Halloween Worm costume? Here is the list of the items I need:";
+	}else{
+		mes "Oh tu viens sans doute pour le costume Halloween Worm ? Voici la liste d'objet qu'il me faut :";
+	}
+	next;
+	mes "[Lock]";
+	mes "300 Ectoplasm";
+	mes "300 Piece of Black Cloth";
+	mes "3 Level 5 Soul Strike";
+	mes "100 halloween coin";
+	close;
+}
+hollow_in,24,51,5	script	Hildon#hol	705,{ //helm_of_darkness_halloween
+	mes "[Hildon]";
+	if(countitem(7209) >= 300 && countitem(983) >= 1 && countitem(1059) >= 300 && countitem(6658) >= 100) {
+		delitem 7209,300;
+		delitem 983,1;
+		delitem 1059,300;
+		delitem 6658,100; 
+		getitem 35398,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[Hildon]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[Hildon]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "If you want to join my sect, you will need the Helm of Darkness Halloween costume. Have a look at the items I need to make one for you.";
+	}else{
+		mes "Si tu veux rejoindre ma secte, il te faudra absolument le costume Helm of Darkness. Voici les objets dont j'ai besoin pour te le fabriquer :";
+	}
+	next;
+	mes "[Hildon]";
+	mes "300 Helm of Dullahan";
+	mes "1 Black Dyestuffs";
+	mes "300 fabric";
+	mes "100 halloween coin";
+	close;
+}
+hollow_in,26,51,3	script	Buhikku#hol	705,{ //helm_of_darkness_halloween2
+	mes "[Buhikku]";
+	if(countitem(7209) >= 300 && countitem(980) >= 1 && countitem(1059) >= 300 && countitem(6658) >= 100) {
+		delitem 7209,300;
+		delitem 980,1;
+		delitem 1059,300;
+		delitem 6658,100; 
+		getitem 35399,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[Buhikku]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[Buhikku]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "I am making the same hat as my partner, but with a different color! Interested in an Orange Helm of Darkness?";
+	}else{
+		mes "Je te propose le meme hat que mon partenaire, mais d'une couleur differente ! Interessé par un Helm of Darkness Orange ?";
+	}
+	next;
+	mes "[Buhikku]";
+	mes "300 Helm of Dullahan";
+	mes "1 Orange Dyestuffs";
+	mes "300 fabric";
+	mes "100 halloween coin";
+	close;
+}
+//hollowtown,181,167,3	script	Hylozoist	1510,{ //hylozoist_doll
+	//mes "[Hylozoist]";
+	//if(countitem(7220) >= 300 && countitem(7213) >= 300 && countitem(724) >= 15 && countitem(6658) >= 100) {
+	//delitem 7220,300;delitem 7213,300;delitem 724,15;delitem 6658,100; getitem ,1;}
+	//mes "J'ai des costumes hylozoist à mon effigie, ils sont plus vrai que nature... Je te l'echange contre ces objets";
+	//mes "I have Hylozoist costumes with a design of my own, they are really true-to-life... I'll trade you one for these items.";
+	//next;mes "[Hylozoist]";mes "300 Ectoplasm";mes "300 Needle Packet";mes "15 Cursed Ruby";mes "100 halloween coin";
+	//close;
+//}
+hollowtown,114,96,1	script	Big Witch#hol	792,{ //mage_hat_halloween & mage_hat_halloween2
+	mes "[Big Witch]";
+	if(countitem(2252) >= 1 && countitem(7001) >= 300 && countitem(4052) >= 1 && countitem(6658) >= 100) {
+		delitem 2252,1;
+		delitem 7001,300;
+		delitem 4052,1;
+		delitem 6658,100; 
+		getitem 35402,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[Big Witch]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[Big Witch]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "Now that I'm dead, I have no more interest in keeping my Mage Hat Halloween costume. Provide me these items and it will be yours.";
+	}else{
+		mes "Maintenant que je suis morte, je n'ai plus d'intérêt à garder le costume Mage Hat, je te l'échange contre ces objets :";
+	}
+	next;
+	mes "[Big Witch]";
+	mes "1 Wizard Hat";
+	mes "300 Mould Powder";
+	mes "1 Elder Willow Card";
+	mes "100 halloween coin";
+	close;
+}
+hollowtown,114,99,3	script	Small Witch#hol	792,{ //mage_hat_halloween2
+	mes "[Small Witch]";
+	if(countitem(2252) >= 1 && countitem(7001) >= 300 && countitem(4052) >= 1 && countitem(6658) >= 100) {
+		delitem 2252,1;
+		delitem 7001,300;
+		delitem 4052,1;
+		delitem 6658,100; 
+		getitem 35403,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[Small Witch]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[Small Witch]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "I am making the same hat as my sister, but with a different color! Interested in an Orange Mage Hat?";
+	}else{
+		mes "Je te propose le meme hat que ma soeur, mais d'une couleur differente ! Interessé par un Mage Hat Orange ?";
+	}
+	next;
+	mes "[Small Witch]";
+	mes "1 Wizard Hat";
+	mes "300 Mould Powder";
+	mes "1 Elder Willow Card";
+	mes "100 halloween coin";
+	close;
+}
+hollow_in,106,47,9	script	Oogie Boogie#hol	735,{ //oogieboogiehat
+	mes "[Oogie Boogie]";
+	if(countitem(7206) >= 50 && countitem(985) >= 30 && countitem(724) >= 15 && countitem(6658) >= 100) {
+		delitem 7206,50;
+		delitem 985,30;
+		delitem 724,15;
+		delitem 6658,100; 
+		getitem 35404,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[Oogie Boogie]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[Oogie Boogie]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "Oogie Boogie? Are you afraid of that name? My last costume will help you scare young kids, do you want it? Here are the items I need:";
+	}else{
+		mes "OogieBoogie ? Ce nom te fais peur ? Mon dernier costume te permettrait de faire peur aux jeunes enfants, il t'intéresse ? Voici la liste d'objet qu'il me faut : ";
+	}
+	next;
+	mes "[Oogie Boogie]";
+	mes "50 Black Cat Doll";
+	mes "30 elunium";
+	mes "15 Cursed Ruby";
+	mes "100 halloween coin";
+	close;
+}
+hollowtown,68,119,3	script	Zero#hol	457,{ //scarf_halloween
+	mes "[Zero]";
+	if(countitem(2502) >= 1 && countitem(2508) >= 1 && countitem(7216) >= 300 && countitem(6658) >= 100) {
+		delitem 2502,1;
+		delitem 2508,1;
+		delitem 7216,300;
+		delitem 6658,100; 
+		getitem 35405,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[Zero]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[Zero]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "Winter is coming, what better than a scarf to keep you from the cold? Here are the items I'll need:";
+	}else{
+		mes "La fraîcheur du temps des fêtes approche, quoi de mieux qu'une écharpe pour contrer le froid ? Voici la liste d'objet qu'il me faudrait :";
+	}
+	next;
+	mes "[Zero]";
+	mes "1 Hood [1]";
+	mes "1 Ragamuffin Manteau";
+	mes "300 Red Muffler";
+	mes "100 halloween coin";
+	close;
+}
+hollowtown,94,47,4	script	Doppel#hol	739,{ //skull_cap
+	mes "[Doppel]";
+	if(countitem(7005) >= 300 && countitem(932) >= 300 && countitem(5122) >= 1 && countitem(6658) >= 100) {
+		delitem 7005,300;
+		delitem 932,300;
+		delitem 5122,1;
+		delitem 6658,100; 
+		getitem 35406,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[Doppel]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[Doppel]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "Devi thinks he has stolen me with impunity. But he doesn't know I took his Skull Cap. I'll barter it for these items:";
+	}else{
+		mes "Devi croit m'avoir volé sans impunité, ce qu'il ne sait pas c'est que je lui ai pris son skull cap. Je te l'echange contre ceci :";
+	}
+	next;
+	mes "[Doppel]";
+	mes "300 Skull";
+	mes "300 Skel-Bone";
+	mes "1 Magni's Cap";
+	mes "100 halloween coin";
+	close;
+}
+hollowtown,30,43,6	script	Devi#hol	738,{ //skull_hood
+	mes "[Devi]";
+	if(countitem(7005) >= 300 && countitem(2502) >= 1 && countitem(930) >= 300 && countitem(6658) >= 100) {
+		delitem 7005,300;
+		delitem 2502,1;
+		delitem 930,300;
+		delitem 6658,100; 
+		getitem 35407,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[Devi]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[Devi]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "Heeheehee I stole Doppel his Skull Hood costume, he must be furious... I prefer exchanging it before he notices. Here's my price:";
+	}else{
+		mes "Hihihi j'ai volé le costume skull hood à Doppel, il doit être fou de rage... je préfere te l'échanger avant qu'il ne s'en aperçoive. Voici la liste d'item qu'il me faudrait :";
+	}
+	next;
+	mes "[Devi]";
+	mes "300 Skull";
+	mes "1 Hood [1]";
+	mes "300 Rotten Bandage";
+	mes "100 halloween coin";
+	close;
+}
+hollowtown,197,64,4	script	Vlad Tepes#hol	799,{ //vamp_hood
+	mes "[Vlad Tepes]";
+	if(countitem(7205) >= 300 && countitem(2502) >= 1 && countitem(983) >= 1 && countitem(6658) >= 100) {
+		delitem 7205,300;
+		delitem 2502,1;
+		delitem 983,1;
+		delitem 6658,100; 
+		getitem 35408,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[Vlad Tepes]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[Vlad Tepes]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "Being a vampire is all about being classy. What about getting a Vamp Hood costume at the cost of a few items?";
+	}else{
+		mes "Etre un vampire, c'est avant tout une question de classe, que dirais tu d'un costume Vamp Hood contre ces objets ?";
+	}
+	next;
+	mes "[Vlad Tepes]";
+	mes "300 Piece of Black Cloth";
+	mes "1 Hood [1]";
+	mes "1 Black Dyestuffs";
+	mes "100 halloween coin";
+	close;
+}
+hollowtown,67,99,3	script	Dan Aykroyd#hol	51,{ //wandering_minstrel_hat_halloween
+	mes "[Dan Aykroyd]";
+	if(countitem(1099) >= 300 && countitem(983) >= 1 && countitem(1061) >= 300 && countitem(6658) >= 100) {
+		delitem 1099,300;
+		delitem 983,1;
+		delitem 1061,300;
+		delitem 6658,100; 
+		getitem 35409,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[Dan Aykroyd]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[Dan Aykroyd]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "Although I'm dead, I'm still a hatter... Would you be interested in a Wandering Minstrel Hat Halloween costume? Here are the items I'd need for it:";
+	}else{
+		mes "Bien que je sois mort, je suis avant tout un chapelier... Es-tu interessé par un costume Wandering Minstrel Hat halloween ? Voici les objets qu'il me faut :";
+	}
+	next;
+	mes "[Dan Aykroyd]";
+	mes "300 Worn-out Prison Uniform";
+	mes "1 Orange Dyestuffs";
+	mes "300 Starsand_Of_Witch";
+	mes "100 halloween coin";
+	close;
+}
+hollowtown,67,108,9	script	John Belushi#hol	704,{ //wandering_minstrel_hat_halloween2
+	mes "[John Belushi]";
+	if(countitem(1099) >= 300 && countitem(980) >= 1 && countitem(1061) >= 300 && countitem(6658) >= 100) {
+		delitem 1099,300;
+		delitem 980,1;
+		delitem 1061,300;
+		delitem 6658,100; 
+		getitem 35410,1;
+		if (#LANGUE == 1 ){
+			mes "Here is your hat!";
+			next;
+			mes "[John Belushi]";
+			mes "Have fun!";
+		}else{
+			mes "Voici votre Hat !";
+			next;
+			mes "[John Belushi]";
+			mes "Amusez vous bien !";
+		}
+		close;
+	}
+	if (#LANGUE == 1 ){
+		mes "My cousin on the other side of the tent is trying to steal my customers. I offer you a nice hat ornated with a very rare feather. Here's my price for this black Wandering Minstrel Hat.";
+	}else{
+		mes "Mon cousin, situé de l'autre côté de la tente essait de voler mes clients. Je te propose donc un joli chapeau orné d'une plume très rare. Voici les items dont j'aurai besoin pour ce Wandering Minstrel hat noir :";
+	}
+	next;
+	mes "[John Belushi]";
+	mes "300 Worn-out Prison Uniform";
+	mes "1 Black Dyestuffs";
+	mes "300 Starsand_Of_Witch";
+	mes "100 halloween coin";
+	close;
+}
+
+//Filler NPC
+hollowtown,84,204,4	script	ANKOU#hol	3029,{}
+
+hollowtown,82,199,6	script	pumpkin head#hol	10174,{
+	mes "[pumpkin head]";
+	if (#LANGUE == 1 ){
+		mes "Have I lost my mind?";
+		next;
+		mes "[pumpkin head]";
+		mes "Oh no, I can't feel my legs anymore!";
+		next;
+		mes "*Tries to move his legs while turning his head*";
+		next;
+		mes "[pumpkin head]";
+		mes "What happened to me ?";
+	}else{
+		mes "Ai-je perdu la tête ?";
+		next;
+		mes "[pumpkin head]";
+		mes "Oh non, je ne sens plus mes jambes !";
+		next;
+		mes "[pumpkin head]";
+		mes "*Tente de bouger ses jambes tout en tournant la tête*";
+		next;
+		mes "[pumpkin head]";
+		mes "Mais que s'est-il passé ?";
+	}
+	next;
+	mes "[pumpkin head]";
+	mes "...";
+	close;
+}
+
+hollowtown,158,169,4	script	Sign#hol	857,{
+	mes "[DANGER]";
+	if (#LANGUE == 1 ){
+		mes "Good luck to whoever goes through these doors!!!";
+	}else{
+		mes "Bonne chance à quiquonque franchira ces portes !!!";
+	}
+	mes "[DANGER]";
+	close;
+}
+
+hollowtown,167,169,4	duplicate(Sign#hol)	Sign#hol2	857
+
+hollowtown,90,91,7	script	Small Pumpkin#hol	10280,{
+	mes "[Small Pumpkin]";
+	if (#LANGUE == 1 ){
+		mes "Crick-crack, crick-crack...";
+		next;
+		mes "[Small Pumpkin]";
+		mes "My head is spinning...";
+		next;
+		mes "[Small Pumpkin]";
+		mes "Crick-crack, crick-crack...";
+	}else{
+		mes "Cric... crac... cric... crac...";
+		next;
+		mes "[Small Pumpkin]";
+		mes "La tête me tourne...";
+		next;
+		mes "[Small Pumpkin]";
+		mes "Cric... crac... cric... crac...";
+	}
+	close;
+}
+
+hollowtown,119,54,4	script	Sally#hol	96,{
+	mes "[Sally]";
+	if (#LANGUE == 1 ){
+		mes "Wow, this ship looks so cool! I'd like to go on a ride with it.";
+	}else{
+		mes "Ouah, il est si beau ce bateau ! J'aimerais y faire un tour un jour.";
+	}
+	close;
+}
+
+hollowtown,129,100,3	script	Old Pumpkin#hol	1130,{
+	mes "[Old Pumpkin]";
+	if (#LANGUE == 1 ){
+		mes "Oh, deceased brothers...";
+		next;
+		mes "[Old Pumpkin]";
+		mes "May their bodies rest in peace.";
+		next;
+		mes "[Old Pumpkin]";
+		mes "I will soon take my revenge with this man!";
+	}else{
+		mes "Oh, des frères décédés...";
+		next;
+		mes "[Old Pumpkin]";
+		mes "Paix à leurs corps.";
+		next;
+		mes "[Old Pumpkin]";
+		mes "Je vais prendre ma revanche bientôt avec cet homme !";
+	}
+	close;
+}
+
+hollowtown,138,128,6	script	Tommy#hol	797,{
+	mes "[Tommy]";
+	if (#LANGUE == 1 ){
+		mes "Please, let me in, I'm scared!";
+		next;
+		mes "[Tommy]";
+		mes "Strangers are coming...";
+	}else{
+		mes "S'il vous plait, laissez moi entrer, j'ai peur !";
+		next;
+		mes "[Tommy]";
+		mes "Des étrangers arrivent...";
+	}
+	close;
+}
+
+hollowtown,208,149,6	script	Igor#hol	409,{
+	mes "[Igor]";
+	if (#LANGUE == 1 ){
+		mes "This forest looks evil...";
+	}else{
+		mes "Cette fôret semble maléfique...";
+	}
+	close;
+}
+
+hollowtown,49,40,4	script	Unknown Traveler#hol	457,{
+	if (#LANGUE == 1 ){
+		mes "*That's what happened to a man who tried coming by swimming*";
+	}else{
+		mes "*C'est ce qui est arrivé à un homme qui a tenté de venir à la nage.*";
+	}
+	close;
+}
+
+hollowtown,93,114,4	script	Tired man#hol	881,{
+	emotion ET_CRY;
+	mes "[Tired man]";
+	if (#LANGUE == 1 ){
+		mes "Help me! Some Jakk locked me in here... I think he wants to eat me...";
+	}else{
+		mes "Aidez-moi ! Un Jakk m'a enfermé la dedans... Je crois qu'il veut me manger...";
+	}
+	close;
+}
+
+hollow_in,26,138,5	script	Angry man#hol	10018,{
+	mes "[Angry man]";
+	if (#LANGUE == 1 ){
+		mes "If i catch the man that tied me here while i was...sleeping...";
+	}else{
+		mes "Si j'attrappe le brigand qui m'a attaché pendant que je... dormais...";
+	}
+	close;
+}
+hollow_in,24,186,3	shop	Gear Dealer#hol	10127,1301:-1,1351:-1,1354:-1,1357:-1,1360:-1,2501:-1,2503:-1,2505:-1
+
+hollow_in,43,76,8	shop	Tool Dealer	755,502:-1
+
+hollow_in,168,173,4	shop	Armor Dealer#hol	10134,2101:-1,2103:-1,2401:-1,2403:-1,2405:-1,2501:-1,2503:-1,2505:-1,2203:-1,2201:-1,2205:-1,2226:-1,2301:-1,2303:-1,2305:-1,2321:-1,2328:-1,2332:-1,2307:-1,2309:-1,2312:-1,2314:-1,2628:-1
+hollow_in,175,160,3	shop	Weapon Dealer#hol	733,1750:-1,1751:-1,1101:-1,1104:-1,1107:-1,1201:-1,1204:-1,1207:-1,1601:-1,1701:-1,1301:-1,1351:-1,1354:-1,1357:-1,1360:-1
+
+hollow_in,37,46,4	script	Bartender	749,{
+	mes "[Bartender]";
+	mes "What are you going to order?";
+	next;
+	switch(select("Tropical Sograt:Vermilion on the Beach:Nothing.")) {
+	case 1:
+		if (Zeny >= 1000 ) {
+			set Zeny, Zeny-1000;
+			getitem 12112,1;
+			mes "[Bartender]";
+			mes "Here you go.";
+			mes "Fruits are major ingredients,";
+			mes "but don't drink too much.";
+			close;
+		}
+		break;
+	case 2:
+		if (Zeny >= 1000 ) {
+			set Zeny, Zeny-1000;
+			getitem 12113,1;
+			mes "[Bartender]";
+			mes "Here you go.";
+			mes "but don't drink too much.";
+			close;
+		}
+		break;
+	case 3:
+		mes "[Bartender]";
+		mes "Hmm...";
+		close;
+	}
+	mes "[Bartender]";
+	mes "Are you asking me to give it for free?";
+	mes "You are one crazy person.";
+	mes "Don't even think about drinking if you don't have 1,000 zeny.";
+	close;
+}
+
+hollow_in,31,125,5	script	Undead Chicken#hol	800,{
+	percentheal -5,0;
+	mes "[Undead Chicken]";
+	mes "I lived a peaceful life as a normal chicken. But then came the day I was tragically killed and eaten by humans. Well... Heh heh~! Now it's my turn! *Cackles*";
+	next;
+	mes "["+ strcharinfo(0) +"]";
+	mes "Ouch...!";
+	mes "A chicken...";
+	mes "It bit me!";
+	next;
+	mes "[Undead Chicken]";
+	mes "Ho ho~!";
+	mes "I can talk AND feast";
+	mes "on living humans!";
+	mes "Being a zombie is great!";
+	mes "*Cackles*";
+	close;
+}
+
+hollow_in,34,123,1	script	Undead Familiar#hol	799,{
+	percentheal -5,0;
+	mes "[Vatoman]";
+	mes "Oooh, how handy, a living";
+	mes "human~! Fresh blood is";
+	mes "always tasty...! I think I'll just";
+	mes "take a liiittle sip.";
+	next;
+	mes "[" + strcharinfo(0) + "]";
+	mes "Ow! My vein!";
+	mes "Did you just";
+	mes "suck my blood?!";
+	next;
+	mes "[Vatoman]";
+	mes "Mwahahaha~";
+	mes "Foolish mortal!";
+	mes "Beware my powers!";
+	close;
+}

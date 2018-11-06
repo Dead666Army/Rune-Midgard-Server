@@ -1,0 +1,32 @@
+// Instance Database
+//
+// Structure of Database:
+// ID,Name,LimitTime,IdleTimeOut,EnterMap,EnterX,EnterY,Map2,Map3,...,Map255
+//
+// EnterMap is considered as Map1
+
+1,Endless Tower,14400,300,1@tower,50,355,2@tower,3@tower,4@tower,5@tower,6@tower
+2,Sealed Catacomb,7200,300,1@cata,100,224,2@cata
+3,Orc's Memory,3600,300,1@orcs,179,15,2@orcs
+4,Nidhoggur's Nest,14400,300,1@nyd,32,36,2@nyd
+5,The Forest Basic,3645,300,anexus,45,49
+6,The Forest Pendemic,1845,300,anexus,45,49
+7,The Forest Apocalypse,1845,300,anexus,45,49
+8,The Forest Nightmare,1845,300,anexus,45,49
+9,Undead Basic,3045,300,undead,314,70
+10,Undead Pendemic,1545,300,undead,314,70
+11,Undead Apocalypse,1545,300,undead,314,70
+12,Undead Nightmare,1545,300,undead,314,70
+13,Old Glast Heim Basic,7200,300,1@gl_k,150,20,2@gl_k
+14,Old Glast Heim Pendemic,3600,300,1@gl_k,150,20,2@gl_k
+15,Old Glast Heim Apocalypse,3600,300,1@gl_k,150,20,2@gl_k
+16,Old Glast Heim Nightmare,3600,300,1@gl_k,150,20,2@gl_k
+17,Celine's Dwelling Basic,3600,300,celin_dw,17,92
+18,Celine's Dwelling Pendemic,1800,300,celin_dw,17,92
+19,Celine's Dwelling Apocalypse,1800,300,celin_dw,17,92
+20,Celine's Dwelling Nightmare,1800,300,celin_dw,17,92
+21,Octopus Cave Basic,2700,300,1@cash,198,99
+22,Octopus Cave Pendemic,1350,300,1@cash,198,99
+23,Octopus Cave Apocalypse,1350,300,1@cash,198,99
+24,Octopus Cave Nightmare,1350,300,1@cash,198,99
+25,Alice's Nightmare,10800,300,1@antgm,150,119,2@antgm,3@antgm

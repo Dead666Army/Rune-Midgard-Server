@@ -1,0 +1,187 @@
+moc_para01,24,36,4	script	Teru	445,{
+	mes "[Teru]";
+	if (#LANGUE == 1 ) {
+		mes "Welcome, mighty warrior.";
+		mes "Do you need supplies for your battles?";
+		mes "I can exchange supplies for your shards...";
+	}
+	else  {
+		mes "Bienvenue puissant guerrier.";
+		mes "Tu as besoin de fournitures pour tes batailles ?";
+		mes "Je peux t'en échanger contre des shards...";
+	}
+	next;
+	
+	switch($rotation){
+		case 0 :
+			set .@menu$, "30 Zenorc's Fang:30 Horn:20 Green Live:1 Karvodailnirol";
+			break;
+		case 1:
+			set .@menu$, "30 Stem:30 Venom Canine:20 Crystal Blue:3 Aloevera";
+			break;
+		case 2:
+			set .@menu$, "15 Immortal Heart:30 Snail's Shell:20 Wind of Verdure:10 Panacea";
+			break;
+		case 3:
+			set .@menu$, "15 Cobweb:30 Rainbow Shell:20 Red Blood:1 Alcohol";
+			break;
+		case 4:
+			set .@menu$, "10 Speed Potion:10 Fabric:3 Coldproof Potion:10 Crystal Fragment";
+			break;
+		case 5:
+			set .@menu$, "30 Bee Sting:30 Scorpion Tail:15 Heart of Mermaid:5 Authoritative Badge";
+			break;
+		case 6:
+			set .@menu$, "50 Empty Bottle:10 Cursed Water:3 Fireproof Potion:10 Witch Starsand";
+			break;
+		case 7:
+			set .@menu$, "30 White Herb:15 Yellow Gemstone:3 Earthproof Potion:5 Professional Cooking Kit";
+			break;
+		case 8:
+			set .@menu$, "20 Blue Herb:30 Poison Spore:3 Thunderproof Potion:1 Royal Cooking Kit";
+			break;
+		
+	}
+	
+	switch(select(.@menu$)) {
+		case 1:
+			switch($rotation){
+				case 0:		callsub S_BuyConsumableBG,1044,30;	
+				case 1:		callsub S_BuyConsumableBG,905,30;	
+				case 2:		callsub S_BuyConsumableBG,929,15;		
+				case 3:		callsub S_BuyConsumableBG,1025,15;	
+				case 4:		callsub S_BuyConsumableBG,12016,10;	
+				case 5:		callsub S_BuyConsumableBG,952,30;	
+				case 6:		callsub S_BuyConsumableBG,713,50;	
+				case 7:		callsub S_BuyConsumableBG,509,30;	
+				case 8:		callsub S_BuyConsumableBG,510,20;		
+			}
+			break;
+		case 2:
+			switch($rotation){
+				case 0:		callsub S_BuyConsumableBG,947,30;	
+				case 1:		callsub S_BuyConsumableBG,937,30;	
+				case 2:		callsub S_BuyConsumableBG,946,30;		
+				case 3:		callsub S_BuyConsumableBG,1013,30;	
+				case 4:		callsub S_BuyConsumableBG,1059,10;	
+				case 5:		callsub S_BuyConsumableBG,904,30;	
+				case 6:		callsub S_BuyConsumableBG,12020,10;	
+				case 7:		callsub S_BuyConsumableBG,715,15;	
+				case 8:		callsub S_BuyConsumableBG,7033,30;		
+			}
+			break;
+		case 3:
+			switch($rotation){
+				case 0:		callsub S_BuyConsumableBG,993,20;	
+				case 1:		callsub S_BuyConsumableBG,991,20;	
+				case 2:		callsub S_BuyConsumableBG,992,20;		
+				case 3:		callsub S_BuyConsumableBG,990,20;	
+				case 4:		callsub S_BuyConsumableBG,12119,3;	
+				case 5:		callsub S_BuyConsumableBG,950,15;	
+				case 6:		callsub S_BuyConsumableBG,12118,3;	
+				case 7:		callsub S_BuyConsumableBG,12120,3;	
+				case 8:		callsub S_BuyConsumableBG,12121,3;		
+			}
+			break;
+		case 4:
+			switch($rotation){
+				case 0:		callsub S_BuyConsumableBG,972,1;	
+				case 1:		callsub S_BuyConsumableBG,606,3;	
+				case 2:		callsub S_BuyConsumableBG,525,10;		
+				case 3:		callsub S_BuyConsumableBG,970,1;	
+				case 4:		callsub S_BuyConsumableBG,7321,10;	
+				case 5:		callsub S_BuyConsumableBG,12262,5;	
+				case 6:		callsub S_BuyConsumableBG,1061,10;	
+				case 7:		callsub S_BuyConsumableBG,12127,5;	
+				case 8:		callsub S_BuyConsumableBG,12128,1;		
+			}
+			break;
+	}
+	end;
+OnClock0000:
+	$rotation = rand(9);
+	end;
+
+S_BuyConsumableBG:
+	set .@item_id, getarg(0);
+	set .@amt, getarg(1);
+	
+	mes "[Teru]";
+	if (#LANGUE == 1){
+		mes "How many sets of ^0000FF"+ .@amt +" "+ getitemname(.@item_id) +"s^000000 do you want?";
+		mes "1 = "+ .@amt   +" supplies = 10 shards";
+		mes "2 = "+ .@amt*2 +" supplies = 20 shards";
+		mes "3 = "+ .@amt*3 +" supplies = 30 shards";
+		mes "etc..";
+	}
+	else{
+		mes "Combien d'exemplaires de ^0000FF"+ .@amt +" "+ getitemname(.@item_id) +"s^000000 souhaites-tu ?";
+		mes "1 = "+ .@amt   +" "+getitemname(.@item_id) +" = 10 shards";
+		mes "2 = "+ .@amt*2 +" "+getitemname(.@item_id) +" = 20 shards";
+		mes "3 = "+ .@amt*3 +" "+getitemname(.@item_id) +" = 30 shards";
+		mes "etc..";
+	}
+
+	next;
+	input .@sets;
+	mes "[Teru]";
+	if (.@sets < 1) {
+		if (#LANGUE == 1){
+			mes "Enter a positive amount, greater than zero.";
+		}
+		else{
+			mes "Entrer une valeur supérieure à 0.";
+		}
+		close;
+	}
+	
+	if (#LANGUE == 1){
+		mes "So you want ^0000FF"+ (.@amt*.@sets) +" "+ getitemname(.@item_id) +"s^000000...";
+		mes "It will cost you "+ .@sets*10 +" shards...";
+		
+	}
+	else{
+		mes "Vous voulez donc ^0000FF"+ (.@amt*.@sets) +" "+ getitemname(.@item_id) +"s^000000...";
+		mes "Cela vous coûtera "+ .@sets*10 +" shards...";
+	}
+	next;
+	if (#LANGUE == 1){
+		switch(select("Give her "+ .@sets*10 +" Shards of Potential")) {
+			case 1: set .@badge,35003; set .@cost,10; break;
+		}
+	}
+	else{
+		switch(select("Donnez lui "+ .@sets*10 +" Shards of Potential")) {
+		case 1: set .@badge,35003; set .@cost,10; break;
+		}
+	}
+	mes "[Teru]";
+	if (countitem(.@badge) < (.@cost*.@sets)) {
+		if (#LANGUE == 1){
+			mes "You do not have enough ^FF0000"+getitemname(.@badge)+"s^000000 to buy "+(.@amt*.@sets)+" "+getitemname(.@item_id)+"s.";
+		}
+		else{
+			mes "Vous n'avez pas assez de ^FF0000"+getitemname(.@badge)+"s^000000 pour acheter "+(.@amt*.@sets)+" "+getitemname(.@item_id)+"s.";
+		}
+		close;
+
+	} else if (!checkweight(.@item_id, .@amt*.@sets)) {
+		if (#LANGUE == 1){
+			mes "You are overweight or have too many items in your inventory.";
+		}
+		else{
+			mes "Vous êtes trop lourds ou vous avez trop d'objets différents dans votre inventaire.";
+		}
+		close;
+	} else {
+			delitem .@badge, .@cost*.@sets;
+			getitem .@item_id,(.@amt*.@sets);
+		}
+	if (#LANGUE == 1){
+		mes "Here are your: ^0000FF"+(.@amt*.@sets)+" "+getitemname(.@item_id)+"s^000000!";
+	}
+	else{
+		mes "Voici vos ^0000FF"+(.@amt*.@sets)+" "+getitemname(.@item_id)+"s^000000!";
+	}
+	close;
+}

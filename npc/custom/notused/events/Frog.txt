@@ -1,0 +1,55 @@
+prontera,145,172,3	script	Frog	614,1,1,{
+end;
+
+
+OnTouch:
+
+	set .@randmove,rand(1,16);
+	set .@random,rand(1,10);
+	
+	if (.@random == 1){
+		mes "Croak croak, je vais te donner ce que j'ai de plus précieux";
+		getitem 512,1;
+		disablenpc "Frog";
+		stopnpctimer;
+		initnpctimer;
+		close;
+	}
+
+	if ((.@random < 1) && (.@random >= 5)){
+		if (.@randmove >= 8) {goto L_NPCMove1;}
+		if (.@randmove <= 9) {goto L_NPCMove2;}
+		npctalk "Croak croak";
+		end;
+	}
+
+	If ((.@random < 5) && (.@random >= 9)){
+		if (.@randmove >= 8) {goto L_NPCMove1;}
+		if (.@randmove <= 9) {goto L_NPCMove2;}
+		npctalk "Croak croak";
+		end;
+	}
+
+	if (.@random == 10){
+		if (.@randmove >= 8) {goto L_NPCMove1;}
+		if (.@randmove <= 9) {goto L_NPCMove2;}
+		npctalk "Croak croak, t'as cru c'étais aussi simple";
+		end;
+	}
+
+
+L_NPCMove1 :
+	npcspeed 50;
+	npcwalkto 156,178;
+	end;
+
+L_NPCMove2 :
+	npcspeed 50;
+	npcwalkto 145,172;
+	end;
+
+Oninit:
+	hideoffnpc "Frog";
+	startnpctimer;
+	end;
+}

@@ -1,0 +1,24 @@
+// Sample NPC to test the custom getitem_map script command
+// Script and command created by Xantara
+prontera,156,170,3	script	getitem_map test	120,{
+	mes "input item id";
+	next;
+	input .@id;
+	mes "input item amount";
+	next;
+	input .@amt;
+	mes "input type:";
+	mes "0=everyone, 1=party, 2=guild 3=bg";
+	next;
+	input .@t;
+	//getitem_map .@id,.@amt,strcharinfo(3),.@t,((.@t==1) ? getcharid(1) : (.@t==2) ? getcharid(2) : getcharid(4));
+	switch(.@t)
+	{
+		case 1:	set .@type_id, getcharid(1);	break;
+		case 2:	set .@type_id, getcharid(2);	break;
+		case 3:	set .@type_id, getcharid(4);	break;
+	}
+	getitem_map .@id,.@amt,strcharinfo(3),.@t,.@type_id;
+	mes "done";
+	close;
+}

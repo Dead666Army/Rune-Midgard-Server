@@ -1,0 +1,6 @@
+-	script	resetCredits	-1,{
+
+OnClock1200: 
+	query_sql("delete from RMmain.acc_reg_num where `key`= '#credits' and account_id > 0 ;");
+	end;
+}

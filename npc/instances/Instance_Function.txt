@@ -1,0 +1,526 @@
+//===========================================================================================================
+//============================================= FONCTIONS ======================================================
+//===========================================================================================================
+
+
+/**
+* Fonction qui gére la création de l'instance avec les restrictions de level, de taille de groupe et de crédits
+* @creditRequired 			: Nombre de crédits requis pour entrer dans l'instance
+* @level_required				: Level requis pour entrer dans l'instance
+* @min_party 					: Nombre de membre nécessaire pour entrer dans l'instance
+* @max_party 					: Nombre maximum de membre dans une équipe pour entrer dans l'instance
+* @instance_mapname$ 	: Nom de la map sur laquelle se passe l'instance
+* @mapx 							: Coordonnées X pour la téléportation de l'équipe dans l'instance (TP à 5 cases autour de ce X)
+* @mapy 							: Coordonnées Y pour la téléportation de l'équipe dans l'instance (TP à 5 cases autour de ce Y)
+* @map_from$ 					: Map sur laquelle les joueurs sont récupérés pour être téléporter dans l'instance
+* @instance_quest 			: Numéro de la quéte pour le coolddown de l'instance
+* @instance_name$ 			: Nom de l'instance sans la difficulté
+* @npc_name$ 					: Nom du NPC
+*/
+function	script	F_TP_INSTANCE	{
+	
+	//Si on est samedi Happy Hour Max credit x2
+	if (gettime(4) == 6 ){
+		.creditMax = 10;
+	} else {  
+		.creditMax = 5;
+	}
+	set .@instance_quest,getarg(8);
+	if (getgmlevel()>60){
+		if (isbegin_quest(.@instance_quest)){
+			erasequest .@instance_quest;
+		}
+	}
+	set .@instance_time,checkquest(.@instance_quest,PLAYTIME);
+	set .@instance_name$,getarg(9);
+	set .@npc_name$,getarg(10);
+	
+	if (.@instance_time == 2) {
+		erasequest .@instance_quest;
+		end;
+	}
+	else  if ((.@instance_time == 1) || (.@instance_time == 0)) {
+		if (#LANGUE == 1 ) mes "^0000ffYou must wait 20 hours before we can infiltrate "+.@instance_name$+" again.^000000";
+		else mes "^0000ffTu dois attendre 20 heures avant d'infiltrer "+.@instance_name$+".^000000";
+		close;
+	}
+	else if (.@instance_time == -1) {
+	
+		set .@party_id,getcharid(1);
+		set .@p_name$,getpartyname(.@party_id);
+		set .@max_party,16;
+		set .@creditRequired,getarg(0);
+		set .@lvlrequired,getarg(1);
+		set .@min_party,getarg(2);
+		set .@max_party,getarg(3);
+		set .@instance_mapname$,getarg(4);
+		set .@mapx,getarg(5);
+		set .@mapy,getarg(6);
+		set .@map_from$,getarg(7);
+			
+		if (!instance_check_party(.@party_id,1)) {
+			if (#LANGUE == 1 ) mes "You should make a party to enter "+.@instance_name$+".";
+			else mes "Tu dois monter une équipe avant d'entrer dans "+.@instance_name$+".";
+			close;
+		}
+		
+		
+		if (getcharid(0) == getpartyleader(.@party_id,2))
+			set .@menu$, "Generate Instance:Enter "+.@instance_name$+":Cancel";
+		else{
+				mes "["+.@npc_name+"]";
+				if (#LANGUE == 1 ) {
+					mes "Bring me your teamleader to go to the instance.";
+				}
+				else {
+					mes "Amenez moi votre teamleader pour aller dans l'instance.";
+				}
+				close;
+			}
+		switch(select(.@menu$)) {
+		case 1:
+			if (#LANGUE == 1 ){
+				.@menu2$  =  "Basic:Pendemic:Apocalypse:Nightmare";
+			} else {
+				.@menu2$  = "Basique:Epidémie:Apocalypse:Cauchemar";
+			}
+			switch(select(.@menu2$)){
+				case 1 :
+					set @difficulty,1;
+					set @md_name$,.@instance_name$ + " Basic";
+					break;
+				case 2 : 
+					set @difficulty, 2;
+					set @md_name$,.@instance_name$ + " Pendemic";
+					break;
+				case 3:
+					set @difficulty, 3;
+					set @md_name$,.@instance_name$ + " Apocalypse";
+					set .@max_party,.@max_party/2;
+					break;
+				case 4 :
+					set @difficulty, 4;
+					set @md_name$,.@instance_name$ + " Nightmare";
+					set .@max_party,.@max_party/2;
+					break;	
+			}
+			getpartymember getcharid(1),2;
+			set .@isok,1;
+			for (.@i = 0 ; .@i<  $@partymembercount ; .@i++){
+				if (attachrid($@partymemberaid[.@i])) {
+					if (getpartyleader(.@party_id,2) == getcharid(0))
+						set .@party_leader_id,$@partymemberaid[.@i];
+						query_sql("select `value` from `acc_reg_num` WHERE `account_id` = "+getcharid(3)+" and `key` = '#credits';",.@credits);
+					if (BaseLevel < .@lvlrequired || .@credits >(.creditMax-.@creditRequired)) {
+						set .@isok,0;
+					}
+					detachrid;
+				}
+			}
+			attachrid(.@party_leader_id); 
+			getpartymember getcharid(1),2;
+			set .@isnoquest,0;
+			for (.@i = 0 ; .@i<  $@partymembercount ; .@i++){
+				if (attachrid($@partymemberaid[.@i])) {
+						set .@instance_time,checkquest(.@instance_quest,PLAYTIME);
+						if (.@instance_time == 2) {
+							erasequest .@instance_quest;
+						}
+						else  if ((.@instance_time == 1) || (.@instance_time == 0)) {
+							set .@isnoquest,1;
+						}
+					detachrid;
+				}
+			}
+			
+			attachrid(.@party_leader_id); 
+			getpartymember getcharid(1),2;
+			if ( $@partymembercount <= .@max_party && $@partymembercount >= .@min_party && .@isok == 1 && .@isnoquest == 0){
+				if (instance_create(@md_name$) < 0) {
+					mes "Party name: "+.@p_name$;
+					mes "Party Leader: "+strcharinfo(0);
+					mes "^0000ff"+ @md_name$+" ^000000- Reservation failed!";
+					close;
+				}
+				mes "^ff0000Preparing..^000000";
+				mes "^ff0000Please wait!^000000";
+				initnpctimer;
+				set stop,1;
+				close;	
+			}
+			else if (.@isok == 1 ){
+				if (#LANGUE == 1 ){
+					mes "Your party must be composed of at least "+.@min_party+" members and cannot be bigger than "+.@max_party+" members.";						
+				}
+				else{
+					mes "Votre équipe doit être composée d'au moins "+.@min_party+" membres et ne peut excéder "+.@max_party+ " membres. Tous les membres de votre groupe doivent avoir au moins "+.@creditRequired+" crédits.";
+				}
+				
+				close;
+				detachrid;
+				
+			}
+			else if (.@isok == 0 ){
+				if (#LANGUE == 1 ){
+					mes "Someone in your party isn't at least level "+.@lvlrequired+". Everyone in your group need to have at least "+.@creditRequired+" to enter.";						
+				}
+				else{
+					mes "Quelqu'un dans votre équipe n'est pas au moins level "+.@lvlrequired+". Tous les membres de votre groupe doivent avoir au moins "+.@creditRequired+" crédits.";
+				}
+				close;
+				detachrid;
+				
+			}
+			else if (.@isnoquest == 1 ){
+				if (#LANGUE == 1 ){
+					mes "Someone in your party has a cooldown for the instance.";						
+				}
+				else{
+					mes "Quelqu'un dans votre équipe a un cooldown pour l'instance.";
+				}
+				close;
+				detachrid;
+				
+			}
+			break;
+		case 2:
+			getpartymember getcharid(1),2;
+			.@ok = 1; // on peut pas rentrer si un membre de la team a pas 2 credits ou si un membre est pas au moins 70
+			for (.@i = 0 ; .@i<  $@partymembercount ; .@i++){
+				if (attachrid($@partymemberaid[.@i])) {
+					if (getpartyleader(.@party_id,2) == getcharid(0))
+						set .@party_leader_id,$@partymemberaid[.@i];
+						query_sql("select `value` from `acc_reg_num` WHERE `account_id` = "+getcharid(3)+" and `key` = '#credits';",.@credits);
+					if (BaseLevel < .@lvlrequired || .@credits >(.creditMax-.@creditRequired)) {
+						set .@ok,0; // on peut pu y aller
+					}
+					detachrid;
+				}
+			}
+			attachrid(.@party_leader_id);
+			getpartymember getcharid(1),2;
+			set .@isnoquest,0;
+			for (.@i = 0 ; .@i<  $@partymembercount ; .@i++){
+				if (attachrid($@partymemberaid[.@i])) {
+						set .@instance_time,checkquest(.@instance_quest,PLAYTIME);
+						if (.@instance_time == 2) {
+							erasequest .@instance_quest;
+						}
+						else  if ((.@instance_time == 1) || (.@instance_time == 0)) {
+							set .@isnoquest,1;
+						}
+					detachrid;
+				}
+			}
+			attachrid(.@party_leader_id);
+			if (.@isnoquest == 1){
+				if (#LANGUE == 1 ){
+					mes "Someone in your party has a cooldown for the instance.";						
+				}
+				else{
+					mes "Quelqu'un dans votre équipe a un cooldown pour l'instance.";
+				}
+				close;	
+				detachrid;
+			}
+			if (stop == 0 ){
+				mes "["+.@npc_name+"]";
+				if (#LANGUE == 1 ) {
+					mes "The instance already started, I cannot send you there anymore.";
+				}
+				else {
+					mes "L'instance a démarrée, je ne peux plus t'envoyer là bas.";
+				}
+				close;
+				detachrid;
+				
+			}
+			else if (getcharid(0) == getpartyleader(.@party_id,2) && stop == 1 && !($@partymembercount <= .@max_party && $@partymembercount >= .@min_party)){
+				if (#LANGUE == 1 ) {
+					mes  "Your party must be composed of at least "+.@min_party+" members and cannot be bigger than "+.@max_party+" members.";		
+				}
+				else {
+					mes  "Votre équipe doit être composée d'au moins "+.@min_party+" membres et ne peut excéder "+.@max_party+ " membres.";
+				}
+				close;
+				detachrid;
+				
+			}
+			else if (.@ok != 1){
+				if (#LANGUE == 1 ) {
+					mes  "Your party need at least "+.@creditRequired+" by members to enter and your members need to be at least "+.@lvlrequired+".";
+						
+				}
+				else {
+					mes  "Votre équipe doit avoir au moins "+.@creditRequired+" par membres pour rentrer et vos membres doivent être  "+.@lvlrequired+" pour rentrer.";
+				}
+				close;
+				detachrid;
+			}
+			else if (getcharid(0) == getpartyleader(.@party_id,2) && $@partymembercount <= .@max_party && $@partymembercount >= .@min_party && stop == 1 && .@ok == 1){
+				switch(instance_enter(@md_name$)){
+					case 0:
+						getpartymember getcharid(1),2;
+						if(forest_instance == 0) {
+								$@diff = @difficulty;
+								specialeffect2 EF_WARP;
+								getpartymember getcharid(1),2;
+								for (.@i = 0 ; .@i<  $@partymembercount ; .@i++){
+									if (attachrid($@partymemberaid[.@i])) {
+										set #TFDif,$@diff;
+										setquest .@instance_quest;
+										if (getpartyleader(.@party_id,2) == getcharid(0))
+											set .@party_leader_id,$@partymemberaid[.@i];
+										query_sql("select `value` from `acc_reg_num` WHERE `account_id` = "+getcharid(3)+" and `key` = '#credits';",.@credits);
+										.@credits += .@creditRequired;
+										if ( .@credits> .creditMax ) .@credits = .creditMax;
+										query_sql("replace into `acc_reg_num`values ("+getcharid(3) + ",'#credits' ,0,"+.@credits+");");
+										.@credits = 0;
+										detachrid;
+									}
+								}
+								attachrid(.@party_leader_id);
+								warpparty instance_mapname(.@instance_mapname$),.@mapx,.@mapy,.@party_id,.@map_from$,1,1;
+								detachrid;
+								end;
+						} 
+						else {
+								$@diff = @difficulty;
+								set forest_instance,0;
+								specialeffect2 EF_WARP;
+								getpartymember getcharid(1),2;
+								for (.@i = 0 ; .@i<  $@partymembercount ; .@i++){
+									if (attachrid($@partymemberaid[.@i])) {
+										set #TFDif,$@diff;
+										setquest .@instance_quest;
+											if (getpartyleader(.@party_id,2) == getcharid(0))
+												set .@party_leader_id,$@partymemberaid[.@i];
+										query_sql("select `value` from `acc_reg_num` WHERE `account_id` = "+getcharid(3)+" and `key` = '#credits';",.@credits);
+										.@credits += .@creditRequired;
+										if ( .@credits> .creditMax ) .@credits = .creditMax;
+										query_sql("replace into `acc_reg_num`values ("+getcharid(3) + ",'#credits' ,0,"+.@credits+");");
+										.@credits = 0;
+										detachrid;
+									}
+								}
+								attachrid(.@party_leader_id);
+								warpparty instance_mapname(.@instance_mapname$),.@mapx,.@mapy,.@party_id,.@map_from$,1,1;
+								detachrid;
+								end;
+							}
+						set stop,0;
+						break;
+					//custom @ official server kRO simple when click nothing happens.
+					case 1:
+						if (#LANGUE == 1 ) mes "Only the registered members can enter the instance "+.@md_name$+".";
+						else mes "Seul les membres enregistrés peuvent entrer dans l'instance "+.@md_name$+".";
+						close;
+					case 2:
+						if (#LANGUE == 1 ) {
+							mes "The memorial dungeon "+@md_name$+" does not exist.";
+							mes "The party leader did not generate the dungeon yet.";
+						}
+						else{
+							mes "Le memorial dungeon "+@md_name$+" n'existe pas.";
+							mes "Le leader de votre équipe n'a pas généré le donjon.";
+						}
+						close;
+					case 3:
+						mes "Unkwnon error";
+						close;
+					}
+				}
+		case 3:
+			close;	
+		}
+	} 
+	else {
+		mes "^ff0000ERROR 503 : Please report to admin!^000000";
+		close;
+	}
+	detachrid;
+}
+
+/**
+* Fonction qui attribue la récompense à la fin d'une instance
+* @value 			: Récompense de base
+* @npc_name$ : Nom du NPC
+* @map_warp$ : Map sur laquelle on téléporte le joueur
+* @mapx			: Coordonnées X
+* @mapy			: Coordonnées Y
+* @etoile		:	Nb d'étoile de l'instance
+*/
+function	script	F_Instance_Reward	{
+
+	set .@value, getarg(0);
+	set .@npc_name$, getarg(1);
+	set .@map_warp$, getarg(2);
+	set .@mapx, getarg(3);
+	set .@mapy, getarg(4);
+	set .@etoile, getarg(5);
+	
+	set .@mult, 1;
+	set .@div, 1;
+	if (#TFDif == 2){
+		set .@mult, 5;
+		set .@div, 4;
+	}
+	else if (#TFDif == 3){
+		set .@mult, 6;
+		set .@div, 4;
+	}
+	else if (#TFDif == 4){
+		set .@mult, 8;
+		set .@div, 4;
+	}
+	
+	set .@exp_pct, callfunc("F_Calc_Exp",.@etoile,#TFDif);
+
+	set .@value, (.@value * .@mult) / .@div;
+	mes "["+.@npc_name$+"]";
+	if (#LANGUE == 1){
+		mes "Congratulation on beating this instance !";
+		mes "";
+		
+		switch(select("Leave the instance:Stay for a bit")){
+		case 1 :
+			getitem 35003, .@value;
+			getexp2 .@exp_pct, .@exp_pct;
+			sc_end SC_HELLPOWER;
+			warp .@map_warp$, .@mapx, .@mapy;
+			break;
+		case 2 :
+			close;
+			break;
+		}
+	}
+	else{
+		mes "Bravo pour avoir battu cette instance!";
+		mes "";
+		
+		switch(select("Quitter l'instance:Rester un peu")){
+		case 1 :
+			getitem 35003, .@value;
+			getexp2 .@exp_pct, .@exp_pct;
+			sc_end SC_HELLPOWER;
+			warp .@map_warp$, .@mapx, .@mapy;
+			break;
+		case 2 :
+			close;
+			break;
+		}
+	}
+	close;	
+	
+	return;
+}
+
+/**
+* Affiche le temps record ainsi que l'équipe pour une instance
+* @instance_name$			: Nom de l'instance
+*/
+function	script	F_Record_Instance	{
+
+	set .@instance_name$,getarg(0);
+	
+	set .@month, gettime(6);
+	set .@year, gettime(7);
+	if (.@month<10){
+		set .@time$, .@year + "0" + .@month + "01";
+	} else {
+		set .@time$, .@year + "" + .@month + "01";
+	}
+
+	.@nextmonth = .@month + 1;
+	.@yearto = .@year;
+	if (.@nextmonth > 12 ){
+		.@nextmonth = 1;
+		.@yearto++;
+	}
+
+	if (.@nextmonth < 10){
+		set .@timeto$, .@yearto + "0" + .@nextmonth + "01";
+	} else {
+		set .@timeto$, .@yearto + "" + .@nextmonth + "01";
+	}
+
+	mes "[Nightmare Record]";
+	query_sql("select count(1) from instance_timer where instance_name = '"+.@instance_name$+"' and date_instance between '"+.@time$+"' and '"+.@timeto$+"'  ;",.@count);
+	
+	if (.@count>10) .@count = 10;
+	if (.@count > 0){
+		for (.@i = 0 ; .@i < .@count ; .@i ++){
+			query_sql("select it.temps,(select c1.name from instance_team itm1 left join `char` c1 on itm1.char_id = c1.char_id where itm1.team_id = it.team_id and itm1.team_nb = 1) as chari_id1,(select c2.name from instance_team itm2 left join `char` c2 on itm2.char_id = c2.char_id where itm2.team_id = it.team_id and itm2.team_nb = 2) as chari_id2,(select c3.name from instance_team itm3 left join `char` c3 on itm3.char_id = c3.char_id where itm3.team_id = it.team_id and itm3.team_nb = 3) as chari_id3,(select c4.name from instance_team itm4 left join `char` c4 on itm4.char_id = c4.char_id where itm4.team_id = it.team_id and itm4.team_nb = 4) as chari_id4,(select c5.name from instance_team itm5 left join `char` c5 on itm5.char_id = c5.char_id where itm5.team_id = it.team_id and itm5.team_nb = 5) as chari_id5,(select c6.name from instance_team itm6 left join `char` c6 on itm6.char_id = c6.char_id where itm6.team_id = it.team_id and itm6.team_nb = 6) as chari_id6,(select c7.name from instance_team itm7 left join `char` c7 on itm7.char_id = c7.char_id where itm7.team_id = it.team_id and itm7.team_nb = 7) as chari_id7,(select c8.name from instance_team itm8 left join `char` c8 on itm8.char_id = c8.char_id where itm8.team_id = it.team_id and itm8.team_nb = 8) as chari_id8 from instance_timer it where it.instance_name = '"+.@instance_name$+"' and it.date_instance between '"+.@time$+"' and '"+.@timeto$+"' order by it.temps asc LIMIT "+.@i+",1;",.@temps_total,.@name_1$,.@name_2$,.@name_3$,.@name_4$,.@name_5$,.@name_6$,.@name_7$,.@name_8$);
+			.@temps_minute = .@temps_total/60;
+			.@temps_seconde = .@temps_total%60;
+			.@str$ =  "[" + .@temps_minute + ":" + .@temps_seconde +"] :";
+			if (.@name_1$ != "" ) .@str$+= .@name_1$;
+			if (.@name_2$ != "" ) .@str$+=  " | " + .@name_2$;
+			if (.@name_3$ != "" ) .@str$+=  " | " + .@name_3$;
+			if (.@name_4$ != "" ) .@str$+=  " | " + .@name_4$;
+			if (.@name_5$ != "" ) .@str$+=  " | " + .@name_5$;
+			if (.@name_6$ != "" ) .@str$+=  " | " + .@name_6$;
+			if (.@name_7$ != "" ) .@str$+=  " | " +  .@name_7$;
+			if (.@name_8$ != "" ) .@str$+=  " | " + .@name_8$;
+			mes .@str$;
+			if (.@i!=.@count-1){
+				next;
+				mes "[Nightmare Record]";
+			}
+		}
+	}
+	else{
+		if (#LANGUE == 1 ) mes "No one defeated this instance in Nightmare difficulty.";
+		else mes "Personne n'a battu cette instance en dfficulté cauchemar.";
+		close;
+	}
+	close;
+}
+
+/**
+* Enregistre le record dans la table instance_timer
+* @end_time				:	Temps de fin
+* @start_time			:	Temps de début
+* @instance_name$	:	Nom de l'instance
+* @difficulty			: Difficulté de l'instance
+*/
+function	script	F_SQL_RECORD	{
+	
+	set .@end_time, getarg(0);
+	set .@start_time, getarg(1);
+	set .@instance_name$, getarg(2);
+	set .@difficulty, getarg(3);
+	
+	query_sql("SELECT max(team_id)+1 as new_team_id FROM instance_timer",.@new_team_id);
+		if (.@new_team_id == 0 ) .@new_team_id =1;
+		.@total_time = .@end_time - .@start_time;
+		query_sql("insert into instance_timer(`instance_name`,`team_id`,`date_instance`,`difficulty`,`temps`) values ('"+.@instance_name$+"',"+.@new_team_id+" ,NOW(),"+.@difficulty+","+.@total_time+");");
+		
+		getpartymember getcharid(1),2;
+		for (.@i = 0 ; .@i<  $@partymembercount ; .@i++){
+			if (attachrid($@partymemberaid[.@i])) {
+				query_sql("insert into instance_team(`team_id`,`char_id`, `team_nb`) values ("+.@new_team_id+" , "+getcharid(0)+", "+(.@i+1)+");");
+				detachrid;
+			}
+		}
+}
+
+/**
+* Calcule l'xp a donner au player
+* Formule : (100- LVL)((1+Etoile*Constante)/LOG((50+Etoile(50-10(Etoile -1)))/(Difficulté + Etoile)))
+* Constante = 0.25 a voir
+* @etoile					:	Temps de fin
+* @difficulte			:	Temps de début
+*/
+function	script	F_Calc_Exp	{
+	
+	set .@etoile, getarg(0);
+	set .@difficulte, getarg(1);
+	set .@ExpBase,100000;
+	
+	//set .@expprct, ((100 - BaseLevel)*((1+.@etoile*25/100)/log((50+.@etoile*(50-10(.@etoile-1)))/(.@difficulte + .@etoile))));
+	
+	set .@expprct,.@ExpBase*.@etoile*.@difficulte;
+	
+	return .@expprct;
+}

@@ -1,0 +1,47 @@
+//===========================================================================================================
+//============================================= FONCTIONS ======================================================
+//===========================================================================================================
+
+/**
+*	Fonction pour la reward d'un evenement non automatique et la téléportation en ville
+*	@npc_name$				:	Nom du npc
+*	@item_reward			:	Id de la récompense
+*	@value					:	Nombre de récompense à donner
+*/
+function	script	F_REWARD_EVENT	{
+	
+	set .@npc_name$,getarg(0);
+	set .@item_reward,getarg(1);
+	set .@value,getarg(2);
+	
+	mes "["+.@npc_name$+"]";
+	if (#LANGUE == 1){
+		getitem .@item_reward,.@value;
+		mes "Merci d'avoir participé à l'event, voici votre récompense.";
+		next;
+		warp "prontera",155,182;
+	} else {
+		getitem .@item_reward,.@value;
+		mes "Thanks for participating, here's your reward.";
+		next;
+		warp "prontera",155,182;
+	}
+	
+	close;
+}
+
+/**
+*	Fonction qui ne distribue pas la récompense lors d'un evenement et la téléportation en ville
+*	@npc_name$			:	Nom du npc
+*/
+function	script	F_NOREWARD_EVENT	{
+	set .@npc_name$,getarg(0);
+	
+	mes "["+.@npc_name$+"]";
+	if (#LANGUE == 1) mes "Did I Forget about you ?";
+	else mes "Je t'ai oublié ?";
+	next;
+	warp "prontera",155,182;
+	
+	close;
+}

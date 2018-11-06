@@ -1,0 +1,12 @@
+build:
+  stage: build
+  image: gcc:8
+  
+  script:
+    - uname -a
+    - chmod +x configure
+    - ./configure --enable-prere=no --enable-vip=no --enable-buildbot=yes
+    - make clean
+    - make all
+    
+    

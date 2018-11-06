@@ -1,0 +1,176 @@
+//===== rAthena Script =======================================
+//= OnPCLogin NPC
+//===== By: ==================================================
+//= Akkarin
+//===== Current Version: =====================================
+//= 2.0
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: =========================================
+//= This NPC saves your settings so the next time you login, it
+//= will auto perform the commands you selected. Easy to edit
+//= or duplicate/modify based on cmds you want to allow.
+//===== Additional Comments: =================================
+//= 1.0 First Version.
+//= 2.0 Complete rewrite to make use of binary values and 
+//      switch(select()) instead of menu();
+//============================================================
+prontera,164,175,4	script	Settings	61,{
+	set .@reset$,"^000000";
+	set .@disabled$,"^BE1C1C";
+	set .@enabled$,"^0DB40D";
+	
+UserMenu:
+	mes "[^484848Settings^000000]";
+	mes "Note: These are all account based, not per-character.";
+	mes "Note 2: You must relog for them to take effect.";
+	if (#pcloginflag&1) { set .@st_autoloot$,.@enabled$+#pcloginalp+"%"+.@reset$; } else { set .@st_autoloot$,.@disabled$+"Off"+.@reset$; }
+	if (#pcloginflag&2) { set .@st_showdelay$,.@enabled$+"On"+.@reset$; } else { set .@st_showdelay$,.@disabled$+"Off"+.@reset$; }
+	if (#pcloginflag&4) { set .@st_showexp$,.@enabled$+"On"+.@reset$; } else { set .@st_showexp$,.@disabled$+"Off"+.@reset$; }
+	if (#pcloginflag&8) { set .@st_channel$,.@enabled$+"On"+.@reset$; } else { set .@st_channel$,.@disabled$+"Off"+.@reset$; }
+	if (#pcloginflag&16) { set .@st_channel2$,.@enabled$+"On"+.@reset$; } else { set .@st_channel2$,.@disabled$+"Off"+.@reset$; }
+	if (#pcloginflag&32) { set .@st_channel3$,.@enabled$+"On"+.@reset$; } else { set .@st_channel3$,.@disabled$+"Off"+.@reset$; }
+	if (#pcloginflag&64) { set .@st_channel4$,.@enabled$+"On"+.@reset$; } else { set .@st_channel4$,.@disabled$+"Off"+.@reset$; }
+	if (#pcloginflag&128) { set .@st_channel5$,.@enabled$+"On"+.@reset$; } else { set .@st_channel5$,.@disabled$+"Off"+.@reset$; }
+	if (#pcloginflag&256) { set .@st_channel6$,.@enabled$+"On"+.@reset$; } else { set .@st_channel6$,.@disabled$+"Off"+.@reset$; }
+	if (#pcloginflag&512) { set .@st_channel7$,.@enabled$+"On"+.@reset$; } else { set .@st_channel7$,.@disabled$+"Off"+.@reset$; }
+	next;
+	switch(select("Auto Loot ["+.@st_autoloot$+"]:Show Delay ["+.@st_showdelay$+"]:Show Exp ["+.@st_showexp$+"]:Channel #LFG ["+.@st_channel$+"]:Channel #EN ["+.@st_channel2$+"]:Channel #FR ["+.@st_channel3$+"]:Channel #Trade ["+.@st_channel4$+"]:Channel #BG ["+.@st_channel5$+"]:Channel #Ally ["+.@st_channel6$+"]:Channel #bgannounce ["+.@st_channel7$+"]")){
+		case 1:
+			mes "[^484848Settings^000000]";
+			mes "Auto Loot is currently "+.@st_autoloot$;
+			mes "Desc: Auto loot adds items to your inventory automatically.";
+			next;
+			switch(select("Toggle:Back")){
+				case 1:
+					if (#pcloginflag&1) { set #pcloginflag, #pcloginflag &~ 1; } else {
+						mes "[^484848Settings^000000]";
+						mes "Auto Loot is currently "+.@st_autoloot$;
+						mes "Enter the minimum rate an item must drop at before it it looted, 100 will loot all items, 99 will only loot cards, 0 disables it.";
+						next;
+						input .@rate;
+						if ((.@rate >= 0) && (.@rate <= 100)) set #pcloginalp,.@rate;
+						set #pcloginflag, #pcloginflag | 1;
+					}
+					break;
+				case 2: break;
+			}
+			break;
+		case 2:
+			mes "[^484848Settings^000000]";
+			mes "Show Delay is currently "+.@st_showdelay$;
+			mes "Desc: When a skill fails because of delay, it will be hidden.";
+			next;
+			switch(select("Toggle:Back")){
+				case 1:
+					if (#pcloginflag&2) { set #pcloginflag, #pcloginflag &~ 2; } else { set #pcloginflag, #pcloginflag | 2; }
+					break;
+				case 2:	break;
+			}
+			break;
+		case 3:
+			mes "[^484848Settings^000000]";
+			mes "Show Exp is currently "+.@st_showexp$;
+			mes "Desc: When you gain exp, it will be displaied.";
+			next;	
+			switch(select("Toggle:Back")){
+				case 1:
+					if (#pcloginflag&4) { set #pcloginflag, #pcloginflag &~ 4; } else { set #pcloginflag, #pcloginflag | 4; }
+					break;
+				case 2:	break;
+			}
+			break;
+		case 4:
+			mes "[^484848Settings^000000]";
+			mes "Channel #lfg is "+.@st_channel$;
+			next;
+			switch(select("Toggle:Back")){
+				case 1:
+					if (#pcloginflag&8) { set #pcloginflag, #pcloginflag &~ 8; } else { set #pcloginflag, #pcloginflag | 8; }
+					break;
+				case 2:	break;
+			}
+			break;
+			case 5:
+			mes "[^484848Settings^000000]";
+			mes "Channel #EN is "+.@st_channel2$;
+			next;
+			switch(select("Toggle:Back")){
+				case 1:
+					if (#pcloginflag&16) { set #pcloginflag, #pcloginflag &~ 16; } else { set #pcloginflag, #pcloginflag | 16; }
+					break;
+				case 2:	break;
+			}
+			break;
+			case 6:
+			mes "[^484848Settings^000000]";
+			mes "Channel #FR is "+.@st_channel3$;
+			next;
+			switch(select("Toggle:Back")){
+				case 1:
+					if (#pcloginflag&32) { set #pcloginflag, #pcloginflag &~ 32; } else { set #pcloginflag, #pcloginflag | 32; }
+					break;
+				case 2:	break;
+			}
+			break;
+			case 7:
+			mes "[^484848Settings^000000]";
+			mes "Channel #Trade is "+.@st_channel4$;
+			next;
+			switch(select("Toggle:Back")){
+				case 1:
+					if (#pcloginflag&64) { set #pcloginflag, #pcloginflag &~ 64; } else { set #pcloginflag, #pcloginflag | 64; }
+					break;
+				case 2:	break;
+			}
+			break;
+			case 8:
+			mes "[^484848Settings^000000]";
+			mes "Channel #BG is "+.@st_channel5$; 
+			next;
+			switch(select("Toggle:Back")){
+				case 1:
+					if (#pcloginflag&128) { set #pcloginflag, #pcloginflag &~ 128; } else { set #pcloginflag, #pcloginflag | 128; }
+					break;
+				case 2:	break;
+			}
+			break;
+			case 9:
+			mes "[^484848Settings^000000]";
+			mes "Channel #Ally is "+.@st_channel6$; 
+			next;
+			switch(select("Toggle:Back")){
+				case 1:
+					if (#pcloginflag&256) { set #pcloginflag, #pcloginflag &~ 256; } else { set #pcloginflag, #pcloginflag | 256; }
+					break;
+				case 2:	break;
+			}
+			break;
+			case 10:
+			mes "[^484848Settings^000000]";
+			mes "Channel #bgannounce is "+.@st_channel7$; 
+			next;
+			switch(select("Toggle:Back")){
+				case 1:
+					if (#pcloginflag&512) { set #pcloginflag, #pcloginflag &~ 512; } else { set #pcloginflag, #pcloginflag | 512; }
+					break;
+				case 2:	break;
+			}
+			break;
+	}
+	goto UserMenu;
+	
+OnPCLoginEvent:
+	sleep2 1000;
+	if (#pcloginflag&1)		atcommand "@autoloot " + #pcloginalp;
+	if (#pcloginflag&2)		atcommand "@showdelay";
+	if (#pcloginflag&4)		atcommand "@showexp";
+	if (#pcloginflag&8)		atcommand "@join #lfg";
+	if (#pcloginflag&16)	atcommand "@join #en";
+	if (#pcloginflag&32)	atcommand "@join #fr";
+	if (#pcloginflag&64)	atcommand "@join #trade";
+	if (#pcloginflag&128)	atcommand "@join #battleground";
+	if (#pcloginflag&256)	atcommand "@join #Ally";
+	if (#pcloginflag&512)	atcommand "@join #bgannounce";
+	end;
+}

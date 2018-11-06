@@ -1,0 +1,469 @@
+//===========================================================================================================
+//============================================= INSTANCE =======================================================
+//===========================================================================================================
+
+//Téléportation dans la salle d'attente
+um_dun02,49,84,4	script	Hemet Nesingwary#2	447,{
+	mes "[Hemet Nesingwary]";
+	if (#LANGUE == 1 ){
+		 mes "Good day,explorer,congratulatious for making it so far.";
+		 mes "However,this is just the begining of your pain,I have behind me a forest full of ruthless monsters.";
+		 next;
+		 mes "[Hemet Nesingwary]";
+		 mes "Will you meet the challenge and overcome this instance?";
+		 set Msg1$,"Yes";
+		 set Msg2$,"No";
+	 }
+	else {
+		mes "Bien le bonjour aventurier,je te félicite pour être venu jusqu'ici.";
+		mes "Toutefois,ce n'est que le début de ta peine,j'ai derrière moi une forêt remplie de monstres sans pitié.";
+		next;
+		mes "[Hemet Nesingwary]";
+		mes "Souhaites-tu relever le défi et venir à  bout de cette instance ?";
+		set Msg1$,"Oui";
+		set Msg2$,"Non";
+	}
+	switch(select(Msg1$+":" + Msg2$)){
+		case 1 : 
+			warp "job3_rang01",90,39;
+			end;
+		case 2 :
+			close;
+	}
+	close;
+}
+
+//Panneau record
+um_dun02,45,87,4	script	Nightmare Record#2	835,{
+	
+	set .@instance_name$,"The Forest";
+	
+	callfunc "F_Record_Instance",
+		.@instance_name$;
+		
+	end;
+}
+
+// Génére l'instance et téléporte l'équipe dans l'instance
+job3_rang01,89,45,4	script	Hemet Nesingwary	447,{
+	set .@instance_quest,66000;
+	set .@max_party,16;
+	set .@creditRequired,2;
+	set .@min_party,5;
+	set .@lvlrequired,70;
+	if (getgmlevel()>60)
+		set .@min_party,1;
+	if (getgmlevel()>60)
+		set .@creditRequired,0;
+	set .@instance_mapname$,"anexus";
+	set .@mapx,45;
+	set .@mapy,49;
+	set .@map_from$,"job3_rang01";
+	set .@instance_quest,66000;
+	set .@instance_name$,"The Forest";
+	set .@npc_name$,"Hemet Nesingwary";
+		
+	callfunc "F_TP_INSTANCE",
+		.@creditRequired,
+		.@lvlrequired,
+		.@min_party,
+		.@max_party,
+		.@instance_mapname$,
+		.@mapx,
+		.@mapy,
+		.@map_from$,
+		.@instance_quest,
+		.@instance_name$,
+		.@npc_name$;
+		
+	end;
+}
+
+// Initialise tout ce qu'il faut pour l'instance
+anexus,89,38,1	script	Init	844,{
+	end;
+OnInstanceInit:
+	hideonnpc instance_npcname("Hemet Nesingwary#3");
+	hideonnpc instance_npcname("Hell#anexus");
+	hideonnpc instance_npcname(strnpcinfo(0));
+	
+	setcell instance_mapname("anexus"),48,74,52,74,cell_walkable,0; // 1ere ligne
+	setcell instance_mapname("anexus"),47,116,52,116,cell_walkable,0; // 2eme ligne
+	setcell instance_mapname("anexus"),55,187,60,187,cell_walkable,0; // 3eme ligne
+	setcell instance_mapname("anexus"),95,244,95,239,cell_walkable,0; // 4eme ligne
+	setcell instance_mapname("anexus"),167,252,167,247,cell_walkable,0; // 5eme ligne
+	setcell instance_mapname("anexus"),223,178,228,178,cell_walkable,0; // 6eme ligne
+	setcell instance_mapname("anexus"),192,148,192,143,cell_walkable,0; // 7eme ligne
+	setcell instance_mapname("anexus"),111,113,114,113,cell_walkable,0; // 8eme ligne
+	setcell instance_mapname("anexus"),206,52,206,47,cell_walkable,0; // 9eme ligne
+	setcell instance_mapname("anexus"),247,76,252,76,cell_walkable,0; // 10eme ligne
+	
+	//FR
+	sleep 5000;
+	mapannounce instance_mapname("anexus"),"Hemet Nesingwary : Avant de vous laisser vous engouffrer dans la forêt, je me dois de vous donner quelques indications.",0;
+	sleep 5000;
+	mapannounce instance_mapname("anexus"),"Hemet Nesingwary : L'instance se découpe en zones repérées par des poteaux en bois, vous devrez nettoyer en intégralité chaque zone afin de progresser.",0;
+	sleep 5000;
+	mapannounce instance_mapname("anexus"),"Hemet Nesingwary : Un Boss vous attend à  la fin,il n'apparaitra que si vous avez exterminé l'intégralité des monstres de l'instance.",0;
+	sleep 5000;
+	mapannounce instance_mapname("anexus"),"Hemet Nesingwary : J'espère que c'est entendu, l'épreuve commencera dans 30 secondes, vous avez une heure. Bonne chance !",0;
+	sleep 5000;
+	
+	//EN
+	mapannounce instance_mapname("anexus"),"Hemet Nesingwary : Before I let you enter the forest, I owe you some hints.",0;
+	sleep 5000;
+	mapannounce instance_mapname("anexus"),"Hemet Nesingwary : The Instance is separated in areas spotted by wooden posts, you will have to clean entirely every area in order to progress.",0;
+	sleep 5000;
+	mapannounce instance_mapname("anexus"),"Hemet Nesingwary : A Boss is waiting for you at the end, he will only appear if there is no monster left in the whole instance.",0;
+	sleep 5000;
+	mapannounce instance_mapname("anexus"),"Hemet Nesingwary : I hope everything is clear,the trial will start in 30 seconds, you have one hour to complete the instance. Good luck!",0;
+	sleep 5000;
+	
+	set $start_time_forest[instance_id()],gettimetick(2);
+	setcell instance_mapname("anexus"),48,74,52,74,cell_walkable,1;
+	callfunc "F_Tower_Monster",
+		1,
+		strnpcinfo(4),
+		instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	end;
+OnMyMobDead:
+	.@ok = rand(100);
+	if (.@ok < 15){
+		getpartymember getcharid(1),2;
+		.@rand = rand($@partymembercount);
+		if (attachrid($@partymemberaid[.@rand])) {
+			if (strcharinfo(3) == instance_mapname("anexus")) {
+				getitem 35003,1;
+			}
+			detachrid;
+		}
+	}
+	set .@map$,instance_mapname("anexus");
+	set .@level,atoi(replacestr(strnpcinfo(0),"Controller",""))+1;
+	set .@mob_dead_num,mobcount(.@map$,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	set .@mob_dead_num,mobcount(instance_mapname("anexus"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	if (.@mob_dead_num < 1) {
+		mapannounce instance_mapname("anexus"),"Hemet Nesingwary : Cette première zone semblait facile, restez sur vos gardes.",0;
+		mapannounce instance_mapname("anexus"),"Hemet Nesingwary : This first area seemed easy, watch out though.",0;
+		setcell instance_mapname("anexus"),47,116,52,116,cell_walkable,1; // 2eme ligne
+		donpcevent instance_npcname("1Controller")+"::OnEnable";
+	}
+	
+	end;
+}
+
+anexus,89,38,1	script	1Controller	844,{
+	end;
+
+OnInstanceInit:
+	hideonnpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+
+OnEnable:
+	enablenpc instance_npcname(strnpcinfo(0));
+	callfunc "F_Tower_Monster",
+		atoi(replacestr(strnpcinfo(0),"Controller",""))+1,
+		strnpcinfo(4),
+		instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	end;
+	
+OnMyMobDead:
+	
+	.@ok = rand(100);
+	if (.@ok < 15){
+		getpartymember getcharid(1),2;
+		.@rand = rand($@partymembercount);
+		if (attachrid($@partymemberaid[.@rand])) {
+			if (strcharinfo(3) == instance_mapname("anexus")) {
+				getitem 35003,1;
+			}
+			detachrid;
+		}
+	}
+	set .@map$,instance_mapname("anexus");
+	set .@level,atoi(replacestr(strnpcinfo(0),"Controller",""))+1;
+	set .@mob_dead_num,mobcount(.@map$,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	set .@mob_dead_num,mobcount(instance_mapname("anexus"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	switch(.@level){
+	case 1:
+		if (.@mob_dead_num < 1) {
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : Cette première zone semblait facile, restez sur vos gardes.",0;
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : This first area seemed easy, watch out though.",0;
+			setcell instance_mapname("anexus"),47,116,52,116,cell_walkable,1; // 2eme ligne
+			donpcevent instance_npcname("1Controller")+"::OnEnable";
+		}
+		break;
+	case 2:	
+		if (.@mob_dead_num < 1) {
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : Bien joué aventuriers, la suite vous attend.",0;
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : Good job adventurers, keep up the good work.",0;
+			setcell instance_mapname("anexus"),55,187,60,187,cell_walkable,1; // 3eme ligne
+			donpcevent instance_npcname("2Controller")+"::OnEnable";
+			
+		}
+		break;
+	case 3:	
+		if (.@mob_dead_num < 1) {
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : On entre tout juste dans le vif du sujet, pas trop fatigués ?",0;
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : We're just starting, I hope you're not exhausted already.",0;
+			setcell instance_mapname("anexus"),95,244,95,239,cell_walkable,1; // 4eme ligne
+			donpcevent instance_npcname("3Controller")+"::OnEnable";
+			
+		}
+		break;
+	case 4:	
+		if (.@mob_dead_num < 1) {
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : Vous êtes définitivement dignes de votre réputation,on continue !",0;
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : You definitely showed yourself worthy of your reputation,keep going!",0;
+			setcell instance_mapname("anexus"),167,252,167,247,cell_walkable,1; // 5eme ligne
+			donpcevent instance_npcname("4Controller")+"::OnEnable";
+			
+		}
+		break;
+	case 5:	
+		if (.@mob_dead_num < 1) {
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : Celle-ci n'était pas évidente, on avance !",0;
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : This one was tough, let's move on!",0;
+			setcell instance_mapname("anexus"),223,178,228,178,cell_walkable,1; // 6eme ligne
+			donpcevent instance_npcname("5Controller")+"::OnEnable";
+			
+		}
+		break;
+	case 6:	
+		if (.@mob_dead_num < 1) {
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : Qui aurait cru qu'un jour des aventuriers arriveraient si loin.",0;
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : Who would bet that a group of adventurers would go that far someday.",0;
+			setcell instance_mapname("anexus"),192,148,192,143,cell_walkable,1; // 7eme ligne
+			donpcevent instance_npcname("6Controller")+"::OnEnable";
+			
+		}
+		break;
+	case 7:	
+		if (.@mob_dead_num < 1) {
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : Ca commence à sentir bon, ne lâchez-rien !",0;
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : It's starting to smell good, you can do it!",0;
+			setcell instance_mapname("anexus"),111,113,114,113,cell_walkable,1; // 8eme ligne
+			donpcevent instance_npcname("7Controller")+"::OnEnable";
+			
+		}
+		break;
+	case 8:	
+		if (.@mob_dead_num < 1) {
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : Vous êtes vraiment coriace, tenez-bon c'est bientôt fini.",0;
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : You're really strong, keep it up it's almost over.",0;
+			setcell instance_mapname("anexus"),206,52,206,47,cell_walkable,1; // 9eme ligne
+			donpcevent instance_npcname("8Controller")+"::OnEnable";
+			
+		}
+		break;
+	case 9:	
+		if (.@mob_dead_num < 1) {
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : Félicitations ! La salle du boss vous attend,prenez le temps de vous préparer.",0;
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : Congratulations! Boss room is waiting for you,take your time to prepare.",0;
+			setcell instance_mapname("anexus"),247,76,252,76,cell_walkable,1; // 10eme ligne
+			donpcevent instance_npcname("9Controller")+"::OnEnable";
+		}
+		break;
+	case 10 :
+		if (.@mob_dead_num < 1) {
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : Vous avez été incroyables, venez me parler pour obtenir votre récompense.",0;
+			mapannounce instance_mapname("anexus"),"Hemet Nesingwary : You were unbelievable, come and talk to me to get your reward.",0;
+			hideoffnpc instance_npcname("Hemet Nesingwary#3");
+				set .@end_time,gettimetick(2);
+				set .@start_time, $start_time_forest[instance_id()];
+				set .@instance_name$,"The Forest";
+				set .@difficulty, #TFDif;
+				callfunc "F_SQL_RECORD",
+					.@end_time,
+					.@start_time,
+					.@instance_name$,
+					.@difficulty;
+			
+		}
+		break;
+	}
+	end;
+}
+
+anexus,86,39,0	duplicate(1Controller)	2Controller	45,2,2
+anexus,86,39,0	duplicate(1Controller)	3Controller	45,2,2
+anexus,86,39,0	duplicate(1Controller)	4Controller	45,2,2
+anexus,86,39,0	duplicate(1Controller)	5Controller	45,2,2
+anexus,86,39,0	duplicate(1Controller)	6Controller	45,2,2
+anexus,86,39,0	duplicate(1Controller)	7Controller	45,2,2
+anexus,86,39,0	duplicate(1Controller)	8Controller	45,2,2
+anexus,86,39,0	duplicate(1Controller)	9Controller	45,2,2
+anexus,86,39,0	duplicate(1Controller)	10Controller	45,2,2
+
+anexus,50,73,4	script	Hell#anexus	120,300,300,{
+	
+	end;	
+	
+OnInstanceInit:
+
+	hideonnpc instance_npcname(strnpcinfo(0));
+	
+	end;
+		
+OnTouch:
+
+	if (#TFDif == 4) sc_start SC_HELLPOWER,3600000,5;
+	
+	end;
+}
+
+// Reward
+anexus,251,103,4	script	Hemet Nesingwary#3	447,{
+
+	set .@Reward,45;
+	set .@npc_name$,"Hemet Nesingwary";
+	set .@map_warp$,"um_dun02";
+	set .@mapx,49;
+	set .@mapy,80;
+	set .@etoile,2;
+	
+	callfunc "F_Instance_Reward",
+		.@Reward,
+		.@npc_name$,
+		.@map_warp$,
+		.@mapx,
+		.@mapy,
+		.@etoile;
+		
+	end;
+	
+OnInstanceInit:
+
+	hideonnpc instance_npcname(strnpcinfo(0));
+	
+	end;
+}
+
+-	script	pevent_instance#anexus	-1,{
+	
+OnPCDieEvent:
+
+	if(#TFDif == 4 && countstr(strcharinfo(3),strnpcinfo(2))>0){
+		sc_end SC_HELLPOWER;
+		warp "SavePoint",0,0;
+	}
+
+end;
+
+OnPCLogoutEvent:
+
+	if(countstr(strcharinfo(3),strnpcinfo(2))>0)
+		sc_end SC_HELLPOWER;
+	
+end;	
+
+}
+
+//===========================================================================================================
+//============================================= FONCTIONS ======================================================
+//===========================================================================================================
+
+function	script	F_Tower_Monster	{
+
+	set .@level,getarg(0);
+	set .@map$,getarg(1);
+	set .@label$,getarg(2);
+
+	switch(.@level) {
+	case 1:
+		areamonster instance_mapname("anexus"),30,87,53,114,"Parasite",1500,10,.@label$;
+		areamonster instance_mapname("anexus"),30,87,53,114,"Dryad",1493,10,.@label$;
+		break;
+	case 2 :
+		areamonster instance_mapname("anexus"),38,132,77,185,"Enchanted Peach Tree",1410,15,.@label$;
+		areamonster instance_mapname("anexus"),38,132,77,185,"Stone Shooter",1495,10,.@label$;
+		areamonster instance_mapname("anexus"),38,132,77,185,"Wooden Golem",1497,15,.@label$;
+		areamonster instance_mapname("anexus"),38,132,77,185,"Drosera",1781,15,.@label$;
+		areamonster instance_mapname("anexus"),38,132,77,185,"Krabben",1587,15,.@label$;
+		break;
+	case 3 : 
+		areamonster instance_mapname("anexus"),54,200,93,245,"Enchanted Peach Tree",1410,20,.@label$;
+		areamonster instance_mapname("anexus"),54,200,93,245,"Krabben",1587,15,.@label$;
+		areamonster instance_mapname("anexus"),54,200,93,245,"Gibbet",1503,10,.@label$;
+		areamonster instance_mapname("anexus"),54,200,93,245,"Wood Goblin",1880,15,.@label$;
+		break;
+	case 4 :
+		areamonster instance_mapname("anexus"),165,253,96,230,"Drosera",1781,15,.@label$;
+		areamonster instance_mapname("anexus"),165,253,96,230,"Krabben",1587,10,.@label$;
+		areamonster instance_mapname("anexus"),165,253,96,230,"Parasite",1500,15,.@label$;
+		areamonster instance_mapname("anexus"),165,253,96,230,"Mavka",1884,10,.@label$;
+		areamonster instance_mapname("anexus"),165,253,96,230,"Wooden Golem",1497,15,.@label$;
+		break;
+	case 5 :
+		areamonster instance_mapname("anexus"),178,179,237,260,"Drosera",1781,20,.@label$;
+		areamonster instance_mapname("anexus"),178,179,237,260,"Krabben",1587,25,.@label$;
+		areamonster instance_mapname("anexus"),178,179,237,260,"Stone Shooter",1495,15,.@label$;
+		areamonster instance_mapname("anexus"),178,179,237,260,"Mavka",1884,25,.@label$;
+		areamonster instance_mapname("anexus"),178,179,237,260,"Pinguicula",1995,15,.@label$;
+		areamonster instance_mapname("anexus"),178,179,237,260,"Uzhas",1883,15,.@label$;
+		areamonster instance_mapname("anexus"),178,179,237,260,"Dryad",1493,15,.@label$;
+		areamonster instance_mapname("anexus"),178,179,237,260,"Parasite",1500,20,.@label$;
+		break;
+	case 6 :
+		areamonster instance_mapname("anexus"),193,168,231,134,"Drosera",1781,80,.@label$;
+		areamonster instance_mapname("anexus"),193,168,231,134,"Krabben",1587,40,.@label$;
+		break;
+	case 7 :
+		areamonster instance_mapname("anexus"),110,114,180,166,"Drosera",1781,20,.@label$;
+		areamonster instance_mapname("anexus"),110,114,180,166,"Krabben",1587,25,.@label$;
+		areamonster instance_mapname("anexus"),110,114,180,166,"Stone Shooter",1495,15,.@label$;
+		areamonster instance_mapname("anexus"),110,114,180,166,"Mavka",1884,25,.@label$;
+		areamonster instance_mapname("anexus"),110,114,180,166,"Pinguicula",1995,15,.@label$;
+		areamonster instance_mapname("anexus"),110,114,180,166,"Uzhas",1883,15,.@label$;
+		areamonster instance_mapname("anexus"),110,114,180,166,"Dryad",1493,15,.@label$;
+		areamonster instance_mapname("anexus"),110,114,180,166,"Parasite",1500,20,.@label$;
+		break;
+	case 8:
+		areamonster instance_mapname("anexus"),94,30,205,96,"Parasite",1500,20,.@label$;
+		areamonster instance_mapname("anexus"),94,30,205,96,"Drosera",1781,20,.@label$;
+		areamonster instance_mapname("anexus"),94,30,205,96,"Krabben",1587,25,.@label$;
+		areamonster instance_mapname("anexus"),94,30,205,96,"Stone Shooter",1495,15,.@label$;
+		areamonster instance_mapname("anexus"),94,30,205,96,"Mavka",1884,25,.@label$;
+		areamonster instance_mapname("anexus"),94,30,205,96,"Pinguicula",1995,15,.@label$;
+		areamonster instance_mapname("anexus"),94,30,205,96,"Uzhas",1883,15,.@label$;
+		areamonster instance_mapname("anexus"),94,30,205,96,"Dryad",1493,15,.@label$;
+		areamonster instance_mapname("anexus"),94,30,205,96,"Parasite",1500,20,.@label$;
+		areamonster instance_mapname("anexus"),94,30,205,96,"Wooden Golem",1497,20,.@label$;
+		areamonster instance_mapname("anexus"),94,30,205,96,"Gibbet",1503,20,.@label$;
+		break;
+	case 9 :
+		areamonster instance_mapname("anexus"),218,75,260,25,"Mavka",1884,30,.@label$;
+		break;
+	case 10:
+		areamonster instance_mapname("anexus"),250,99,250,99,"Lady Tanee",1688,1,.@label$,2;
+		areamonster instance_mapname("anexus"),239,106,257,90,"Krabben",1587,25,.@label$,2;
+		break;
+	}
+}
+
+
+
+//===========================================================================================================
+//============================================= MAPFLAGS =======================================================
+//===========================================================================================================
+
+job3_rang01	mapflag	nowarpto
+job3_rang01	mapflag	noteleport
+job3_rang01	mapflag	nosave
+job3_rang01	mapflag	nomemo
+job3_rang01	mapflag	nobranch
+job3_rang01	mapflag	noloot
+job3_rang01	mapflag	nopenalty
+
+anexus	mapflag	nowarp
+anexus	mapflag	nowarpto
+anexus	mapflag	noteleport
+anexus	mapflag	nosave
+anexus	mapflag	nomemo
+anexus	mapflag	nobranch
+anexus	mapflag	noloot
+anexus	mapflag	nopenalty
+anexus	mapflag	monster_noteleport
+anexus	mapflag	partylock
+anexus	mapflag	noicewall

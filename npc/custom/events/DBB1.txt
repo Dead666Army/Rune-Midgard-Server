@@ -1,0 +1,138 @@
+//=======================================================================================================
+//=========================================== WARPS =======================================================
+//=======================================================================================================
+
+prontera,156,173,0	warp	WarpToDBB1#1	2,2,job3_guil03,60,60
+job3_guil03,64,33,0	warp	WarpToDBB1#2	2,2,prontera,155,182
+
+//=======================================================================================================
+//=========================================== EVENT =======================================================
+//=======================================================================================================
+
+// D�limite la zone de combat et de spectateurs
+-	script	DBB1	-1,{
+
+	end;
+OnClock2055:
+	announce "L'event Dead Branch Battle est sur le point de commencer, un warp a �t� ouvert au centre de Prontera pour les combattants et les spectateurs.",0;
+	announce "The Dead Branch Battle event is starting soon, a warp has been opened in the center of Prontera for the warriors and the spectators.",0;
+	enablenpc("WarpToDBB1#1");
+	enablenpc("WarpToDBB1#2");
+	end;
+OnClock2100:
+	announce "L'event Dead Branch Battle a commenc�, nous vous rappelons qu'il y a un warp au centre de Prontera pour les retardataires !",0;
+	announce "The Dead Branch Battle event has started, we kindly remind you that there is a warp in the center of Prontera for those who are lates !",0;
+	end;
+OnClock2130:
+	announce "L'event Dead Branch Battle touchant bient�t � sa fin, nous n'acceptons plus les retardaires.",0;
+	announce "The Dead Branch Battle ending soon, we do not accept those who are lates anymore.",0;
+	disablenpc("WarpToDBB1#1");
+	disablenpc("WarpToDBB1#2");
+	end;
+OnInit:
+
+	// Estrade
+	setcell "job3_guil03",65,77,65,32,cell_walkable,0;
+	setcell "job3_guil03",56,32,65,32,cell_walkable,0;
+	setcell "job3_guil03",65,77,56,77,cell_walkable,0;
+	setcell "job3_guil03",56,32,56,77,cell_walkable,0;
+	
+	//Zone de combat
+	setcell "job3_guil03",53,22,53,79,cell_walkable,0;
+	setcell "job3_guil03",36,22,36,79,cell_walkable,0;
+	setcell "job3_guil03",36,22,53,22,cell_walkable,0;
+	setcell "job3_guil03",36,79,53,79,cell_walkable,0;
+	
+	//Disable les warps
+	disablenpc("WarpToDBB1#1");
+	disablenpc("WarpToDBB1#2");
+	
+	end;
+}
+
+// Un GM peut whisp ce NPC pour d�sactiver les warps
+-	script	pDBB1	-1,{
+
+
+OnInit:
+
+	set $gmcontrol,20;
+	
+	end;
+
+
+OnWhisperGlobal:
+
+	if (getgmlevel() >= $gmcontrol) {
+	
+		disablenpc("WarpToDBB1#1");
+		disablenpc("WarpToDBB1#2");
+		
+		end;
+	}
+	
+	end;
+}
+
+
+// Un GM peut whisp ce NPC pour activer le NPC Reward
+-	script	pDBB1_Reward	-1,{
+
+
+OnInit:
+
+	set $gmcontrol,20;
+	
+	end;
+
+
+OnWhisperGlobal:
+
+	if (getgmlevel() >= $gmcontrol) {
+	
+		enablenpc("Reward#DBB1");
+		
+		end;
+	}
+	
+	end;
+}
+
+job3_guil03,60,60,4	script	Reward#DBB1	994,{
+	
+	set .@npc_name$,"Reward";
+	set .@item_reward,35001;
+	set .@value,3;
+		
+	if (#EVENT_REWARD_DBB1 == 0){
+	
+		set #EVENT_REWARD_DBB1,1;
+		
+		callfunc  "F_REWARD_EVENT",
+			.@npc_name$,
+			.@item_reward,
+			.@value;
+	}
+	else{
+		callfunc "F_NOREWARD_EVENT",
+			.@npc_name$;
+	}
+	end;
+OnInit:
+	disablenpc(strnpcinfo(0));
+	end;
+}
+
+//===========================================================================================================
+//============================================= MAPFLAGS =======================================================
+//===========================================================================================================
+
+job3_guil03	mapflag	noicewall
+job3_guil03	mapflag	nowarp
+job3_guil03	mapflag	nowarpto
+job3_guil03	mapflag	noteleport
+job3_guil03	mapflag	nosave	SavePoint
+job3_guil03	mapflag	nomemo
+job3_guil03	mapflag	noloot
+job3_guil03	mapflag	nopenalty
+job3_guil03	mapflag	monster_noteleport

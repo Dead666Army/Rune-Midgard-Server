@@ -1,0 +1,131 @@
+//===== rAthena Script =======================================
+//= Reset NPC
+//===== Description: =========================================
+//= Resets skills, stats, or both.
+//===== Additional Comments: =================================
+//= 1.0 First Version
+//= 1.1 Optimized for the greater good. [Kisuka]
+//= 1.2 Cleaning [Euphy]
+//= 1.3 All statuses removed upon skill reset. [Euphy]
+//= 1.4 Compressed Script, Added limit use option [Stolao]
+//=	Changed set -> setarray, Improved text with F_InsertPlural
+//= 1.5 Added sc_end_class to reset related status changes [sader1992]
+//============================================================
+prt_in,38,108,4	script	Reset Girl	661,{
+	//	 		Skills,	Stats,	Both,	Limit
+	setarray .@Reset,	2000,	1000,	3000,	0;
+	mes "[Reset Girl]";
+	if(.@Reset[3] && reset_limit > .@Reset[3]) {
+		mes "Sorry you can only reset "+callfunc("F_InsertPlural",.@Reset[3],"time")+" in your life.";
+		close;
+	}
+	.@skillpointcount = skillpointcount;
+	if (#LANGUE == 1 ) {
+		mes "I am the Reset Girl.";
+		if (firstReset == 0) {
+			mes "The first reset stat or skill is free.";
+		}
+		else{
+			mes "Reset Stats: "+ callfunc("F_InsertComma",.@Reset[0]) +"z" + " per base level.";
+			mes "Reset Skills: "+ callfunc("F_InsertComma",.@Reset[1]) +"z" + " per job points.";
+			next;
+			mes "[Reset Girl]";
+			mes "At your level, you will need :";
+			mes "" + .@Reset[0] *  BaseLevel + " zenys for a reset status.";
+			mes "" + .@Reset[1] * .@skillpointcount+ " zenys for a reset skill.";
+		}
+	}
+	else{
+		mes "Je suis la Reset Girl.";
+		if (firstReset == 0) {
+			mes "Le premier reset stat ou skill est gratuit.";
+		}
+		else{
+			mes "Reset Stats: "+ callfunc("F_InsertComma",.@Reset[0]) +"z" + " par base level.";
+			mes "Reset Skills: "+ callfunc("F_InsertComma",.@Reset[1]) +"z" + " par job points.";
+			next;
+			mes "[Reset Girl]";
+			mes "Il vous faut";
+			mes "" + .@Reset[0] * BaseLevel + " zenys pour un reset status.";
+			mes "" + .@Reset[1] * .@skillpointcount+ " zenys pour un reset skill.";
+		}
+	}
+	if(.@Reset[3]) mes "You may only reset "+callfunc("F_InsertPlural",.@Reset[3],"time")+", so use "+((.@Reset[3]>1)?"them":"it")+" wisely.";
+	if (#LANGUE == 1)mes "Please select the service you want:";
+	else mes "Merci de sélectionner le service qui vous intéresse.";
+	next;
+	switch(select("^FF3355Reset Stats:Reset Skills:Reset Both^000000:Cancel")){
+	case 1:
+		if (firstReset == 0) {
+			firstReset++;
+			ResetStatus;
+			if (#LANGUE == 1) mes "There you go!";
+			else mes "Et voilà ";
+		}
+		else if (Zeny < .@Reset[0] * BaseLevel ){
+			if (#LANGUE == 1 )mes "Sorry, you don't have enough Zeny.";
+			else mes "Désolé, vous n'avez pas assez de Zeny.";
+			close;
+		}
+		else{
+			set Zeny,Zeny - .@Reset[0] *  BaseLevel;
+			ResetStatus;
+			if (#LANGUE == 1) mes "There you go!";
+			else mes "Et voilà ";
+		}
+		break;
+	case 2:
+		if (firstReset == 0) {
+			firstReset++;
+			ResetSkill;
+			if (#LANGUE == 1) mes "There you go!";
+			else mes "Et voilà ";
+		}
+		else if (Zeny < .@Reset[1] * .@skillpointcount ){
+			if (#LANGUE == 1) mes "Sorry, you don't have enough Zeny.";
+			else mes "Désolé, vous n'avez pas assez de Zeny.";
+			close;
+		}
+		else{
+			set Zeny,Zeny - .@Reset[1] * .@skillpointcount;
+			ResetSkill;
+			if (#LANGUE == 1) mes "There you go!";
+			else mes "Et voilà ";
+		}
+		break;
+	case 3:
+		if (Zeny < .@Reset[0] * BaseLevel  + .@Reset[1] * .@skillpointcount ){
+			if (#LANGUE == 1 ) mes "Sorry, you don't have enough Zeny.";
+			else mes "Désolé, vous n'avez pas assez de Zeny.";
+			close;
+		}
+		else{
+			set Zeny,Zeny - ( .@Reset[0] * BaseLevel + .@Reset[1] * .@skillpointcount);
+			ResetStatus;
+			ResetSkill;
+			if (#LANGUE == 1) mes "There you go!";
+			else mes "Et voilà ";
+		}
+		break;
+		case 4:
+		close;
+		break;
+	}
+	if(.@Reset[3]){
+		mes "You can only reset "+callfunc("F_InsertPlural",.@Reset[3],"time")+" in your life, are you sure?";
+		if(select("Let me think:That's fine") == 1) close;
+	}
+	if(.@Reset[3]) set reset_limit,reset_limit + 1;
+	close;
+}
+
+prontera,138,183,4	script	Sign#reset_girl	837,{
+	
+	end;
+
+OnInit:
+
+	waitingroom "Job Changer | Reset Girl",0;
+	end;
+
+}

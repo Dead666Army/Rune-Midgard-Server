@@ -1,0 +1,472 @@
+//===== eAthena Script ================================================================================================================
+//= Super Broadcaster
+//===== Created By: ===================================================================================================================
+//= GorthexTiger (www.eathena.ws) 
+//= If you're going to use my script, you can make modifications
+//= But credits and the fact that I created it must remain intact.
+//===== Current Version: ==============================================================================================================
+//= 2.0 (Development Version)
+//===== Compatible With: ==============================================================================================================
+//= TXT & SQL
+//===== Script Explaination: ==========================================================================================================
+//= The best damn broadcaster you ever had.
+//===== Features: =====================================================================================================================
+//= Broadcaster That Accepts 3 Different Ways Of Payment: Zeny, Cash Points, And A Set Amount Of A Specified Item By Item ID #
+//= Broadcasts Can Be Logged (If Enabled Or Activated In Game.)
+//= Automatically Disables Itself During WoE  (For Players)
+//= Has A 3 Minute Cooldown In Between Broadcasts
+//= Players Must Meet A Level Requirement To Use Broadcaster (In Configuration Settings Below)
+//= Collects The Last Name Of The Player Who Used It Last To Allow For Easy Punishment For Misuse Via PM
+//= (Punishment Is Automatic When Dictated By a GM: Bans for 15 Minutes, With Public Announcement W/ Their Name To Discourage Abuse)
+//= GM's Can Enable & Disable: Broadcasting & Logs, 
+//===== Always Check For Updates! =====================================================================================================
+//= http://www.eathena.ws/board/index.php?showtopic=231474
+//===== Comments: =====================================================================================================================
+//= If You Don't Like It, Don't Use It
+//= I Reserve The Right To Remove, Assign, Modify, Or In Anyway Change Permissions On This Script At Any And All Times
+//=====================================================================================================================================
+
+prt_in,31,108,6	script	Broadcaster	935,{
+if (getgmlevel() >= .gmlevel){
+	OnWhisperGlobal:
+	if (getgmlevel() < .gmlevel) end;
+	while(1){
+		mes .npc$;
+		mes "Hello, GM "+strcharinfo(0)+", what can I help you with today?";
+		switch(select("Enable/Disable Broadcasting:Enable/Disable Logging:Ban Last User:Player Menu")){
+	
+			case 1:
+			next;
+			mes .npc$;
+			mes "Broadcasting is "+( (!.enable)?"^FF0000Disabled^000000":"^00FF00Enabled^000000");
+			mes "Turn it "+( (!.enable)?"^00FF00On^000000":"^FF0000Off^000000")+"?";
+			if (select("Yes:No")==2) {
+				next; 
+				continue;
+				}
+			if(!.enable) set .enable,1;
+			else set .enable,0;
+			next;
+			mes .npc$;
+			mes "Broadcasting is "+( (!.enable)?"^FF0000Disabled^000000":"^00FF00Enabled^000000")+".";
+			next;
+			continue;
+
+			case 2:
+			next;
+			mes .npc$;
+			mes "Broadcasting logs are "+( (!.log)?"^FF0000Disabled^000000":"^00FF00Enabled^000000");
+			mes "Turn them "+( (!.log)?"^00FF00On^000000":"^FF0000Off^000000")+"?";
+			if (select("Yes:No")==2) {
+				next; 
+				continue;
+				}
+			if(!.log) set .log,1;
+			else set .log,0;
+			next;
+			mes .npc$;
+			mes "Broadcasting Message logs are now "+( (!.log)?"^FF0000Disabled^000000":"^00FF00Enabled^000000")+".";
+			next;
+			continue;
+
+			case 3:
+			next;	
+			mes .npc$;
+			mes "Last Broadcast User: ^FF0000"+.lastname$+"^000000.";
+			next;
+			mes .npc$;
+			mes "Ban This Player?";
+			if(select("Yes:No")==2) next; continue;
+			atcommand "@ban 15n " + .lastname$;
+			announce .lastname$+" has been banned for 15 minutes for abusing the Broadcasting NPC.",0;
+			next;
+			mes .npc$;
+			mes "Player is banned.";
+			next;
+			continue;
+
+			case 4:
+			next;
+			break;
+			} //End of Switch
+
+		break;
+		}//End of While() Loop
+
+	}//End Of GM Check
+
+if (.enable == 0){
+	mes .npc$;
+	mes "I'm sorry, I am currently disabled by the server's GM team until further notice.";
+	next;
+	mes .npc$;
+	mes "Please direct any inquiries regarding my disabling to the proper persons. Thank-you.";
+	close;
+	}
+
+if ((agitcheck() == 1) || (agitcheck2() == 1)){
+	mes .npc$;
+	mes "I'm sorry, during ^0000FFWar of Emperium^000000, I don't do any broadcasts.";
+	close;
+	}
+
+if (.timedelay == 1){
+	mes .npc$;
+	mes "I'm sorry, I need a few moments to rest before I am able to broadcast to the entire server again.";
+	close;
+	}
+
+if (Baselevel < .checklevel){
+	mes .npc$;
+	mes "I'm sorry, you must be at least Base Level ^0000FF"+.checklevel+"^000000, before you can use the Broadcaster.";
+	close;
+	}
+
+mes .npc$;
+mes "Hello, "+strcharinfo(0)+" ! I can broadcast messages on your behalf accross the entire server.";
+if (.warning){
+	mes .npc$;
+	mes "But, before we begin...";
+	next;
+	mes .npc$;
+	mes "You agree to any Terms of Service, rules, laws, notices or any other type of behaviorial guidelines that are set, and established for this server.";
+	next;
+	mes .npc$;
+	mes "In addition, you agree to not abuse, misuse, over-use, or in any other way, use this Broadcasting NPC for any other purpose besides those mentioned in the options below.";
+	next;
+	if (.log){
+		mes .npc$;
+		mes "Additionally, your name and message are ^FF0000LOGGED^000000.";
+		next;
+		}
+	mes .npc$;
+	mes "Do you agree to the terms just previously stated?";
+	if(select("Yes:No")==2) close;
+	}
+
+while(1){
+	next;
+	mes .npc$;
+	mes "Broadcasting isn't free and does have a cost.";
+	mes "How would you like to pay for your broadcast?";
+	switch(select("With Zeny:With Points:With Items:")){
+		
+		case 1:
+		next;
+		if(.limitation != 1 && .limitation != 0 ){
+			mes .npc$;
+			mes "I'm sorry, but this method of payment has been disabled by the GM Administration Team.";
+			continue;
+			}
+		mes .npc$;
+		mes "Ok, to Broadcast with ^0000FFzeny^000000 costs ^0000FF"+.costz+"^000000 zeny.";
+		mes "Proceed?";
+		if(select("Yes:No")==2) continue;
+		if (zeny < .costz){
+			next;
+			mes .npc$;
+			mes "It looks like you don't have enough zeny to Broadcast.";
+			mes "Try coming back later.";
+			close;
+			}
+		set zeny, zeny - .costz;
+		break;
+		
+		case 2:
+		next;
+		if(.limitation != 2 && .limitation != 0 ){
+			mes .npc$;
+			mes "I'm sorry, but this method of payment has been disabled by the GM Administration Team.";
+			continue;
+			}
+		mes .npc$;
+		mes "Ok, to Broadcast with ^0000FFpoints^000000 costs ^0000FF"+.costa+" Event Points.";
+		mes "Proceed?";
+		if(select("Yes:No")==2) continue;
+		if (#CASHPOINTS < .costa){
+			next;
+			mes .npc$;
+			mes "It looks like you don't have enough points to Broadcast.";
+			mes "Try coming back later.";
+			close;
+			}
+		set #CASHPOINTS, #CASHPOINTS -.costa;
+		break;
+
+		case 3:
+		next;
+		if(.limitation != 4 && .limitation != 0 ){
+			mes .npc$;
+			mes "I'm sorry, but this method of payment has been disabled by the GM Administration Team.";
+			continue;
+			}
+		mes .npc$;
+		mes "Ok, to Broadcast with ^0000FFitems^000000...";
+		mes "I will need.";
+		mes "^0000FF"+.costiamount+"^000000 ^FF0000"+getitemname(.costi)+".";
+		next;
+		mes .npc$;
+		mes "Proceed?";
+		if(select("Yes:No")==2) continue;
+		if (countitem(.costi) < .costiamount){
+			next;
+			mes .npc$;
+			mes "Hmm, looks like you still need to get a few more "+getitemname(.costi)+".";
+			mes "Try coming back after you have got more.";
+			close;
+			}
+		delitem .costi,.costiamount;
+		break;
+		} //End of Switch
+
+	break;
+	}//End of While
+	
+while(1){
+	next;
+	mes .npc$;
+	mes "What would you like to do?";
+	switch(select("Sell:Buy:Trade:Page Another Player:Page a GM:Recruitment:Free Broadcast")){
+
+	case 1: callsub L_merch,0;
+	case 2: callsub L_merch,1;
+	case 3: callsub L_merch,2;
+	
+	case 4:
+	while(1){
+		next;
+		mes .npc$;
+		mes "Ok, who is the person you are trying to get a hold of?";
+		input .@name$;
+		next;
+		callsub L_color;
+		mes .npc$;
+		mes "Ok, here is how it will look.";
+		next;
+		mes "^"+.colorarray$[@colorindex]+"Broadcaster: "+.@name$+" please contact "+strcharinfo(0)+" if you're online.";
+		next;
+		mes .npc$;
+		mes "Proceed?";
+		if(select("Yes:Rewrite Message")==2) continue;
+		set .addon$,"0x" + .colorarray$[@colorindex];
+		announce  "Broadcaster: "+.@name$+" please contact "+strcharinfo(0)+" if you're online.",bc_all,.addon$;
+		set .timedelay, 1;
+		if (.log) logmes gettimestr("%m/%d/%Y %H:%M:%S",21)+": "+strcharinfo(0)+": "+.@name$+" please contact me if you're online.";
+		next;
+		set .lastname$,strcharinfo(0);
+		mes .npc$;
+		mes "Ok, your broadcast has been completed.";
+		close2;
+		initnpctimer;
+		npctalk "Service will be available in 3 minutes.";     
+		end;
+		}
+
+	case 5:
+	while(1){
+		next;
+		callsub L_color;
+		mes .npc$;
+		mes "This is how the announcement will be look.";
+		next;
+		mes "^"+.colorarray$[@colorindex]+"Broadcaster: If any GMs are online, please contact "+strcharinfo(0)+".";
+		next;
+		mes .npc$;
+		mes "Proceed?";
+		if(select("Yes:Nevermind")==2) continue;
+		set .addon$,"0x" + .colorarray$[@colorindex];
+		announce  "Broadcaster: "+strcharinfo(0)+": If there are any GM's online, please contact me.",bc_all,.addon$;
+		set .timedelay, 1;
+		if (.log) logmes gettimestr("%m/%d/%Y %H:%M:%S",21)+": "+strcharinfo(0)+": If there are any GM's online, please contact me.";
+		next;
+		set .lastname$,strcharinfo(0);
+		mes .npc$;
+		mes "Ok, your broadcast has been completed.";
+		close2;
+		initnpctimer;
+		npctalk "Service will be available in 3 minutes.";     
+		end;
+		}
+
+	case 6:
+	while(1){
+		next;
+		mes .npc$;
+		mes "Ok, what are you recruiting for?";
+		setarray .@partyselection$[0],"A Guild","Guild Members","A MVP Party","A Leveling Party","A Quest Party","A PVP Party";
+		set .@selection,select("Guild:Guild Members:MVP Party:Leveling Party:Quest Party:PVP Party")-1;
+		next;
+		mes .npc$;
+		mes "Ok, so you're looking for "+.@partyselection$[.@selection]+". Got it.";
+		next;
+		callsub L_color;
+		if(.@selection == 1){
+			mes .npc$;
+			mes "This is how your broadcast will appear.";
+			next;
+			if(getcharid(2) == 0 ){
+				mes .npc$;
+				mes "You're not even a part of a guild! Go find a guild before you try to advertise one.";
+				emotion 4;
+				continue;
+				}
+			mes "^"+.colorarray$[@colorindex]+"Broadcaster: "+strcharinfo(0)+" is looking for "+.@partyselection$[.@selection]+" for "+(getguildname(getcharid(2,strcharinfo(0))))+"! Please PM them for more details!";
+			next;
+			mes .npc$;
+			mes "Proceed?";
+			if(select("Yes:Nevermind")==2) continue;
+			set .addon$,"0x" + .colorarray$[@colorindex];
+			announce "Broadcaster: "+strcharinfo(0)+" is looking for "+.@partyselection$[.@selection]+" for "+(getguildname(getcharid(2,strcharinfo(0))))+"! Please PM them for more details!",bc_all,.addon$;
+			set .timedelay, 1;
+			if (.log) logmes gettimestr("%m/%d/%Y %H:%M:%S",21)+": "+strcharinfo(0)+" is looking for "+.@partyselection$[.@selection]+" for "+(getguildname(getcharid(2,strcharinfo(0))))+"! Please PM them for more details!";
+			next;
+			set .lastname$,strcharinfo(0);
+			mes .npc$;
+			mes "Ok, your broadcast has been completed.";
+			close2;
+			initnpctimer;
+			npctalk "Service will be available in 3 minutes.";
+			end;
+			}
+		mes .npc$;
+		mes "This is how your broadcast will appear.";
+		next;
+		mes "^"+.colorarray$[@colorindex]+"Broadcaster: "+strcharinfo(0)+" is looking for "+.@partyselection$[.@selection]+"! Please PM them for more details!";
+		next;
+		mes .npc$;
+		mes "Proceed?";
+		if(select("Yes:Reselect Choice")==2) continue;
+		set .addon$,"0x" + .colorarray$[@colorindex];
+		announce  strcharinfo(0)+" is looking for "+.@partyselection$[.@selection]+"! Please PM them for more details!",bc_all,.addon$;
+		set .timedelay, 1;
+		if (.log) logmes gettimestr("%m/%d/%Y %H:%M:%S",21)+": "+strcharinfo(0)+" is looking for a "+.@partyselection$[.@selection]+"! Please PM them for more details!";
+		next;
+		set .lastname$,strcharinfo(0);
+		mes .npc$;
+		mes "Ok, your broadcast has been completed.";
+		close2;
+		initnpctimer;
+		npctalk "Service will be available in 3 minutes.";     
+		end;
+		}
+
+	case 7:
+	while(1){
+		next;
+		mes .npc$;
+		mes "Ok, what is your message?";
+		input .@freestyle$;
+		next;
+		callsub L_color;
+		mes .npc$;
+		mes "Ok, here is how it will look.";
+		next;
+		mes "^"+.colorarray$[@colorindex]+""+strcharinfo(0)+": "+.@freestyle$+".";
+		next;
+		mes .npc$;
+		mes "Proceed?";
+		if(select("Yes:Rewrite Message")==2) continue;
+		set .addon$,"0x" + .colorarray$[@colorindex];
+		announce  "Broadcaster: "+.@freestyle$+".",bc_all,.addon$;
+		set .timedelay, 1;
+		if (.log) logmes gettimestr("%m/%d/%Y %H:%M:%S",21)+": "+strcharinfo(0)+": "+.@freestyle$+".";
+		next;
+		set .lastname$,strcharinfo(0);
+		mes .npc$;
+		mes "Ok, your broadcast has been completed.";
+		close2;
+		initnpctimer;
+		npctalk "Service will be available in 3 minutes.";     
+		end;
+		}//End of While()
+
+	}// End of Switch()
+
+}// End of Switch() While
+
+OnTimer60000:
+npctalk "Service will be available in 2 minutes.";    
+end;
+
+OnTimer120000:
+npctalk "Service will be available in 1 minute.";    
+end;
+
+OnTimer180000:
+npctalk "Broadcasting Service Is Now Available.";  
+set .timedelay,0;
+stopnpctimer; 
+end;
+
+L_color:
+mes .npc$;
+mes "Please select a color that your broadcast will use.";
+set @colorindex, select(.color$)-1;
+next;
+return;
+
+L_merch:
+while(1){
+	next;
+	mes .npc$;
+	mes "Ok, what item are you trying to "+.typearray$[getarg(0)]+"?";
+	input .@item1$;
+	next;
+	mes .npc$;
+	mes "Ok, what are you "+.typearray$[getarg(0)+3]+" it for?";
+	input .@item2$;
+	next;
+	callsub L_color;
+	mes .npc$;
+	mes "This is how your broadcast will appear.";
+	next;
+	mes "^"+.colorarray$[@colorindex]+"Broadcaster: "+strcharinfo(0)+" is "+.typearray$[getarg(0)+3]+" "+.@item1$+" for "+.@item2$+" ! Please PM them for more info.";
+	next;
+	mes .npc$;
+	mes "Broadcast?";
+	if(select("Yes:Rewrite Message")==2) continue;
+	set .addon$,"0x" + .colorarray$[@colorindex];
+	announce "Broadcaster: "+strcharinfo(0)+" is "+.typearray$[getarg(0)+3]+" "+.@item1$+" FOR "+.@item2$+" ! Please PM them for more info.",bc_all,.addon$;
+	set .timedelay, 1;
+	if (.log) logmes gettimestr("%m/%d/%Y %H:%M:%S",21)+": "+strcharinfo(0)+":"+.typearray$[getarg(0)+3]+" "+.@item1$+" for "+.@item2$+".";
+	next;
+	set .lastname$,strcharinfo(0);
+	mes .npc$;
+	mes "Ok, your broadcast has been completed.";
+	close2;
+	initnpctimer;
+	npctalk "Service will be available in 3 minutes.";
+	break;    
+	}
+end;
+	
+OnInit:
+//===== Configuration Settings ========================================================================================================
+//
+set .npc$, "[Broadcaster]";         // Sets Name Of The NPC: Change The Name In Brackets For A Custom Name
+set .checklevel,99;                 // Players Must Be This Level or Higher In Order To Broadcast
+set .costz,50000;                   // Set's Cost To Use Broadcaster (In Zeny)
+set .costa, 50;                     // Set's Cost To Use Broadcaster (In Cash Points)
+set .costi, 7539;		    // Set's The Item To Be Used In Payment For Broadcaster (Item ID # Here)
+set .costiamount,25;		    // Amount of Items Specified By .costi In Order To Use The Broadcaster
+set .gmlevel,40;                    // Minimum GM Level To Reach GM Menu & Use OnWhisperGlobal: Label
+set .timedelay,1;  		    // Creates The 3 Minute Delay Between Broadcasts. When set to '0', players are able to broadcast
+				    // If set to '1', the broadcaster thinks it has a delay to go through
+set .enable,1;     		    // Check To See If Broadcasting is Enabled. 1 == Enabled || 0 == Disabled (Enabled By Default)		
+set .log, 0;	   		    // Enables Logs of Broadcasts, 0 == Disabled, 1 == Enabled (Off By Default)
+set .limitation,1;		    // Limitation Setting for limiting how many payment options are available: 
+				    // 0 = all payment options available, 1 = only zeny, 2 = only cash points, 4 = only items 
+set .warning,0;			    // if set to '1', displays a General Abuse Message before broasting (Disabled by Default)
+set .color$,"";			    // Clears the color menu (DO NOT MESS WITH THIS)
+setarray .typearray$[0],"Sell","Buy","Trade","Selling","Buying","Trading";
+setarray .colorarray$[0],	    // Array That Store's Colors That Can Be Used For Broadcasts
+"FF3333",	//Red
+"37FDFC",	//Sky Blue
+"4DBD33",	//Green
+"BAB9B9",	//Grey
+"FFFF00",	//Yellow
+"FF7F50";	//Orange
+for(set .i,0; .i < getarraysize(.colorarray$); set .i, .i + 1){
+	set .color$, .color$ + "^" + ""+.colorarray$[.i]+"" + "This Color" + "^000000:";
+	}		     
+}

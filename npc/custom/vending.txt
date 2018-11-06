@@ -1,0 +1,56 @@
+-	script	zonevending	-1,{
+
+OnInit: 
+	setcell "payon",    0,  0,  400,400,    cell_novending, 1;
+  setcell "payon",    146,232,146,192,    cell_novending, 0;
+  setcell "payon",    149,232,149,192,    cell_novending, 0;
+  setcell "payon",    162,232,162,192,    cell_novending, 0;
+  setcell "payon",    165,232,165,192,    cell_novending, 0;
+}
+
+payon,151,239,4	duplicate(Banker)	Banker#2	109
+payon,159,239,4	script	Kafra#Market	113,{
+	cutin "kafra_05",2;
+	callfunc "F_KafSet";
+	mes "[Kafra Employee]";
+	mes "The Kafra Corporation";
+	mes "is always working to provide";
+	mes "you with convenient services.";
+	mes "How may I be of assistance?";
+	callfunc "F_Kafra",5,13,1,60,930;
+	callfunc "F_KafEnd",0,1,"in the city of Payon";
+}
+
+//right row
+payon,162,233,3	script	Market#Market1	858,{
+    if (#LANGUE == 1){
+        mes "[Payon market]";
+        mes "Place your shops between the boards (on the grass).";
+    }
+    else{
+        mes "[Marché de payon]";
+        mes "Placez votre boutique entre les pancartes (sur l'herbe).";
+    }
+	close;
+}
+payon,162,219,3	duplicate(Market#Market1)	Market#Market2	858
+payon,162,205,3	duplicate(Market#Market1)	Market#Market3	858
+payon,162,191,3	duplicate(Market#Market1)	Market#Market4	858
+
+//2nd right row
+payon,165,233,3	duplicate(Market#Market1)	Market#Market5	858
+payon,165,219,3	duplicate(Market#Market1)	Market#Market6	858
+payon,165,205,3	duplicate(Market#Market1)	Market#Market7	858
+payon,165,191,3	duplicate(Market#Market1)	Market#Market8	858
+
+//left row
+payon,149,233,5	duplicate(Market#Market1)	Market#Market9	858
+payon,149,219,5	duplicate(Market#Market1)	Market#Market10	858
+payon,149,205,5	duplicate(Market#Market1)	Market#Market11	858
+payon,149,191,5	duplicate(Market#Market1)	Market#Market12	858
+
+//2nd left row
+payon,146,233,5	duplicate(Market#Market1)	Market#Market13	858
+payon,146,219,5	duplicate(Market#Market1)	Market#Market14	858
+payon,146,205,5	duplicate(Market#Market1)	Market#Market15	858
+payon,146,191,5	duplicate(Market#Market1)	Market#Market16	858

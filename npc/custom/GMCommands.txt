@@ -1,0 +1,132 @@
+//===== rAthena Script ============================================
+//= Rune-Midgard GM commands
+//===== By: =======================================================
+//= Snotra
+//===== Current Version: ==========================================
+//= 1.0
+//===== Compatible With: ==========================================
+//= rAthena Project
+//===== Description: ==============================================
+//= Scripts to manually turn on/off things
+//===== Additional Comments: ======================================
+//BG happy hour
+//EXP event
+//=================================================================
+
+prontera,147,157,4	script	GMcommands	795,{
+OnInit:
+  hideonnpc "GMcommands";
+  set .BGHHEnabled,0;
+  set .EXPEvent,0;
+	set .EXPBaseRate,500;
+	set .EXPRate,.EXPRate;
+  set $gmcontrol,30;
+  end;
+  
+OnWhisperGlobal:
+	if (getgmlevel() >= $gmcontrol) {
+    mes "^3399FF[GM commands]^000000";	
+    mes "Hello GameMaster!";
+		if (getbattleflag("bg_eAmod_mode") == 1){ mes "BG are: ^0DB40DEnabled^000000";}
+    else { mes "BG are: ^BE1C1CDisabled^000000";}
+		if (agitcheck()){ mes "WoE is: ^0DB40DEnabled^000000";}
+    else { mes "WoE is: ^BE1C1CDisabled^000000";}
+    if (.BGHHEnabled == 1 ){ mes "BG Happy Hours are: ^0DB40DEnabled^000000";}
+    else { mes "BG Happy Hours are: ^BE1C1CDisabled^000000";}
+		if (.EXPEvent == 1 ){ mes "Event EXP is: ^0DB40DEnabled^000000 ("+.EXPRate+")";}
+    else { mes "Event EXP is: ^BE1C1CDisabled^000000";}
+    mes "What do you want to do?";
+    switch(select("Toggle BG:Toggle BG Happy Hour:Toggle EXP Event:Toggle WOE:Nothing"))
+    {
+			case 1: //TOGGLE BG
+      {
+        next;
+				if (getbattleflag("bg_eAmod_mode") == 0){
+					donpcevent "BG_Queue_Join::OnBGStartCommand";
+				}else{
+					donpcevent "BG_Queue_Join::OnBGStopCommand";
+				}
+				close;
+        break;
+      }
+      case 2: //TOGGLE BG HH
+      {
+        next;
+				if (.BGHHEnabled == 0){
+					set .BGHHEnabled, 1;
+					announce "-- Les Happy hours Battleground ont commencées --",0,0x00FF00;
+					announce "-- Battleground Happy Hour has begun --",0,0x00FF00;
+					setbattleflag "bg_reward_rates",150; // +50% Reward Rates
+				}else{
+					set .BGHHEnabled, 0;
+					announce "-- Les Happy hours Battleground sont terminées --",0,0x00BFFF;
+					announce "-- Battleground Happy Hour is over --",0,0x00BFFF;
+					setbattleflag "bg_reward_rates",100; // Normal Rates
+				}
+				close;
+        break;
+      }
+			case 3: //TOGGLE EXP EVENT
+			{
+				next;
+				if (.EXPEvent == 0){
+					mes "^3399FF[GM commands]^000000";
+					mes "Input rate value *100.";
+					mes "ie: rate 5 = 500";
+					mes "Max rate 2500";
+					input .@rates;
+
+					if (.@rates < .EXPBaseRate || .@rates > .EXPBaseRate*5) {
+						next;
+						mes "^3399FF[GM commands]^000000";
+						mes "Values out of bound";
+						close;
+					}
+					set .EXPEvent, 1;
+					set .EXPRate, .@rates;
+					set $@brate,.@rates;
+					set $@jrate,.@rates;
+					//Base exp
+					setbattleflag("base_exp_rate",$@brate);
+					//Job exp
+					setbattleflag("job_exp_rate",$@jrate);
+					atcommand "@reloadmobdb";
+					announce "Les rates exp ont été augmentées : Base Exp "+($@brate/100)+", Job Exp"+($@jrate/100)+"",bc_all,0xFF6060;
+					announce "Exp rates have been increased: Base Exp "+($@brate/100)+", Job Exp"+($@jrate/100)+"",bc_all,0xFF6060;
+				}else{
+					set .EXPEvent, 0;
+					set .EXPRate, .EXPBaseRate;
+					set $@brate,.EXPBaseRate;
+					set $@jrate,.EXPBaseRate;
+					//Base exp
+					setbattleflag("base_exp_rate",$@brate);
+					//Job exp
+					setbattleflag("job_exp_rate",$@jrate);
+					atcommand "@reloadmobdb";
+					announce "Les rates exp sont revenues à la normale : Base Exp "+($@brate/100)+", Job Exp"+($@jrate/100)+"",bc_all,0xFF6060;
+					announce "Original Exp rates have returned: Base Exp "+($@brate/100)+", Job Exp"+($@jrate/100)+"",bc_all,0xFF6060;
+				}
+				close;
+			}
+			case 4: //TOGGLE WOE
+      {
+        next;
+				if (!agitcheck()){
+					AgitStart;
+					Announce "The War of Emperium has begun!",bc_all|bc_woe;
+					donpcevent "Agit_Event::OnInit";
+				}else{
+					AgitEnd;
+					announce "The War Of Emperium is over!",bc_all|bc_woe;
+					donpcevent "Agit_Event::OnInit";
+				}
+				close;
+      }
+      case 5: //CANCEL
+      {
+        close;
+      }
+    }
+	}
+  end;
+}

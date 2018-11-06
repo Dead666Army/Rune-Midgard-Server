@@ -1,0 +1,2 @@
+iz_dun04,129,234,0	warp	WarpToBya#6	2,2,iz_dun05,141,187
+iz_dun05,141,190,0	warp	WarpToBya#5	2,2,iz_dun04,129,230

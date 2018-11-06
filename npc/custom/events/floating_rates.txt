@@ -1,0 +1,43 @@
+//===== rAthena Script =======================================
+//= Floating Server Rates
+//===== By: ==================================================
+//= Lupus
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: =========================================
+//= It's a simply example of setbattleflag
+//= This script will change your server rates from 1x to 1.5x every 6 hours
+//= Note: It doesn't affect Card granted drops, MVP & Treasure Chests drops ^_-
+//=       It also doesn't affect CARD drops, because they are just 0.01%
+//===== Additional Comments: =================================
+//= You can make incredible scripts with 'setbattleflag'!
+//============================================================
+
+-	script	FloatingRates	-1,{
+OnInit:
+	end;
+OnWed2100:
+	set $@brate,1000;
+	set $@jrate,1000;
+	//Base exp
+	setbattleflag("base_exp_rate",$@brate);
+	//Job exp
+	setbattleflag("job_exp_rate",$@jrate);
+	atcommand "@reloadmobdb";
+	announce "Les rates exp ont été augmentées : Base Exp "+($@brate/100)+", Job Exp"+($@jrate/100)+"",bc_all,0xFF6060;
+	announce "Exp rates have been increased: Base Exp "+($@brate/100)+", Job Exp"+($@jrate/100)+"",bc_all,0xFF6060;
+	end;
+OnThu0700:
+	set $@brate,500;
+	set $@jrate,500;
+	//Base exp
+	setbattleflag("base_exp_rate",$@brate);
+	//Job exp
+	setbattleflag("job_exp_rate",$@jrate);
+	atcommand "@reloadmobdb";
+	announce "Les rates exp sont revenues à la normale : Base Exp "+($@brate/100)+", Job Exp"+($@jrate/100)+"",bc_all,0xFF6060;
+	announce "Original Exp rates have returned: Base Exp "+($@brate/100)+", Job Exp"+($@jrate/100)+"",bc_all,0xFF6060;
+	end;
+}

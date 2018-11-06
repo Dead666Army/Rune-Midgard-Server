@@ -1,0 +1,113 @@
+cave,64,81,6	script	Renowned Blacksmith	448,{
+	mes "[Renowned Blacksmith]";
+	if (#LANGUE == 1 ) mes "Ho ho ho... I am the only person in Rune-Midgard who knows how to craft Quartz from Shards. I imagine that the reason you came here is because you need my skills...";
+	mes "Ho ho ho... Je suis le seul dans tout Rune-Midgard à savoir fabriquer des Quartz à partir de Shards. J'imagne que si tu es ici c'est que tu as besoin de mes services...";
+	if (#LANGUE == 1 ){
+		switch(select("Right !:I was just passing by")) {
+		case 1 :
+			next;
+			mes "[Renowned Blacksmith]";
+			mes "I need 20 Shards to craft one Quartz";
+			mes "How many Quartz do you want ?";
+			input .@pc;
+			.@item1 = countitem(35003);
+			.@value = .@pc *20;
+			if (.@value > .@item1){
+				next;
+				mes "[Renowned Blacksmith]";
+				mes "You do not have enough Shards, I need " + .@value + "of them.";
+				mes "See you.";
+				close;
+			}
+			specialeffect2 EF_REPAIRWEAPON;
+			close2;
+			progressbar "ffff00",.@pc*1;
+			delitem 35003,.@value;
+			getitem 35004,.@pc;
+			mes "[Renowned Blacksmith]";
+			mes "Here are your Quartz.";
+			mes "See you.";
+			close;
+			break;
+		case 2 :
+			next;
+			mes "[Renowned Blacksmith]";
+			mes "See you.";
+			close;
+			break;
+		}
+	}
+	else{
+		switch(select("Tout juste !:Je passais juste dans le coin")) {
+		case 1 :
+			next;
+			mes "[Renowned Blacksmith]";
+			mes "Il me faut 20 Shards pour faire un Quartz";
+			mes "Combien veux-tu de Quartz ?";
+			input .@pc;
+			.@item1 = countitem(35003);
+			.@value = .@pc *20;
+			if (.@value > .@item1){
+				next;
+				mes "[Renowned Blacksmith]";
+				mes "Tu n'as pas assez de Shards, il m'en faut " + .@value;
+				mes "Au revoir.";
+				close;
+			}
+			specialeffect2 EF_REPAIRWEAPON;
+			close2;
+			progressbar "ffff00",.@pc*1;
+			delitem 35003,.@value;
+			getitem 35004,.@pc;
+			mes "[Renowned Blacksmith]";
+			mes "Voici vos Quartz.";
+			mes "Au revoir.";
+			close;
+			break;
+		case 2 :
+			next;
+			mes "[Renowned Blacksmith]";
+			mes "Au revoir.";
+			close;
+			break;
+		}
+	}
+}
+
+moc_para01,43,20,4	script	Thinim	826,{
+	mes "[Thinim]";
+	if (#LANGUE == 1 ){
+		mes "The Renowned Blacksmith, whose true identity is still unknown, has been a heavy loss for Rune Midgard's realm.";
+		next;
+		mes "[Thinim]";
+		mes "Ever since he is missing, adventurers are hopeless as nobody can have the blacksmith to work on some of their items, indispensable to their ascent.";
+		next;
+		mes "[Thinim]";
+		mes "However, rumors have been running. People seem to have perceived him in a secluded part of Schwartzvald region.";
+		next;
+		mes "[Thinim]";
+		mes "He would be living, according to the words, in an unknown cave not even mapped, tough in this conditions to confirm the testimonies.";
+		next;
+		mes "[Thinim]";
+		mes "Will you manage to locate him ?";
+	}
+	else{
+		mes "Le Renowned Blacksmith, dont personne ne connait la véritable identité, fut une lourde perte pour le royaume de Rune Midgard.";
+		next;
+		mes "[Thinim]"; 
+		mes "Depuis qu'il s'est absent, impossible pour les aventuriers de travailler certains objets indispensables à leur ascension.";
+		next;
+		mes "[Thinim]";
+		mes "Cependant des rumeurs ont récemment circulées. Des gens l'auraient aperçu dans des coins reculés de la région de Schwartzvald.";
+		next;
+		mes "[Thinim]";
+		mes "Il logerait, selon les dires, dans une cave inconnue et non-cartographiée, difficile dans ces conditions de confirmer les témoignages reçus.";
+		next;
+		mes "[Thinim]";
+		mes "Saurez-vous retrouver sa trace ?";
+	}
+	close;
+}
+
+ein_fild01,27,261,0	warp	rnwwrp01	1,1,cave,97,27
+cave,98,21,0	warp	rnwwrp02	1,1,ein_fild01,28,254

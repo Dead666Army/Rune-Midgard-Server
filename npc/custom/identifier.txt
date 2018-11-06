@@ -1,0 +1,32 @@
+prontera,151,190,5	script	Identifier	100,{
+	identifyall(true);
+}
+
+// --------------------------------------------------
+//	Duplicates:
+// --------------------------------------------------
+
+alberta,37,239,4	duplicate(Identifier)	Identifier#alb	100
+aldebaran,134,114,4	duplicate(Identifier)	Identifier#alde	100
+amatsu,102,146,5	duplicate(Identifier)	Identifier#ama	100
+ayothaya,212,174,6	duplicate(Identifier)	Identifier#ayo	100
+comodo,200,151,5	duplicate(Identifier)	Identifier#com	100
+einbech,166,125,5	duplicate(Identifier)	Identifier#einbe	100
+einbroch,225,199,5	duplicate(Identifier)	Identifier#einbr	100
+geffen,126,63,4	duplicate(Identifier)	Identifier#gef	100
+gonryun,151,115,5	duplicate(Identifier)	Identifier#gon	100
+hugel,103,148,4	duplicate(Identifier)	Identifier#hug	100
+izlude,122,111,4	duplicate(Identifier)	Identifier#izl	100	//Pre-RE: (132,120)
+jawaii,210,160,5	duplicate(Identifier)	Identifier#jaw	100
+lighthalzen,152,97,5	duplicate(Identifier)	Identifier#lhz	100
+louyang,223,107,4	duplicate(Identifier)	Identifier#lou	100
+morocc,159,97,4	duplicate(Identifier)	Identifier#mor	100
+morocc_mem,159,97,4	duplicate(Identifier)	Identifier#mom	100
+niflheim,189,191,5	duplicate(Identifier)	Identifier#nif	100
+pay_arche,52,137,4	duplicate(Identifier)	Identifier#arc	100
+payon,178,113,4	duplicate(Identifier)	Identifier#pay	100
+rachel,125,103,7	duplicate(Identifier)	Identifier#rac	100
+umbala,94,157,3	duplicate(Identifier)	Identifier#umb	100
+veins,210,133,5	duplicate(Identifier)	Identifier#ve	100
+xmas,154,126,9	duplicate(Identifier)	Identifier#xmas	100
+yuno,164,125,4	duplicate(Identifier)	Identifier#yuno	100

@@ -1,0 +1,81 @@
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ *
+      * ~~~~~~~~  Euphy's MVP Ladder v1.3  ~~~~~~~~ *
+      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+moc_para01,13,36,4	script	MVP Ladder	891,{
+	mes "[Rank MVP]";
+	mes "Hello.";
+	mes "What are you doing here";
+	next;
+	switch(select("Check Ranking.:My points.:Nothing...")) {
+		case 1:
+			mes "[Rank MVP]";
+			set .@month, gettime(6);
+			set .@year, gettime(7);
+			if (.@month<10){
+				set .@time$, .@year + "0" + .@month + "01";
+			} else {
+				set .@time$, .@year + "" + .@month + "01";
+			}
+
+			.@nextmonth = .@month + 1;
+			.@yearto = .@year;
+			if (.@nextmonth > 12 ){
+				.@nextmonth = 1;
+				.@yearto++;
+			}
+
+			if (.@nextmonth < 10){
+				set .@timeto$, .@yearto + "0" + .@nextmonth + "01";
+			} else {
+				set .@timeto$, .@yearto + "" + .@nextmonth + "01";
+			}
+			query_sql("SELECT kill_char_id,count(*) cnt FROM mvplog WHERE mvp_date between "+.@time$+" and "+.@timeto$+" group by kill_char_id order by cnt desc LIMIT 20;",.@cid,.@value);
+			for(set .@i,0; .@i<getarraysize(.@cid); set .@i,.@i+1) {
+				query_sql("SELECT `name` FROM `char` WHERE char_id = "+.@cid[.@i]+";",.@j$);
+				set .@name$[.@i], .@j$;
+			}
+			if (!getarraysize(.@cid))
+				mes "The rankings are empty.";
+			else for(set .@i,0; .@i<getarraysize(.@cid); set .@i,.@i+1)
+			mes "["+(.@i+1)+"] "+.@name$[.@i]+" ~ "+.@value[.@i]+" kills";
+			close;
+			
+		case 2:
+			mes "[Rank MVP]";
+			set .@month, gettime(6);
+			set .@year, gettime(7);
+			if (.@month<10){
+				set .@time$, .@year + "0" + .@month + "01";
+			} else {
+				set .@time$, .@year + "" + .@month + "01";
+			}
+
+			.@nextmonth = .@month + 1;
+			.@yearto = .@year;
+			if (.@nextmonth > 12 ){
+				.@nextmonth = 1;
+				.@yearto++;
+			}
+
+			if (.@nextmonth < 10){
+				set .@timeto$, .@yearto + "0" + .@nextmonth + "01";
+			} else {
+				set .@timeto$, .@yearto + "" + .@nextmonth + "01";
+			}
+			
+			query_sql("SELECT kill_char_id,count(*) cnt FROM rmlog.mvplog WHERE kill_char_id = "+getcharid(0)+" and  mvp_date between "+.@time$+" and "+.@timeto$+" group by kill_char_id order by cnt desc LIMIT 20;",.@cid,.@value);
+			for(set .@i,0; .@i<getarraysize(.@cid); set .@i,.@i+1) {
+				query_sql("SELECT `name` FROM `char` WHERE char_id = "+.@cid[.@i]+";",.@j$);
+				set .@name$[.@i], .@j$;
+			}
+			if (!getarraysize(.@cid))
+				mes "The rankings are empty.";
+			else for(set .@i,0; .@i<getarraysize(.@cid); set .@i,.@i+1)
+			mes "["+(.@i+1)+"] "+.@name$[.@i]+" ~ "+.@value[.@i]+" kills";
+			close;
+			close;
+		case 3:
+			close;
+	}
+}

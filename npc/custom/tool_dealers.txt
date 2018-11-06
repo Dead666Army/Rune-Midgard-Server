@@ -1,0 +1,26 @@
+prontera,163,188,4	shop	Tool Dealer#prt_cus	73,1750:-1,611:-1,501:-1,502:-1,503:-1,504:-1,506:-1,645:-1,656:-1,601:-1,602:-1,1065:-1
+
+alberta,40,241,4	duplicate(Tool Dealer#prt_cus)	Tool Dealer#alb_cus	73
+aldebaran,144,121,4	duplicate(Tool Dealer#prt_cus)	Tool Dealer#alde_cus	73
+amatsu,112,156,4	duplicate(Tool Dealer#prt_cus)	Tool Dealer#ama_cus	73
+ayothaya,212,179,5	duplicate(Tool Dealer#prt_cus)	Tool Dealer#ayo_cus	73
+comodo,212,152,4	duplicate(Tool Dealer#prt_cus)	Tool Dealer#com_cus	73
+einbech,181,131,4	duplicate(Tool Dealer#prt_cus)	Tool Dealer#einbe_cus	73
+einbroch,242,199,4	duplicate(Tool Dealer#prt_cus)	Tool Dealer#einbr_cus	73
+geffen,111,68,5	duplicate(Tool Dealer#prt_cus)	Tool Dealer#gef_cus	73
+gonryun,166,116,4	duplicate(Tool Dealer#prt_cus)	Tool Dealer#gon_cus	73
+hugel,103,144,4	duplicate(Tool Dealer#prt_cus)	Tool Dealer#hug_cus	73
+izlude,134,118,4	duplicate(Tool Dealer#prt_cus)	Tool Dealer#izl_cus	73	//Pre-RE: (132,120)
+jawaii,222,162,4	duplicate(Tool Dealer#prt_cus)	Tool Dealer#jaw_cus	73
+lighthalzen,165,97,4	duplicate(Tool Dealer#prt_cus)	Tool Dealer#lhz_cus	73
+louyang,210,110,5	duplicate(Tool Dealer#prt_cus)	Tool Dealer#lou_cus	73
+//morocc,159,97,4 	duplicate(Tool Dealer#prt_cus)	Tool Dealer#mor_cus 73
+morocc_mem,162,97,4	duplicate(Tool Dealer#prt_cus)	Tool Dealer#mom_cus	73
+niflheim,193,192,5	duplicate(Tool Dealer#prt_cus)	Tool Dealer#nif_cus	73
+pay_arche,52,143,4	duplicate(Tool Dealer#prt_cus)	Tool Dealer#arc_cus	73
+payon,165,100,5	duplicate(Tool Dealer#prt_cus)	Tool Dealer#pay_cus	73
+rachel,131,117,4	duplicate(Tool Dealer#prt_cus)	Tool Dealer#rac_cus	73
+umbala,97,161,4	duplicate(Tool Dealer#prt_cus)	Tool Dealer#umb_cus	73
+veins,221,134,4	duplicate(Tool Dealer#prt_cus)	Tool Dealer#ve_cus	73
+xmas,141,138,5	duplicate(Tool Dealer#prt_cus)	Tool Dealer#xmas_cus	73
+yuno,165,130,4	duplicate(Tool Dealer#prt_cus)	Tool Dealer#yuno_cus	73

@@ -1,0 +1,31 @@
+-	script	dualclientkicker	-1,{
+	end;
+OnPCLoadMapEvent:
+	//debugmes "map loaded";
+	query_sql "SELECT `char`.`name`, `char`.`account_id` FROM `char` LEFT JOIN login ON `char`.account_id = login.account_id WHERE last_unique_id = ( SELECT last_unique_id FROM login WHERE account_id = " + playerattached() + " ) AND online AND `char`.account_id != " + playerattached() , .@name$,.@account_id;
+		for (.@i=0;.@i<getarraysize(.@name$);.@i++){
+			getmapxy .@map$, .@x, .@y, 0, .@name$[.@i];
+			for (.@j = 0;.@j<.size_maps ; .@j++){
+				if ( countstr(.@map$,.current_maps$[.@j])>0)
+				 {
+					dispbottom "Dual accounts not allowed in this map.";
+					if (getgmlevel() < 20)
+						warp "SavePoint" , 0 , 0;
+					end;
+				}
+			}
+		}
+	end;
+	
+OnInit:
+	setarray .current_maps$[0] , "anexus" , "undead" , "1@gl_k", "2@gl_k", "celin_dw", "1@cash",
+											"bat_c01", "bat_b02", "bat_b04", "bat_b03" , "bat_a04", "bat_a02",
+											"region_8", "prtg_cas01", "ordeal_1-1",
+											"schg_cas06", "schg_cas07", "schg_cas08", "arug_cas06", "arug_cas07", "arug_cas08",
+											"rush_cas01" , "rush_cas02" , "rush_cas03" , "rush_cas04", "quiz_02", "que_qsch01",
+	"p_track01";
+	.size_maps = getarraysize ( .current_maps$ );
+	for ( .i = 0; .i < .size_maps; .i++)
+		setmapflag .current_maps$[.i],	mf_loadevent ;
+	end;
+} 

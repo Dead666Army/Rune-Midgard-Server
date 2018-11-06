@@ -1,0 +1,143 @@
+
+-	shop	hatcostumecashshop1	-1,909:-1
+					
+moc_para01,51,25,3	script	Costume 	502,{
+function Add; function Chk;
+
+	if(.Shops$ != "") set .@i,1;
+	else {
+		set .@menu$,"";
+		for(set .@i,1; .@i<=getarraysize(.Shops$); set .@i,.@i+1)
+			set .@menu$, .@menu$+.Shops$[.@i]+":";
+		set .@i, select(.@menu$); }
+	dispbottom "Select one item at a time.";
+	callshop "hatcostumecashshop1",1;
+	npcshopattach "hatcostumecashshop1";
+	end;
+
+function Add {
+	if (getitemname(getarg(1))=="null") {
+		debugmes "Quest reward #"+getarg(1)+" invalid (skipped)."; return; 
+	}
+	for(set .@n,5; .@n<127; set .@n,.@n+2) {
+		if (!getarg(.@n,0))
+			break;
+		if (getitemname(getarg(.@n))=="null") {
+			debugmes "Quest requirement #"+getarg(.@n)+" invalid (skipped) on Quest ItemID "+ getarg(1) +"."; return; 
+		} 
+	}
+	for(set .@i,2; .@i<.@n; set .@i,.@i+1){
+		set getd(".q_"+getarg(1)+"["+(.@i-2)+"]"), getarg(.@i);
+	}
+	npcshopadditem "hatcostumecashshop"+getarg(0),getarg(1),0;
+	return; 
+}
+function Chk {
+	if (getarg(0)<getarg(1)) { set @qe0,1; return "^FF0000"; }
+	else return "^00FF00"; 
+}
+OnBuyItem:
+	set .@q[0],@bought_nameid;
+	copyarray .@q[1],getd(".q_"+@bought_nameid+"[0]"),getarraysize(getd(".q_"+@bought_nameid+"[0]"));
+	if (!.@q[1]) { message strcharinfo(0),"An error has occurred."; end; }
+	set @qe1, getiteminfo(.@q[0],5); set @qe2, getiteminfo(.@q[0],11);
+	addtimer 1000, strnpcinfo(1)+"::OnEnd";
+	while(1){
+		switch(select(""+((((@qe1&1) || (@qe1&256) || (@qe1&512)  || (@qe1&1024) || (@qe1&2048) || (@qe1&4096))&& @qe2>0 && !@qe6)?" ~ Preview...":"")+": ~ ^777777Cancel^000000")) {
+			case 1:
+				set @qe3, getlook(3); set @qe4, getlook(4); set @qe5, getlook(5);
+				if ((@qe1&1)||(@qe1&4096)) atcommand "@changelook 3 "+@qe2;
+				if ((@qe1&256)||(@qe1&1024)) atcommand "@changelook 1 "+@qe2;
+				if ((@qe1&512)||(@qe1&2048)) atcommand "@changelook 2 "+@qe2;
+				set @qe6,1;
+				break;
+			case 2:
+				close; } }
+OnEnd:
+	if (@qe6) { atcommand "@changelook 3 "+@qe3; atcommand "@changelook 1 "+@qe4; atcommand "@changelook 2 "+@qe5; }
+	for(set .@i,0; .@i<7; set .@i,.@i+1) setd "@qe"+.@i,0;
+	end;
+OnInit:
+// --------------------- Config ---------------------
+// Custom points, if needed: "<variable>","<name to display>"
+	setarray .Points$[0],"#CASHPOINTS","Cash Points";
+
+	set .Announce,1;	// Announce quest completion? (1: yes / 0: no)
+	set .ShowSlot,1;	// Show item slots? (2: all equipment / 1: if slots > 0 / 0: never)
+	set .DisplayID,0;	// Show item IDs? (1: yes / 0: no)
+	set .ShowZeny,0;	// Show Zeny cost, if any? (1: yes / 0: no)
+
+// Shop categories, if needed: "<Shop 1>","<Shop 2>"{,...};
+// Duplicate dummy data for any additional shops (bottom of script).
+// If no categories, use the second line instead (remove //).
+
+	setarray .Shops$[1],"Cash Shop Items";
+	// set .Shops$,"n/a";
+
+// Add(<shop number>,<reward ID>,<reward amount>,<Zeny cost>,<point cost>,
+//     <required item ID>,<required item amount>{,...});
+// Shop number corresponds with order above (default is 1).
+// Note: Do NOT use a reward item more than once!
+
+	//Upper
+	Add(1,20100,1,0,0,35006,5); //Champion's Wreath#35007
+	Add(1,19521,1,0,0,35006,1); //Gold Angel Scultpure#20233
+	Add(1,19517,1,0,0,35006,1); //Gold Angel Scultpure#20233
+	Add(1,20127,1,0,0,35006,3); //Helm Of Dragon#19667
+	Add(1,19581,1,0,0,35006,3); //Lord Kaho's Horn#35008
+	Add(1,19716,1,0,0,35006,1); // RTC First Place#35013
+	Add(1,19827,1,0,0,35006,1); // RTC Second Place#35014
+	Add(1,19934,1,0,0,35006,1); // RTC Third Place#35015
+	Add(1,20435,1,0,0,35006,4); //RWC 2008 Dragon Helm Gold#35010
+	Add(1,20316,1,0,0,35006,3); //RWC 2008 Dragon Helm Silver#35011
+	Add(1,20398,1,0,0,35006,2); //RWC 2008 Dragon Helm Copper#35012
+	Add(1,31160,1,0,0,35006,1); //Statue of Baby Angel#35009
+	Add(1,20028,1,0,0,35006,2); //Subject aura#20132
+	Add(1,20026,1,0,0,35006,2); //Subject aura#20132
+	sleep 10;
+	Add(1,19660,1,0,0,35006,2); //Subject aura#20132
+	Add(1,19836,1,0,0,35006,2); //Subject aura#20132
+	Add(1,19824,1,0,0,35006,2); //Subject aura#20132
+	Add(1,20214,1,0,0,35006,2); //Subject aura#20132
+	Add(1,19545,1,0,0,35006,2); //Subject aura#20132
+	Add(1,19786,1,0,0,35006,2); //Subject aura#20132
+	Add(1,19509,1,0,0,35006,2); //Subject aura#20132
+	Add(1,20221,1,0,0,35006,2); //Subject aura#20132
+	Add(1,20461,1,0,0,35006,2); //Subject aura#20132
+	Add(1,19954,1,0,0,35006,2); //Subject aura#20132
+	Add(1,20399,1,0,0,35006,2); //Subject aura#20132
+	Add(1,19722,1,0,0,35006,2); //Subject aura#20132
+	Add(1,20142,1,0,0,35006,2); //Subject aura#20132
+	Add(1,20462,1,0,0,35006,2); //Subject aura#20132
+	sleep 10;
+	Add(1,20405,1,0,0,35006,2); //Subject aura#20132
+	Add(1,31057,1,0,0,35006,2); //Subject aura#20132
+	Add(1,19785,1,0,0,35006,2); //Subject aura#20132
+	Add(1,20195,1,0,0,35006,2); //Subject aura#20132
+	Add(1,19882,1,0,0,35006,2); //Subject aura#20132
+	Add(1,20183,1,0,0,35006,2); //Subject aura#20132
+	Add(1,20392,1,0,0,35006,2); //Subject aura#20132
+	Add(1,19864,1,0,0,35006,2); //Subject aura#20132
+	Add(1,19823,1,0,0,35006,2); //Subject aura#20132
+	Add(1,19598,1,0,0,35006,2); //Subject aura#20132
+	sleep 10;
+	Add(1,20194,1,0,0,35006,2); //Subject aura#20132
+	Add(1,19574,1,0,0,35006,2); //Subject aura#20132
+	Add(1,20070,1,0,0,35006,2); //Subject aura#20132
+	Add(1,20234,1,0,0,35006,2); //Subject aura#20132
+	Add(1,19746,1,0,0,35006,2); //Subject aura#20132
+	Add(1,20206,1,0,0,35006,2); //Subject aura#20132
+	Add(1,20210,1,0,0,35006,2); //Subject aura#20132
+	Add(1,20211,1,0,0,35006,2); //Subject aura#20132
+	Add(1,20300,1,0,0,35006,2); //Subject aura#20132
+	Add(1,19996,1,0,0,35006,2); //Subject aura#20132
+	Add(1,19743,1,0,0,35006,2); //Subject aura#20132
+	sleep 10;
+
+	
+
+// --------------------------------------------------
+	for(set .@i,1; .@i<=getarraysize(.Shops$); set .@i,.@i+1)
+		npcshopdelitem "hatcostumecashshop"+.@i,909;
+	end;
+}

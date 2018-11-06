@@ -1,0 +1,498 @@
+nov_grnds,80,59,4	script	Welcome	469,{
+	if (nov_welcome == 0){
+		if (#LANGUE == 1 ) {
+			callfunc "F_NPC_NAME";
+			mes "Welcome in Rune Midgard!";
+			mes "Before starting your journey, you will have to go through a little introduction which will show you all the different currencies and how to use them.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "On your way, you will come across NPCs who will explain to you everything you need to know about the currencies by giving you little quests to accomplish.";
+			next;
+			mes "Keep in mind the information you will be given, it will definitely be useful all along your journey.";
+			next;
+			mes "Hold your breath and let the adventure begin!";
+		}
+		else{
+			callfunc "F_NPC_NAME";
+			mes "Bienvenue sur Rune Midgard !";
+			mes "Avant de commencer votre aventure, vous devrez passer par une petite introduction.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Celle-ci vous présentera les différentes monnaies du serveur ainsi que leur utilité.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Sur votre route vous croiserez des NPCs qui vous expliqueront tout ce qu'il y a à savoir sur les monnaies avec des petites quêtes à accomplir.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Retenez bien les informations qui vous seront données, elles s'avéreront très utiles tout au long de votre périple.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Retenez également votre souffle, car l'aventure commence !";
+		}
+		getitem 569,300;
+		rentitem 20307,259200;
+		set nov_welcome,1;
+		close;
+	}
+	else{
+		if (#LANGUE == 1 ) mes "Have fun in Rune Midgard!";
+		else mes "Amusez vous bien sur Rune Midgard !";
+	}
+		close;
+}
+
+nov_grnds,61,73,5	shop	Weapon Boy#nov	577,569:10,645:800,1639:80,13040:100,1545:120,13415:150,2112:200,5055:200,2352:200,2510:200,2414:200
+
+nov_grnds,84,55,4	script	Language Config#nov	857,{
+	switch(select("Français:English:Annuler")){
+		case 1:
+			set #LANGUE,0;
+			callfunc "F_NPC_NAME";
+			mes "Votre langue a été paramétré en Français.";
+			mes "Tous les NPCS custom vous parlerons en français.";
+			mes "Bonne journée.";
+			close;
+		case 2:
+			set #LANGUE,1;
+			callfunc "F_NPC_NAME";
+			mes "Your language has been set to English.";
+			mes "Every custom NPC should now talk to you in English.";
+			mes "Have a nice day.";
+			close;
+		case 3:
+			close;
+		}
+	OnInit:
+
+		waitingroom "Select Language",0;
+		
+		end;	
+}
+
+nov_grnds,122,75,4	script	Hervé	120,15,1,{
+	callfunc "F_NPC_NAME";
+	if (novice_tem !=1) {
+		if (#LANGUE == 1 ) mes "Nice day isn't it?";
+		else mes "Belle journée n'est-ce pas ?";
+		close;
+	}
+	else if (novice_tem == 1){
+		if (countitem(35000) != 0 ){
+			if (#LANGUE == 1 ) {
+			mes "Thank you so much, kid ! I was already seeing myself sleeping under bridges. Rune Coins are everything here, make sure you pile up as many of them as you can ! Take this, it's a little something to show you my gratitude.";
+			}
+			else {
+				mes "Merci gamin, je me voyais déjà dormir sous les ponts. Les Rune Coin te servent à tout ici, tâche d'en amasser autant que tu peux ! Tiens, voilà un petit quelque chose en gage de remerciement.";
+			}
+			getexp 10,4;
+			set Zeny, Zeny + 1000;
+			delitem 35000,1;
+			if (#TICKET1 == 0 ) {
+					getitem 35005,1;
+					set #TICKET1,1;
+			}	
+			set novice_tem,2;
+			close;
+		}
+		else{
+			if (#LANGUE == 1 ) mes "You haven't found my Rune Coin yet? I'm screwed...";
+			else mes "Tu n'as toujours pas trouvé mon Rune Coin ? Je suis foutu...";
+			close;
+		}
+	}
+OnTouch:
+	if (novice_tem == 0 ) {
+		if (#LANGUE == 1 ) {
+			mes " Hey kid, did you see my Rune Coin by any chance? I might have lost it on my way...";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Besides, do you know what a Rune Coin is? It's a universal currency which will act as an intermediary between every other currency of Rune-Midgard! But I'm too old for all of this...";
+			mes "This Rune Coin was everything I had, if you manage to find it please bring it back to me!";
+		}
+		else {
+			mes "Hop hop hop gamin, tu aurais pas vu mon Rune Coin par hasard ? J'ai dû le perdre en chemin...";  
+			next;
+			callfunc "F_NPC_NAME";
+			mes "D'ailleurs sais-tu ce qu'est un Rune Coin ? C'est une monnaie universelle qui te permettra de de faire l'intermédiaire entre toutes les autres monnaies de Rune-Midgard ! Mais moi je suis trop vieux pour ça... ";
+			next;
+			callfunc "F_NPC_NAME";	
+			mes "Ce Rune Coin était tout ce que j'avais de plus cher, si tu le retrouves ramène-le moi !";
+		}
+		set novice_tem,1;
+		close;
+	}
+	
+}
+
+nov_grnds,118,103,4	script	Bush	516,{
+	if (novice_tem2 == 0 ) {
+		if (#LANGUE == 1 ) mes "As you rummage in the bush, you find a Rune Coin.";
+		else mes "En fouillant le buisson, vous trouvez un Rune Coin.";
+		getitembound 35000,1,Bound_Char;
+		set novice_tem2,1;
+		close;
+	}
+	else{
+		if (#LANGUE == 1 ) mes "You keep rummaging in the bush, but find nothing.";
+		else mes "Vous avez beau fouiller, vous ne trouvez rien.";
+		close;
+	}
+}
+
+nov_grnds,89,138,4	script	Oscar	496,{
+	callfunc "F_NPC_NAME";
+	if (novice_tem3 == 0 ) {
+		if (#LANGUE == 1 ) {
+			mes "Hi adventurer! Do you like mini-games? I love it!";
+			mes "I wander around Rune Midgard night and day to find new games.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Did you know you could get Event Tickets by playing these games ?";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "It's the perfect plan for somebody like me who doesn't like to get in trouble!";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "By using Event Tickets, I can buy Rune Coins that allow me to get whatever I want !";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "I have a game for you, bring me a Chrysalis and you'll get a reward!";
+		}
+		else {
+			mes "Salut aventurier !  T'aimes bien les mini-jeux ? Moi j'adore ça !";	
+			mes "Je parcours Rune Midgard jour et nuit pour trouver de nouveaux jeux.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Tu savais qu'en y participant tu pouvais obtenir des Event Tickets ?";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "C'est parfait pour moi qui n'aime pas trop me battre ! Avec les Events Tickets je peux acheter des Rune Coin qui me permettent d'avoir accès à tout ce que je veux !";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Tiens, j'ai un jeu pour toi, ramène moi une Chrysalis et tu auras une récompense !";
+		}
+		set novice_tem3,1;
+	}
+	else if (novice_tem3 == 1){
+		if (countitem(915) <1 ){
+			if (#LANGUE == 1 ) 	mes "Bring me a Chrysalis please.";
+			else mes "S'il te plaît, ramène moi une Chrysalis.";
+			close;
+		}
+		else{	
+			delitem 915,1;
+			if (#LANGUE == 1 ){
+				if (#TICKET2 == 0 ) {
+					getitembound 35005,1,Bound_Char;;
+					set #TICKET2,1;
+				}	
+				getexp 25,5;
+				mes "Congratulations, you did it! Here's a Warpra Ticket which will allow you to unlock a dungeon, use it wisely!";
+				next;
+				callfunc "F_NPC_NAME";
+				mes "It's a bit less powerful than a real Event Ticket because it has no value in Rune Coin, but it's normal since my mini-game isn't a real event...";
+				next;
+				callfunc "F_NPC_NAME";
+				mes "Anyway, I wish you good luck for your journey!";
+			}
+			else {
+				if (#TICKET2 == 0 ) {
+					getitem 35005,1;
+					set #TICKET2,1;
+				}		
+				getexp 25,5;
+				mes "Félicitations tu as réussi ! Voici un Warpra Ticket qui te permettra de débloquer un donjon, fais-en bon usage !";
+				next;
+				callfunc "F_NPC_NAME";
+				mes "Il est un peu moins puissant qu'un vrai Event Ticket car il n'a aucune valeur en Rune Coin, mais mon mini-jeu n'est pas un vrai événement.";
+				next;
+				callfunc "F_NPC_NAME";
+				mes "Quoi qu'il en soit bonne chance pour ton périple !";
+			}
+			set novice_tem3,2;
+			close;
+		}
+	}
+	else{
+		mes "Meow~";
+	}
+	close;
+}
+
+/*
+nov_grnds,230,111,9	script	Conrad	512,{
+	callfunc "F_NPC_NAME";
+	if (novice_tem4 == 0 ) {
+		if (#LANGUE ==1) {
+			mes "Greetings warrior apprentice here's your ultimate trial.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "In the world of Rune Midgard, you will be able to fight against other players in Battlegrounds, and it is my duty to prepare you for it.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "The Battlegrounds will allow you to accumulate badges, which will allow you to buy special battle consumables.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Badges are also a mean to boost your strength in order to carry more items.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Let's talk about the trial, before thinking about fighting against others, you must be ready to fight against yourself.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Don't forget to press [shift] or to have /ns enabled to touch your rival.";
+			mes "Are you ready ?" ;
+			switch(select("Sure I am !:I'm too cowardly for that.")){
+				case 1 : 
+					set novice_tem4,1;
+					//clone "nov_grnds", 227,106, strnpcinfo(0)+"::OnDead", getcharid( 0);
+					close;
+					break;
+				case 2:
+					close;
+					break;
+			}
+		}
+		else {
+			mes "Salut à toi apprenti guerrier, voici ta dernière épreuve.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Dans le monde de Rune Midgard tu auras la possibilité de te battre contre les autres joueurs dans des champs de bataille, et il est de mon devoir de t'y préparer.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Les champs de bataille de permettront d'accumuler des badges qui te seront utiles pour acheter des consommables spéciaux pour la bataille.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Les badges sont également un moyen de booster ta force pour pouvoir porter plus d'objets sur toi.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Passons à l'épreuve, avant de te battre contre les autres, tu dois être prêt à te battre contre toi même.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "N'oublie pas d'appuyer sur la touche [shift] ou d'avoir la commande /ns active pour toucher ton rival.";
+			mes "Es-tu prêt ? ";
+			switch(select("Et comment !:Je suis trop lâche pour ça.")){
+			case 1 : 
+				set novice_tem4,1;
+				//clone "nov_grnds", 227,106, strnpcinfo(0)+"::OnDead", getcharid( 0);
+				close;
+				break;
+			case 2:
+				close;
+			}
+		}
+	}
+	else if (novice_tem4 == 1 ){
+				if (#LANGUE ==1) {
+					mes "You can't escape anymore, it's you or him.";
+				}
+				else {
+					mes "Tu ne peux plus fuir, c'est lui ou toi.";
+				}
+				close;
+	}
+	else if (novice_tem4 == 2) {
+		if (#TICKET3 == 0 ) {
+			getitem 35005,1;
+			set #TICKET3,1;
+		}
+		getexp 30,12;
+		if (#LANGUE ==1) mes "Congratulations, you proved your bravery, here's a Warpra Ticket as a reward.";
+		else mes "Bravo, tu as su prouver ta bravoure, voici un Warpra Ticket en guise de récompense.";
+		set novice_tem4,3;
+		close;
+	
+	}
+	else{
+		if (#LANGUE == 1 ) mes "Good continuation adventurer!";
+		else mes "Bonne continuation aventurier !";
+		close;
+	}
+	
+OnDead:
+	set novice_tem4,2;
+	if (#LANGUE ==1) mes "Good Job, come and see me for your reward.";
+	else mes "Bravo, viens me voir pour ta récompense.";
+	close;
+}*/
+
+nov_grnds,226,198,4	script	Amy	702,{
+	callfunc "F_NPC_NAME";
+	if (novice_tem5 == 0){
+		if (#LANGUE == 1 ){
+			mes "Hi, my name is Amy.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "I am here to teach you what the Shards of Potential are. You can get some by killing monsters in the instances.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "They can be traded for different kinds of useful items, for Rune Coins, but you especially will be able to transform them.";
+			next;
+			callfunc "F_NPC_NAME";
+			getitem 35003,3;
+			mes "Take these 3 Shards of Potential, go and break them against the two big rocks near the lake.";
+		}
+		else {
+			mes "Bonjour, je suis Amy.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Mon rôle est de t'apprendre ce que sont les Shards of Potential. Tu pourras en obtenir en tuant les monstres dans les instances.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Elles pourront être échangées contre toutes sortes d'objets utiles, contre des Rune Coin, mais surtout, tu pourras les transformer.";
+			next;
+			callfunc "F_NPC_NAME";
+			getitem 35003,3;
+			mes "Voici 3 Shards of Potential, va les casser contre les deux rochers près du lac.";
+		}
+		set novice_tem5,1;
+	}
+	else if (novice_tem5 == 1) {
+		if (#LANGUE == 1 ){
+			mes "Go and find the sharp rocks next to the lake and break your Shards of Potential.";
+		}
+		else{
+			mes "Cherche les deux rochers près du lac et casse tes Shards of Potential.";
+		}
+	}
+	else if (novice_tem5 == 2) {
+		getexp 20,10;
+		delitem 35002,9;
+		if (#LANGUE == 1 ){
+			mes "Perfect! By breaking Shards of Potential, you will obtain Dust of Potential, which will allow you to increase your equipment deslotting chances for example.";
+			next;
+			callfunc "F_NPC_NAME";
+			getitem 35003,20;
+			mes "Now, take these 20 Shards of Potential and go find Sam on the Eastern side of the Lake, he will know what to do.";
+		}
+		else{
+			mes "Parfait ! En cassant des Shards of Potential tu obtiens des Dust of Potential, elles serviront à augmenter tes chances de deslottage d'équipements par exemple.";
+			next;
+			callfunc "F_NPC_NAME";
+			getitem 35003,20;
+			mes "A présent voici 20 Shards of Potential, va trouver Sam à l'Est du lac, il saura quoi faire.";
+		}
+		set novice_tem5,3;
+	}
+	else if (novice_tem5 == 3) {
+		if (#LANGUE == 1 ) mes "Go find Sam on the Eastern side of the lake.";
+		else mes "Va trouver Sam à l'Est du lac.";
+	 }
+	 else if (novice_tem5 == 4 ){
+		delitem 35004,1;
+		if (#LANGUE == 1 ) mes "Great! Now you know everything about Shards of Potential! Take this slight counterpart for your hardwork, and take care!";
+		else mes "Super ! A présent tu sais tout sur les Shards of Potential, voici une maigre contrepartie pour ton dur labeur, bon courage pour la suite !";
+		if (#TICKET4 == 0 ) {
+			getitem 35005,1;
+			set #TICKET4,1;
+		}
+		set Zeny,Zeny + 2000;
+		getexp 50,20;
+		set novice_tem5,5;
+	 }
+	else {
+		if (#LANGUE == 1 ) mes "Take care!";
+		else mes " Bon courage pour la suite !";
+	}
+	close;
+}
+
+nov_grnds,237,225,4	script	Sharp Rocks	1187,{
+	if (novice_tem5 == 1){
+			specialeffect2 EF_REPAIRWEAPON;
+			progressbar "ffff00",10;
+			delitem 35003,3;
+			getitem 35002,9;
+			set novice_tem5,2;
+	}
+}
+
+nov_grnds,279,256,4	script	Sam 	107,{
+	callfunc "F_NPC_NAME";
+	if (novice_tem5 == 3){
+		if (#LANGUE == 1 ){
+			mes "...";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "I will transform your Shards into Quartz of Potential.";
+			specialeffect2 EF_REPAIRWEAPON;
+			close2;
+			progressbar "ffff00",20;
+			delitem 35003,20;
+			getitem 35004,1;
+			mes "They can be used to craft hats. These are high value crystals so take good care of them.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Go back to Amy for your reward.";
+		}
+		else {
+			mes "...";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Je vais transformer tes Shards en Quartz of Potential.";
+			specialeffect2 EF_REPAIRWEAPON;
+			close2;
+			progressbar "ffff00",20;
+			delitem 35003,20;
+			getitem 35004,1;
+			callfunc "F_NPC_NAME";
+			mes "Les Quartz of Potential servent à fabriquer des chapeaux. Ce sont des crystaux d'une grande valeur alors prends-en soin.";
+			next;
+			callfunc "F_NPC_NAME";
+			mes "Retourne parler à Amy pour ta récompense.";
+		}
+		set novice_tem5,4;
+	}
+	else{
+		mes "...";
+	}
+	close;
+}
+
+nov_grnds,228,70,4	script	Warpra#nov	862,{
+	callfunc "F_NPC_NAME";
+	if (#LANGUE == 1 ){
+		.@msg1$ = "Hi, do you want to start your journey in the world of Rune Midgard? You won't be able to come back in this area.";
+		.@msg2$ = "I'm ready!:Not now.";
+	}
+	else{
+		.@msg1$ = "Bonjour, voulez-vous commencer votre voyage dans le monde de Rune Midgard ? Vous ne pourrez plus revenir dans cette zone.";
+		.@msg2$ = "Je suis prêt !:Pas tout de suite.";
+	}
+	mes .@msg1$;
+	switch(select(.@msg2$)){
+		case 1 :
+			delitem 35000,countitem(35000);
+			delitem 35001,countitem(35001);
+			delitem 35002,countitem(35002);
+			delitem 35003,countitem(35003);
+			delitem 35004,countitem(35004);
+			if (#TICKET5 == 0 ) {
+				getitem 35005,2;
+				set #TICKET5,1;
+			}
+			getitem 601,20; 
+			getitem 602,2;  
+			getitem 7059,5; 
+			getitem 7060,5; 
+			if (!(#pcloginflag&8)) atcommand "@join #lfg";
+			set #pcloginflag, #pcloginflag | 8;
+			if (!(#pcloginflag&16)) atcommand "@join #en";
+			set #pcloginflag, #pcloginflag | 16;
+			if (!(#pcloginflag&32)) atcommand "@join #fr";
+			set #pcloginflag, #pcloginflag | 32;
+			if (!(#pcloginflag&64)) atcommand "@join #trade";
+			set #pcloginflag, #pcloginflag | 64;
+			if (!(#pcloginflag&128)) atcommand "@join #battleground";
+			set #pcloginflag, #pcloginflag | 128;
+			if (!(#pcloginflag&256)) atcommand "@join #ally";
+			set #pcloginflag, #pcloginflag | 256;
+			if (!(#pcloginflag&512)) atcommand "@join #bgannounce";
+			set #pcloginflag, #pcloginflag | 512;
+			
+			warp "prontera",155,181;
+			savepoint "prontera",155,181;
+		case 2 :
+			close;
+			break;
+	}
+}

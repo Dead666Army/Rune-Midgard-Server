@@ -1,0 +1,155 @@
+//===== rAthena Script =======================================
+//= War of Emperium - Auto-Start
+//===== By: ==================================================
+//= kalen (1.0)
+//= 1.1 by Akaru and ho|yAnge|
+//===== Current Version: =====================================
+//= 2.0
+//===== Compatible With: =====================================
+//= rAthena Project; RO Episode 4+
+//===== Description: =========================================
+//= Auto-start for War of Emperium FE.
+//= For instructions, see doc/woe_time_explanation.txt.
+//===== Additional Comments: =================================
+//= 1.1a changed OnInit to OnAgitInit.[kobra_k88]
+//= 1.2 added gettime checks. removed $AgitStarted var.[kobra_k88]
+//= 1.3 Moved treasure spawn time here.[kobra_k88]
+//= 1.3a Implemented Shadowlady's idea to allow for different
+//=     start/stop times on different days.[kobra_k88]
+//= 1.4 Fixed treasure chests spawn! We had to unroll some loops
+//=     Now they appear in castles from 00:01 to 00:24. [Lupus]
+//= 1.5 Fixed WOE end messages on non-WOE days, by Avaj
+//= 1.5a missing tabs [KarLaeda]
+//= 1.6 Corrected multiple "WoE has begun" announces [ultramage]
+//= 1.7 Commented out the WoE start and end announces. [L0ne_W0lf]
+//= 1.8 Castle owners displayed when WoE starts and finished. [L0ne_W0lf]
+//= 1.8a Will now report unoccupied castles at start/end. [L0ne_W0lf]
+//= 1.8b Whoops. Fixed a mistake :D [L0ne_W0lf]
+//= 1.9 Rearranged the time-checks so they no longer use goto. [L0ne_W0lf]
+//=     Removed treasure spawning function calls. (No longer needed)
+//= 2.0 Added WoE Battle Log support for broadcasts. [L0ne_W0lf]
+//============================================================
+
+-	script	Agit_Event	-1,{
+	end;
+	
+OnInit:
+	if (agitcheck()) {
+		callsub S_OpenPortals;
+	}else{
+		callsub S_ClosePortals;
+	}
+	end;
+
+OnSun2100:
+OnSun2230:
+OnAgitInit:
+	// starting time checks
+	if((gettime(DT_DAYOFWEEK)==SUNDAY) && (gettime(DT_HOUR)==21)) {
+		if (!agitcheck()) {
+			AgitStart;
+			Announce "The War of Emperium has begun!",bc_all|bc_woe;
+			callsub S_OpenPortals;
+			callsub S_DisplayOwners;
+		}
+	}
+
+	// end time checks
+	if ((gettime(DT_DAYOFWEEK)==SUNDAY) && (gettime(DT_HOUR)==22 && gettime(DT_MINUTE)==30)) { 
+		if (agitcheck()) {
+			AgitEnd;
+			Announce "The War of Emperium has ended!",bc_all|bc_woe;
+			callsub S_ClosePortals;
+			callsub S_DisplayOwners;
+		}
+	}
+	end;
+
+S_DisplayOwners:
+	setarray .@maps$[0],"prtg_cas01";
+	//setarray .@maps$[0],"aldeg_cas01","aldeg_cas02","aldeg_cas03","aldeg_cas04","aldeg_cas05";
+	//setarray .@maps$[5],"gefg_cas01","gefg_cas02","gefg_cas03","gefg_cas04","gefg_cas05";
+	//setarray .@maps$[10],"payg_cas01","payg_cas02","payg_cas03","payg_cas04","payg_cas05";
+	//setarray .@maps$[15],"prtg_cas01","prtg_cas02","prtg_cas03","prtg_cas04","prtg_cas05";
+	for( set .@i, 0; .@i <= 0; set .@i, .@i+1 ) {
+		if (GetCastleData(.@maps$[.@i],1)) {
+			Announce "The [" + GetCastleName(.@maps$[.@i]) + "] castle has been conquered by the [" + GetGuildName(GetCastleData(.@maps$[.@i],1)) + "] guild.",bc_all|bc_woe;
+		}
+		else {
+			Announce "The [" + GetCastleName(.@maps$[.@i]) + "] castle is currently unoccupied.",bc_all|bc_woe;
+		}
+	}
+	
+	return;
+	
+S_OpenPortals:
+	//Prontera Castle Map
+	enablenpc "prtg-1_prtg-1-01";
+	//enablenpc "prtg-2_prtg-2";
+	//enablenpc "prtg-3_prtg-3";
+	//enablenpc "prtg-4_prtg-4";
+	//enablenpc "prtg-5_prtg-5";
+	
+	//Geffen Castle Map
+	//enablenpc "gef-g1-0_gefg-1-07";
+	//enablenpc "gef-g1-1_gefg-1-04";
+	//enablenpc "gef-g2_gefg-2-07";
+	//enablenpc "gef-g3-0_g-cas3-12";
+	//enablenpc "gef-g3-1_g-cas3-13";
+	//enablenpc "gef-g3-2_g-cas3-14";
+	//enablenpc "gef-g3-3_g-cas3-15";
+	//enablenpc "gef-g4_gefg-4-05";	
+	//enablenpc "gef-5-0_gefg-5-04";
+	//enablenpc "gef-5-1_gefg-5-01";
+	
+	//Payon Castle Map
+	//enablenpc "payg-1_payg-1-06";
+	//enablenpc "payg-2_payg-2-02";
+	//enablenpc "payg-3_payg-3-07";
+	//enablenpc "payg-4_payg-4-01";
+	//enablenpc "payg-5_payg-5-03";
+  
+	//Al De Baran Castle Map
+	//enablenpc "aldeg-1_aldeg-1-1";
+	//enablenpc "aldeg-2_aldeg-2-1";
+	//enablenpc "aldeg-3_aldeg-3-1";
+	//enablenpc "aldeg-4_aldeg-4-1";
+	//enablenpc "aldeg-5_aldeg-5-1";
+	return;
+	
+S_ClosePortals:
+	//Prontera Castle Map
+	disablenpc "prtg-1_prtg-1-01";
+	disablenpc "prtg-2_prtg-2";
+	disablenpc "prtg-3_prtg-3";
+	disablenpc "prtg-4_prtg-4";
+	disablenpc "prtg-5_prtg-5";
+	
+	//Geffen Castle Map
+	disablenpc "gef-g1-0_gefg-1-07";
+	disablenpc "gef-g1-1_gefg-1-04";
+	disablenpc "gef-g2_gefg-2-07";
+	disablenpc "gef-g3-0_g-cas3-12";
+	disablenpc "gef-g3-1_g-cas3-13";
+	disablenpc "gef-g3-2_g-cas3-14";
+	disablenpc "gef-g3-3_g-cas3-15";
+	disablenpc "gef-g4_gefg-4-05";	
+	disablenpc "gef-5-0_gefg-5-04";	
+	disablenpc "gef-5-1_gefg-5-01";	
+	
+	//Payon Castle Map
+	disablenpc "payg-1_payg-1-06";
+	disablenpc "payg-2_payg-2-02";
+	disablenpc "payg-3_payg-3-07";
+	disablenpc "payg-4_payg-4-01";
+	disablenpc "payg-5_payg-5-03";
+
+	//Al De Baran Castle Map
+	disablenpc "aldeg-1_aldeg-1-1";
+	disablenpc "aldeg-2_aldeg-2-1";
+	disablenpc "aldeg-3_aldeg-3-1";
+	disablenpc "aldeg-4_aldeg-4-1";
+	disablenpc "aldeg-5_aldeg-5-1";
+	return;
+	
+}

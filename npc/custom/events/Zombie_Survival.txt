@@ -1,0 +1,115 @@
+nov_grnds,75,68,0	script	WarpToEvent	45,2,2,{
+	end;
+OnTouch:
+	if (BaseLevel>1){
+		if (#LANGUE == 1){
+			mes "[Novice Survival]";
+			mes "You need to be level 1 to participate to this event.";
+			close;
+		}
+		else{
+			mes "[Novice Survival]";
+			mes "Tu dois être level 1 pour participer à l'event.";
+			close;
+		}
+	}
+	else{
+		if (countitem(35000)>0 || countitem(35003)>0 || countitem(35004)>0 || countitem(35002)>0|| countitem(35001)>0){
+			if (#LANGUE == 1){
+			mes "[Novice Survival]";
+			mes "Are you trying to be smart ? Get outta here!";
+			close;
+		}
+		else{
+			mes "[Novice Survival]";
+			mes "Tu essayes d'être malin ? Va t'en d'ici!";
+			close;
+		}
+		}
+		else{
+			warp "quiz_02",349,378;
+		}
+	}
+}
+
+quiz_02,349,378,0	script	Survival	628,{
+	mes "[Survival]";
+	if (#survival_01 == 0){
+		set #survival_01,1;
+		getitem 35001,3;
+		if (#LANGUE == 1 ) {
+			mes "Thanks for participating, take this little gift as a reward for your bravery.";
+			next;
+			mes "Do you want to get out of here?";
+			if (select("Yes:No") == 1)
+				warp "prontera",155,180;
+			close;
+	}
+	else {
+		mes "Merci d'avoir participé, voici un petit cadeau pour récompenser votre bravoure."; 
+		next;
+		mes "Voulez-vous sortir d'ici ?";
+		if (select("Oui:Non") == 1)
+				warp "prontera",155,180;
+			close;
+	}
+	}
+	if (#LANGUE == 1 ) {
+			mes "Thanks for participating.";
+			next;
+			mes "Do you want to get out of here?";
+			if (select("Yes:No") == 1)
+				warp "prontera",155,180;
+			close;
+	}
+	else {
+		mes "Merci d'avoir participé."; 
+		next;
+		mes "Voulez-vous sortir d'ici ?";
+		if (select("Oui:Non") == 1)
+				warp "prontera",155,180;
+			close;
+	}
+	end;
+OnInit:
+	disablenpc("Survival");
+	end;
+}
+
+-	script	psurvival	-1,{
+OnInit:
+	disablenpc("WarpToEvent");
+	end;
+OnClock2100:
+	enablenpc("WarpToEvent");
+	announce "L'event Novice Survival est lancé ! Pour rejoindre l'event créer un novice 1/1 et prennez le warp au novice ground ! Le warp sera ouvert pendant 10 minutes! Vite!",0;
+	announce "The Event Novice Survival is beginning ! To join the event make a novice 1/1 and take the warp at the novice ground ! The warp will be here for 10 minutes! Hurry!",0;
+	end;
+OnClock2110:
+	disablenpc("WarpToEvent");
+	end;
+OnWhisperGlobal:
+	if (getgmlevel() >= 60) {
+		enablenpc("Survival");
+		end;
+	}
+end;
+}
+
+-	script	pwarp	-1,{
+OnWhisperGlobal:
+	if (getgmlevel() >= 60) {
+		enablenpc("WarpToEvent");
+		end;
+	}
+end;
+}
+
+-	script	pwarp2	-1,{
+OnWhisperGlobal:
+	if (getgmlevel() >= 60) {
+		disablenpc("WarpToEvent");
+		end;
+	}
+end;
+}

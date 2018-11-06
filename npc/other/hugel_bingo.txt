@@ -1,0 +1,7 @@
+que_bingo,49,125,0	script	end1a#bingo	45,3,3,{
+	end;
+OnTouch:
+	if(hg_ma1 == 6) warp "que_bingo",45,186;
+	else warp "que_bingo",40,121;
+	end;
+}

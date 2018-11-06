@@ -1,0 +1,283 @@
+//===========================================================================================================
+//============================================= INSTANCE =======================================================
+//===========================================================================================================
+
+// Panneau Record
+niflheim,202,282,4	script	Nightmare Record#undead	835,{
+	
+	set .@instance_name$,"Undead";
+	
+	callfunc "F_Record_Instance",
+		.@instance_name$;
+		
+	end;
+}
+
+// Génére l'instance et téléporte l'équipe dans l'instance
+niflheim,207,282,4	script	Lost Spirit#2	802,{
+	set .@instance_quest,66001;
+	set .@max_party,16;
+	set .@creditRequired,1;
+	set .@min_party,5;
+	set .@lvlrequired,60;
+	if (getgmlevel()>60)
+		set .@min_party,1;
+	if (getgmlevel()>60)
+		set .@creditRequired,0;
+	set .@instance_mapname$,"undead";
+	set .@mapx,314;
+	set .@mapy,70;
+	set .@map_from$,"niflheim";
+	set .@instance_name$,"Undead";
+	set .@npc_name$,"Lost Spirit";
+		
+	callfunc "F_TP_INSTANCE",
+		.@creditRequired,
+		.@lvlrequired,
+		.@min_party,
+		.@max_party,
+		.@instance_mapname$,
+		.@mapx,
+		.@mapy,
+		.@map_from$,
+		.@instance_quest,
+		.@instance_name$,
+		.@npc_name$;
+		
+	end;
+}
+
+// Initialise tout ce qu'il faut pour l'instance
+undead,320,66,1	script	Init#undead	844,{
+	end;
+OnInstanceInit:
+	hideonnpc instance_npcname("Lost Spirit#3");
+	hideonnpc instance_npcname("Hell#undead");
+	hideonnpc instance_npcname(strnpcinfo(0));
+	
+	setcell  instance_mapname("undead"),308,86,314,86,cell_walkable,0; // 1ere ligne
+	
+	//FR
+	sleep 5000;
+	mapannounce instance_mapname("undead"),"Lost Spirit : Mille mercis pour avoir accepter ma requête, je tâcherai de vous guider au mieux à travers cette enfer de mort-vivants...",0;
+	sleep 5000;
+	mapannounce instance_mapname("undead"),"Lost Spirit : Le début semble facile mais méfier vous, nous fûmes confiants aussi au début de l'instance...",0;
+	sleep 5000;
+	mapannounce instance_mapname("undead"),"Lost Spirit : Les zombies devraient commencer à apparaître d'ici une 20aine de secondes, préparez-vous !",0;
+	sleep 5000;
+	
+	//EN
+	mapannounce instance_mapname("undead"),"Lost Spirit : Many thanks for accepting my request, I will try to guide you best through this hell of undead ...",0;
+	sleep 5000;
+	mapannounce instance_mapname("undead"),"Lost Spirit : The beginning seems easy but beware, we were confident also at the beginning of the case ...",0;
+	sleep 5000;
+	mapannounce instance_mapname("undead"),"Lost Spirit : Zombies should start appearing in a few seconds, get ready!",0;
+	sleep 5000;
+	
+	set $start_time_undead[instance_id()], gettimetick(2);
+	setcell  instance_mapname("undead"),308,86,314,86,cell_walkable,1; // 1ere ligne
+	callfunc "F_Undead_Monster",
+		1,
+		strnpcinfo(4),
+		instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	end;
+OnMyMobDead:
+	.@ok = rand(100);
+	if (.@ok < 10){
+		getpartymember getcharid(1),2;
+		.@rand = rand($@partymembercount);
+		if (attachrid($@partymemberaid[.@rand])) {
+			if (strcharinfo(3) == instance_mapname("undead")) {
+				getitem 35003,1;
+			}
+			detachrid;
+		}
+	}
+	set .@map$, instance_mapname("undead");
+	set .@level, atoi(replacestr(strnpcinfo(0),"Controller#Undead",""))+1;
+	set .@mob_dead_num,mobcount(.@map$,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	set .@mob_dead_num,mobcount(instance_mapname("undead"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	if (.@mob_dead_num < 1) {
+		mapannounce instance_mapname("undead"),"Lost Spirit : Bien, nous étions également arrivés jusqu'ici, c'est maintenant que les choses se corsent, préparez-vous à combattre trois puissants mages.",0;
+		mapannounce instance_mapname("undead"),"Lost Spirit : Ne les sous-estimez pas, c'est en affaiblissant nos forces dans cette bataille que nous avons été dépassés lors du combat final...",0;
+		mapannounce instance_mapname("undead"),"Lost Spirit : Well, we've gotten here too, now that things are getting tough, get ready to fight three powerful mages.",0;
+		mapannounce instance_mapname("undead"),"Lost Spirit : Do not underestimate them, it is by weakening our forces in this battle that we were overwhelmed in the final fight ...",0;
+		donpcevent instance_npcname("1Controller#Undead")+"::OnEnable";
+	}
+	
+	end;
+}
+
+undead,320,66,1	script	1Controller#Undead	844,{
+	end;
+
+OnInstanceInit:
+	hideonnpc instance_npcname(strnpcinfo(0));
+	disablenpc instance_npcname(strnpcinfo(0));
+	end;
+
+OnEnable:
+	enablenpc instance_npcname(strnpcinfo(0));
+	callfunc "F_Undead_Monster",
+		atoi(replacestr(strnpcinfo(0),"Controller#Undead",""))+1,
+		strnpcinfo(4),
+		instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+	end;
+	
+OnMyMobDead:
+	
+	.@ok = rand(100);
+	if (.@ok < 10){
+		getpartymember getcharid(1),2;
+		.@rand = rand($@partymembercount);
+		if (attachrid($@partymemberaid[.@rand])) {
+			if (strcharinfo(3) == instance_mapname("undead")) {
+				getitem 35003,1;
+			}
+			detachrid;
+		}
+	}
+	set .@map$, instance_mapname("undead");
+	set .@level, atoi(replacestr(strnpcinfo(0),"Controller#Undead",""))+1;
+	set .@mob_dead_num,mobcount(.@map$,instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	set .@mob_dead_num,mobcount(instance_mapname("undead"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead");
+	switch(.@level){
+	case 1:
+		if (.@mob_dead_num < 1) {
+			donpcevent instance_npcname("1Controller#Undead")+"::OnEnable";
+		}
+		break;
+	case 2:
+		if (.@mob_dead_num < 1) {
+			mapannounce instance_mapname("undead"),"Lost Spirit : Vous vous en êtes très bien sortis jusqu'ici, je croirais me revoir avec mes amis quel triste souvenir...",0;
+			mapannounce instance_mapname("undead"),"Lost Spirit : Cependant restez concentrés ! Vous allez devoir affronter le monstre qui a volé mon corps, jamais un pirate n'a autant été humilié...",0;
+			mapannounce instance_mapname("undead"),"Lost Spirit : Donnez tout ce que vous avez !",0;
+			mapannounce instance_mapname("undead"),"Lost Spirit : You have done very well so far, I would think me with my friends what a sad memory ...",0;
+			mapannounce instance_mapname("undead"),"Lost Spirit : However stay focused! You will have to face the monster who stole my body, never a pirate has been so humiliated ... ",0;
+			mapannounce instance_mapname("undead"),"Lost Spirit : Give everything you have!",0;
+			donpcevent instance_npcname("2Controller#Undead")+"::OnEnable";
+		}
+		break;
+	case 3:	
+		if (.@mob_dead_num < 1) {
+			mapannounce instance_mapname("undead"),"Lost Spirit : Félicitations, grâce à vous j'ai pu retrouver mon apparence originelle. Je ne vous serai jamais assez reconnaissant, rapprochez-vous de moi pour recevoir votre récompense.",0;
+			mapannounce instance_mapname("undead"),"Lost Spirit : Congratulations, thanks to you I was able to find my original appearance. I will never be grateful enough, get close to me to receive your reward.",0;
+			hideoffnpc instance_npcname("Lost Spirit#3");
+			set .@end_time, gettimetick(2);
+			set .@start_time, $start_time_undead[instance_id()];
+			set .@instance_name$,"Undead";
+			set .@difficulty, #TFDif;
+			callfunc "F_SQL_RECORD",
+				.@end_time,
+				.@start_time,
+				.@instance_name$,
+				.@difficulty;
+		}
+		break;
+	}
+	end;
+}
+
+undead,320,66,0	duplicate(1Controller#Undead)	2Controller#Undead	45,2,2
+undead,320,66,0	duplicate(1Controller#Undead)	3Controller#Undead	45,2,2
+
+//Applique le HellPower en difficulté Nightmare
+undead,238,265,4	duplicate(Hell#anexus)	Hell#undead	120,300,300
+
+//Reward
+undead,221,267,4	script	Lost Spirit#3	1112,{
+
+	set .@Reward,20;
+	set .@npc_name$,"Lost Spirit";
+	set .@map_warp$,"niflheim";
+	set .@mapx,209;
+	set .@mapy,271;
+	set .@etoile,1;
+	
+	callfunc "F_Instance_Reward",
+		.@Reward,
+		.@npc_name$,
+		.@map_warp$,
+		.@mapx,
+		.@mapy,
+		.@etoile;
+		
+	end;
+OnInstanceInit:
+
+	hideonnpc instance_npcname(strnpcinfo(0));
+	
+	end;
+}
+
+
+//===========================================================================================================
+//============================================= FONCTIONS ======================================================
+//===========================================================================================================
+
+/**
+*	Invoque les monstres de l'instance
+*	@level				:	Niveau de l'instance (découpé en 3 niveaux)
+*	@map$				:	Nom de la map
+*	@label$				: 	Nom de l'evenement lié aux monstres
+*/
+function	script	F_Undead_Monster	{
+
+	set .@level, getarg(0);
+	set .@map$, getarg(1);
+	set .@label$, getarg(2);
+
+	switch(.@level) {
+	case 1:
+		areamonster instance_mapname("undead"),290,101,341,359,"Evil Druid",1117,2,.@label$;
+		areamonster instance_mapname("undead"),88,49,290,359,"Evil Druid",1117,28,.@label$;
+		areamonster instance_mapname("undead"),290,101,341,359,"Whisper",1179,3,.@label$;
+		areamonster instance_mapname("undead"),88,49,290,359,"Whisper",1179,47,.@label$;
+		areamonster instance_mapname("undead"),290,101,341,359,"Ghoul",1036,3,.@label$;
+		areamonster instance_mapname("undead"),88,49,290,359,"Ghoul",1036,47,.@label$;
+		areamonster instance_mapname("undead"),290,101,341,359,"Wraith",1192,2,.@label$;
+		areamonster instance_mapname("undead"),88,49,290,359,"Wraith",1192,28,.@label$;
+		areamonster instance_mapname("undead"),290,101,341,359,"Dullahan",1504,1,.@label$;
+		areamonster instance_mapname("undead"),88,49,290,359,"Dullahan",1504,19,.@label$;
+		areamonster instance_mapname("undead"),290,101,341,359,"Bloody Murderer",1507,1,.@label$;
+		areamonster instance_mapname("undead"),88,49,290,359,"Bloody Murderer",1507,19,.@label$;
+		areamonster instance_mapname("undead"),290,101,341,359,"Loli Ruri",1505,1,.@label$;
+		areamonster instance_mapname("undead"),88,49,290,359,"Loli Ruri",1505,19,.@label$;
+		areamonster instance_mapname("undead"),290,101,341,359,"Antique Firelock",1403,2,.@label$;
+		areamonster instance_mapname("undead"),88,49,290,359,"Antique Firelock",1403,28,.@label$;
+		areamonster instance_mapname("undead"),88,49,290,359,"Anubis",1504,10,.@label$;
+		areamonster instance_mapname("undead"),88,49,290,359,"Wraith Dead",1291,10,.@label$;
+		areamonster instance_mapname("undead"),88,49,290,359,"Ancient Mummy",1297,10,.@label$;
+		areamonster instance_mapname("undead"),88,49,290,359,"Ragged Zombie",1865,10,.@label$;
+		areamonster instance_mapname("undead"),88,49,290,359,"Zombie Slaughter",1864,15,.@label$;
+		areamonster instance_mapname("undead"),88,49,290,359,"Zombie Master",1298,5,.@label$;
+		break;
+	case 2 :
+		areamonster instance_mapname("undead"),305,311,305,311,"Caspar",1870,1,.@label$;
+		areamonster instance_mapname("undead"),302,311,302,311,"Balthasar",1870,1,.@label$;
+		areamonster instance_mapname("undead"),299,311,299,311,"Melchior",1870,1,.@label$;
+		break;
+	case 3 :
+		areamonster instance_mapname("undead"),215,251,235,271,"Wraith",1192,40,.@label$,2;
+		areamonster instance_mapname("undead"),225,261,225,261,"Metamorph",1112,1,.@label$,2;
+		break;
+	}
+}
+
+-	duplicate(pevent_instance#anexus)	pevent_instance#undead	-1
+
+//===========================================================================================================
+//============================================= MAPFLAGS =======================================================
+//===========================================================================================================
+
+undead	mapflag	nowarp
+undead	mapflag	nowarpto
+undead	mapflag	noteleport
+undead	mapflag	nosave
+undead	mapflag	nomemo
+undead	mapflag	nobranch
+undead	mapflag	noloot
+undead	mapflag	nopenalty
+undead	mapflag	monster_noteleport
+undead	mapflag	partylock
+undead	mapflag	noicewall

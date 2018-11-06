@@ -1,0 +1,335 @@
+//===========================================================================================================
+//============================================= INSTANCE =======================================================
+//===========================================================================================================
+
+// Panneau Record
+alb2trea,40,47,4	script	Nightmare Record#Octopus	835,{
+
+	set .@instance_name$,"Octopus Cave";
+	
+	callfunc "F_Record_Instance",
+		.@instance_name$;
+		
+	end;
+}
+
+// Génére l'instance et téléporte l'équipe dans l'instance
+alb2trea,42,47,4	script	Captain#OctopusCave	712,{
+	set .@instance_quest,66004;
+	set .@max_party,16;
+	set .@creditRequired,2;
+	set .@min_party,5;
+	set .@lvlrequired,70;
+	if (getgmlevel()>60)
+		set .@min_party,1;
+	if (getgmlevel()>60)
+		set .@creditRequired,0;
+	set .@instance_mapname$,"1@cash";
+	set .@mapx,198;
+	set .@mapy,99;
+	set .@map_from$,"alb2trea";
+	set .@instance_name$,"Octopus Cave";
+	set .@npc_name$,"Captain";
+		
+	callfunc "F_TP_INSTANCE",
+		.@creditRequired,
+		.@lvlrequired,
+		.@min_party,
+		.@max_party,
+		.@instance_mapname$,
+		.@mapx,
+		.@mapy,
+		.@map_from$,
+		.@instance_quest,
+		.@instance_name$,
+		.@npc_name$;
+		
+	end;
+}
+
+// NPC Reward
+1@cash,199,189,4	script	Captain#Reward	712,{
+
+	set .@Reward,45;
+	set .@npc_name$,"Captain";
+	set .@map_warp$,"alb2trea";
+	set .@mapx,42;
+	set .@mapy,45;
+	set .@etoile,2;
+	
+	callfunc "F_Instance_Reward",
+		.@Reward,
+		.@npc_name$,
+		.@map_warp$,
+		.@mapx,
+		.@mapy,
+		.@etoile;
+		
+	end;
+OnInstanceInit:
+
+	disablenpc instance_npcname(strnpcinfo(0));
+	
+	end;
+}
+
+//Warps
+1@cash,185,100,0	warp	octopus_lt	1,1,1@cash,150,130 // Bras en haut à gauche
+1@cash,75,194,0	warp	octopus_mlt	1,1,1@cash,198,99 // Bras en haut à gauche TP vers le milieu de l'octopus
+1@cash,186,83,0	warp	octopus_ld	1,1,1@cash,152,50 // Bras en bas à gauche
+1@cash,17,117,0	warp	octopus_mld	1,1,1@cash,198,99 // Bras en bas à gauche TP vers le milieu de l'octopus
+1@cash,209,100,0	warp	octopus_rt	1,1,1@cash,246,111 // Bras en haut à droite
+1@cash,310,216,0	warp	octopus_mrt	1,1,1@cash,198,99 // Bras en haut à droite TP vers le milieu de l'octopus
+1@cash,209,83,0	warp	octopus_rd	1,1,1@cash,247,51 // Bras en haut à droite
+1@cash,373,134,0	warp	octopus_mrd	1,1,1@cash,199,99 // Bras en haut à droite TP vers le milieu de l'octopus.
+1@cash,197,111,0	warp	octopus_b	1,1,1@cash,200,162 // Salle du boss
+
+// Initialise tout ce qu'il faut pour l'instance
+1@cash,199,98,1	script	Init#OctopusCave	844,{
+	end;
+OnInit:
+
+    disablenpc("octopus_b");
+
+    end;
+
+OnInstanceInit:
+	enablenpc(instance_npcname("octopus_lt"));
+    enablenpc(instance_npcname("octopus_mlt"));
+    enablenpc(instance_npcname("octopus_ld"));
+    enablenpc(instance_npcname("octopus_mld"));
+    enablenpc(instance_npcname("octopus_rt"));
+    enablenpc(instance_npcname("octopus_mrt"));
+    enablenpc(instance_npcname("octopus_rd"));
+    enablenpc(instance_npcname("octopus_mrd"));
+	enablenpc(instance_npcname("octopus_b"));
+
+	hideonnpc instance_npcname("Hell#1@cash");
+	hideonnpc instance_npcname(strnpcinfo(0));
+	
+	set .@npc_name$,"Captain";
+    'octopus_boss = 4;
+
+    set $start_time_octopus[instance_id()],gettimetick(2);
+    setcell instance_mapname("1@cash"),193,106,201,106,cell_walkable,0;
+	
+	callfunc "F_Room_Monster#Octopus",
+		instance_npcname(strnpcinfo(0))+"::OnMyMobLTDead",
+        1;
+    callfunc "F_Room_Monster#Octopus",
+        instance_npcname(strnpcinfo(0))+"::OnMyMobLDDead",
+        2; 
+    callfunc "F_Room_Monster#Octopus",
+		instance_npcname(strnpcinfo(0))+"::OnMyMobRTDead",
+        3;
+    callfunc "F_Room_Monster#Octopus",
+        instance_npcname(strnpcinfo(0))+"::OnMyMobRDDead",
+        4;
+	
+
+
+	//FR
+	sleep 10000;
+	mapannounce instance_mapname("1@cash"),"???? : Qui ose entrer sur mon territoire ? Seul la mort vous attend dans ce lieu...",0;
+	
+	
+	//EN
+	mapannounce instance_mapname("1@cash"),"???? : Who dares to enter my territory? Only death awaits those in this place...",0;
+
+	end;
+
+OnMyMobLTDead:
+    callfunc "F_ENABLE_WARP_OCTUPUS",
+        instance_npcname(strnpcinfo(0))+"::OnMyMobLTDead",
+        instance_npcname("octopus_mlt");
+    
+    end;
+
+OnMyMobLDDead:
+    callfunc "F_ENABLE_WARP_OCTUPUS",
+        instance_npcname(strnpcinfo(0))+"::OnMyMobLDDead",
+        instance_npcname("octopus_mld");
+
+    end;
+
+OnMyMobRTDead:
+    callfunc "F_ENABLE_WARP_OCTUPUS",
+        instance_npcname(strnpcinfo(0))+"::OnMyMobRTDead",
+        instance_npcname("octopus_mrt");
+    end;
+
+OnMyMobRDDead:
+    callfunc "F_ENABLE_WARP_OCTUPUS",
+        instance_npcname(strnpcinfo(0))+"::OnMyMobRDDead",
+        instance_npcname("octopus_mrd");
+    end;
+
+OnBossDead:
+
+    mapannounce instance_mapname("1@cash"),"Giant Octopus : JE REVIENDRAI !!!",0;
+    mapannounce instance_mapname("1@cash"),"Giant Octopus : I WILL BE BACK!!!",0;
+
+OnBossDeadSlave:
+
+    .@mob_dead_num = mobcount(instance_mapname("1@cash"),instance_npcname(strnpcinfo(0))+"::OnBossDeadSlave");
+    if (.@mob_dead_num < 1){
+        enablenpc(instance_npcname("Captain#Reward"));
+        set .@end_time,gettimetick(2);
+        set .@start_time, $start_time_octopus[instance_id()];
+        set .@instance_name$,"Octopus Cave";
+				set .@difficulty, #TFDif;
+
+        callfunc "F_SQL_RECORD",
+            .@end_time,
+            .@start_time,
+            .@instance_name$,
+						.@difficulty;
+    }
+
+    end;
+
+}
+
+1@cash,198,99,0	duplicate(Hell#anexus)	Hell#1@cash	45,300,300
+
+-	duplicate(pevent_instance#anexus)	pevent_instance#1@cash	-1
+
+
+//===========================================================================================================
+//============================================= FONCTIONS ======================================================
+//===========================================================================================================
+
+function	script	F_Room_Monster#Octopus	{
+
+	set .@label$,getarg(0);
+    set .@branch,getarg(1);
+
+    switch(.@branch){
+        //LT
+        case 1 :
+            set .@x_l, 66;
+            set .@x_r, 152;
+            set .@y_t, 159;
+            set .@y_d, 82;
+            break;
+        //LD
+        case 2 :
+            set .@x_l, 15;
+            set .@x_r, 156;
+            set .@y_t, 84;
+            set .@y_d, 20;
+            break;
+        //RT
+        case 3 :
+            set .@x_l, 243;
+            set .@x_r, 311;
+            set .@y_t, 218;
+            set .@y_d, 94;
+            break;
+        //RD
+        case 4 :
+            set .@x_l, 245;
+            set .@x_r, 374;
+            set .@y_t, 93;
+            set .@y_d, 18;
+            break;
+        default:
+            break;
+    }
+
+    areamonster instance_mapname("1@cash"),.@x_l,.@y_t,.@x_r,.@y_d,"Strouf",1065,15,.@label$;
+    areamonster instance_mapname("1@cash"),.@x_l,.@y_t,.@x_r,.@y_d,"Deviace",1108,15,.@label$;
+    areamonster instance_mapname("1@cash"),.@x_l,.@y_t,.@x_r,.@y_d,"Swordfish",1069,10,.@label$;
+    areamonster instance_mapname("1@cash"),.@x_l,.@y_t,.@x_r,.@y_d,"Marc",1045,15,.@label$;
+    areamonster instance_mapname("1@cash"),.@x_l,.@y_t,.@x_r,.@y_d,"Iara",2069,20,.@label$;
+    areamonster instance_mapname("1@cash"),.@x_l,.@y_t,.@x_r,.@y_d,"King Dramoh",2198,10,.@label$;
+    areamonster instance_mapname("1@cash"),.@x_l,.@y_t,.@x_r,.@y_d,"Penomena",1216,20,.@label$;
+    areamonster instance_mapname("1@cash"),.@x_l,.@y_t,.@x_r,.@y_d,"Sedora",2204,15,.@label$;
+    areamonster instance_mapname("1@cash"),.@x_l,.@y_t,.@x_r,.@y_d,"Sropho",2201,15,.@label$;
+    areamonster instance_mapname("1@cash"),.@x_l,.@y_t,.@x_r,.@y_d,"Strouf",1065,15,.@label$;
+    areamonster instance_mapname("1@cash"),.@x_l,.@y_t,.@x_r,.@y_d,"Deepsea Marse",2175,5,.@label$;
+    areamonster instance_mapname("1@cash"),.@x_l,.@y_t,.@x_r,.@y_d,"Small Octopus",2192,30,.@label$;
+    areamonster instance_mapname("1@cash"),.@x_l,.@y_t,.@x_r,.@y_d,"Piranha",2070,10,.@label$;
+    areamonster instance_mapname("1@cash"),.@x_l,.@y_t,.@x_r,.@y_d,"Red Eruma",2197,10,.@label$;
+	
+	return;
+}
+
+/**
+*   Active un warp en fonction de la branche pour retourner au milieu
+*   @label$         :   Label des monstres à compter
+*   @npc_name$  	:   Nom du warp à activer
+*/
+function	script	F_ENABLE_WARP_OCTUPUS	{
+
+    set .@label$, getarg(0);
+
+    .@ok = rand(100);
+	if (.@ok < 15){
+		getpartymember getcharid(1),2;
+		.@rand = rand($@partymembercount);
+		if (attachrid($@partymemberaid[.@rand])) {
+			if (strcharinfo(3) == instance_mapname("1@cash")) {
+				getitem 35003,1;
+			}
+			detachrid;
+		}
+	}
+
+    .@mob_dead_num = mobcount(instance_mapname("1@cash"),.@label$);
+    if (.@mob_dead_num < 1){
+        switch('octopus_boss){
+            case 4:
+                mapannounce instance_mapname("1@cash"),"Je vous surveille !",0;
+		        mapannounce instance_mapname("1@cash"),"I'm watching you!",0;
+                break;
+            case 3:
+                mapannounce instance_mapname("1@cash"),"Je me vengerai !",0;
+		        mapannounce instance_mapname("1@cash"),"I will take revenge!",0;
+                break;
+            case 2:
+                mapannounce instance_mapname("1@cash"),"C'est décidé, je vais vous dévorer, simples mortels !",0;
+		        mapannounce instance_mapname("1@cash"),"That's it, I will devour you, mere mortals!",0;
+                break;
+            case 1:
+                mapannounce instance_mapname("1@cash"),"Je vous attends, venez les mollusques !",0;
+		        mapannounce instance_mapname("1@cash"),"I'm waiting fo you. Come after me, molluscs!",0;
+                break; 
+        }
+        'octopus_boss--;
+    }
+
+    if ('octopus_boss == 0){
+        callfunc "F_BOSS_OCTOPUS",
+            instance_npcname(strnpcinfo(0))+"::OnBossDead";
+    }
+
+    return;
+}
+
+function	script	F_BOSS_OCTOPUS	{
+
+    set .@label$, getarg(0);
+
+     if ('octopus_boss == 0){
+
+        setcell instance_mapname("1@cash"),193,106,201,106,cell_walkable,1;
+
+        areamonster instance_mapname("1@cash"),197,199,197,199,"Giant Octopus",2194,1,.@label$,2;
+        areamonster instance_mapname("1@cash"),169,218,227,159,"Small Octopus",2192,50,.@label$+"Slave",2;
+     }
+
+    return;
+}
+
+1@cash	mapflag	nowarp
+1@cash	mapflag	noicewall
+1@cash	mapflag	nowarpto
+1@cash	mapflag	noteleport
+1@cash	mapflag	nosave
+1@cash	mapflag	nomemo
+1@cash	mapflag	nobranch
+1@cash	mapflag	noloot
+1@cash	mapflag	nopenalty
+1@cash	mapflag	monster_noteleport
+1@cash	mapflag	partylock

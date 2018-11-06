@@ -1,0 +1,578 @@
+//=== Ver 0.1 ===============//
+//=== By Noriel Calingasan ==//
+//===========================//
+
+-	script	mainevent	-1,{
+
+//===========================================================//
+OnPCLoadMapEvent:
+	for( set .@u, 0; .@u < getarraysize(.BMapFS$); set .@u, .@u + 1 ){
+		if(strcharinfo(3) == .BMapFS$[.@u]){
+		SC_ALL;
+		}
+
+	}
+
+end;
+//===========================================================//
+
+OnInit:
+	//== Walls ==//
+	setwall "06guild_r",74,78,4,2,0,"TeamAWall";
+	setwall "06guild_r",128,78,4,2,0,"TeamBWall";
+	
+	//== Item Deletion ==//
+	setarray .delitem[0],1408,1251,1705,1208,1902,1951,1602,1802,1302,5314,2285,5379,5325,2289,5377,5800,2310,2404,2102,2504,2624,2621;
+	setarray .delitems[0],547,601,645,656,657,678,715,716,717,7135,7136,12009,13534,13810,11501,11502,1751;
+	
+	//== Random Maps==//
+	setarray .BMap$[0],"guild_vs1","guild_vs2","guild_vs3","guild_vs4","guild_vs5";
+
+	//== Maps==//
+	setarray .BMapFS$[0],"guild_vs1","guild_vs2","guild_vs3","guild_vs4","guild_vs5","06guild_r";
+
+	//== Team A X/Y map axis ==//
+	setarray .Xa[0],7,7,16,7,19;
+	setarray .Ya[0],49,49,50,49,49;
+	
+	//== Team B X/Y map axis ==//
+	setarray .Xb[0],92,92,83,92,80;
+	setarray .Yb[0],49,49,50,49,49;
+
+	set .MaxMembers,7;
+	set $teama$,"Null";
+	set $teamb$,"Null";
+	set .Map$,"06guild_r";
+
+	//== Commands ==//
+	bindatcmd "gvgevent","mainevent::OnDoTeam",99,99;
+	bindatcmd "gvgdismiss","mainevent::OnDoDismiss",99,99;
+	end;
+	
+//===========================================================//
+
+//===========================================================//
+
+OnDoTeam:
+		if ( compare( .@atcmd_parameters$, "members" ) ) {
+			set .MaxMembers,.@atcmd_parameters$[1];
+			dispbottom "The new amount of members needed for GvG event is "+.MaxMembers+".";
+		end;
+		}else if ( compare( .@atcmd_parameters$, "Reset" ) ) {
+			set $teama$,"Null";
+			set $teamb$,"Null";
+			set $partya,0;
+			set $partyb,0;
+			dispbottom "Team's has been reset";
+		end;
+		}else if ( compare( .@atcmd_parameters$, "Team" ) ) {
+		set .@team$,.@atcmd_parameters$[1];
+		set .@Pteam,.@atcmd_parameters$[2];
+		query_sql ("SELECT `char_id` FROM `char` WHERE `name` = '"+.@team$+"'",.@leaderid);
+		query_sql ("SELECT `party_id` FROM `party` WHERE `leader_char` = '"+.@leaderid+"'",.@pid);
+		query_sql ("SELECT `guild_id` FROM `guild_member` WHERE `char_id` = '"+.@leaderid+"'",.@guildid);
+		set .@teamg$,getguildname(.@guildid);
+		if (!.@pid){dispbottom "Invalid leader name."; end;}
+					if(!.@Pteam || .@Pteam > 2){
+							dispbottom "Please input the team number <1/2>."; 
+							end;
+					}
+					if($teama$ != "Null" && .@Pteam == 1){
+							dispbottom "Guild ["+$teama$+"] still registered in Team A."; 
+							end;
+					}else if($teamb$ != "Null" && .@Pteam == 2){
+							dispbottom "Guild ["+$teamb$+"] still registered in Team B."; 
+							end;
+					}else if($teama$ != "Null" && $teamb$ != "Null"){
+							dispbottom "Guild ["+$teama+"] and "+$teamb$+" are still registered."; 
+							end;
+					}else if(.@teamg$ == $teamb$){
+							dispbottom "Guild ["+$teamb$+"] still registered in Team B."; 
+							end;
+					}else if(.@teamg$ == $teama$){
+							dispbottom "Guild ["+$teama$+"] still registered in Team A."; 
+							end;
+					}
+						getpartymember .@pid, 1;
+						getpartymember .@pid, 2;
+					
+					if ($@partymembercount != .MaxMembers ){
+						dispbottom "Party members is not equal to "+.MaxMembers+" members.";
+						end;
+					}else{
+						dispbottom "Team ["+.@teamg$+"] has been warped.";
+						if(.@Pteam == 1){
+							set $teama$,.@teamg$;
+							set $partya,.@pid;
+							set .@x,73;
+							set .@y,69;
+						}else if(.@Pteam == 2){
+							set $teamb$,.@teamg$;
+							set $partyb,.@pid;
+							set .@x,127;
+							set .@y,69;
+						}
+					}
+	
+			
+			for( set .@i, 0; .@i < .MaxMembers; set .@i, .@i + 1 ){
+				if(isloggedin($@partymemberaid[.@i],$@partymembercid[.@i])){
+					attachrid $@partymemberaid[.@i];
+					if(BaseJob == Job_Whitesmith || BaseJob == Job_Creator){atcommand "@clearcart";}
+					if(strcharinfo(3) != .Map$) {
+					nude;
+					atcommand "@storeall";
+					warp .Map$,.@x,.@y;
+					savepoint .Map$,.@x,.@y;
+					}
+				}
+			}			
+		}else if ( compare( .@atcmd_parameters$, "Start" ) ) {
+				if($teama$ == "Null" && $teamb$ == "Null"){
+							dispbottom "Both Team's are empty."; 
+							end;
+				}else if($teama$ == "Null" && $teamb$ != "Null"){
+							dispbottom "Team A is still empty."; 
+							end;
+				}else if($teama$ != "Null" && $teamb$ == "Null"){
+							dispbottom "Team B is still empty."; 
+							end;
+				}
+			donpcevent "mainevent::OnDoStart";
+			set .count_online1,0;
+			set .count_online2,0;
+
+	
+			getpartymember $partya, 1;
+			getpartymember $partya, 2;
+	for( set .@q, 0; .@q < .MaxMembers; set .@q, .@q + 1 ){
+		if ( isloggedin( $@partymemberaid[.@q], $@partymembercid[.@q] ) ){
+		attachrid $@partymemberaid[.@q];
+		if(strcharinfo(3) == .Map$) {
+					nude;
+			for( set .@k, 0; .@k < getarraysize(.delitem); set .@k, .@k + 1 ){
+						set .@count,countitem(.delitem[.@k]);
+						delitem .delitem[.@k],.@count;
+			}
+			for( set .@u, 0; .@u < getarraysize(.delitems); set .@u, .@u + 1 ){
+						set .@count,countitem2(.delitems[.@u],1,0,0,254,0,getbattleflag("woe_reserved_char_id")&0xffff,(getbattleflag("woe_reserved_char_id")>>16)&0xffff);
+						delitem2 .delitems[.@u],.@count,1,0,0,254,0,getbattleflag("woe_reserved_char_id")&0xffff,(getbattleflag("woe_reserved_char_id")>>16)&0xffff;					
+			}
+			if (BaseJob == Job_Knight || BaseJob == Job_Crusader){
+				setarray .@items[0],			13534,13810,656;			
+				setarray .@amount[0],			   10,   10, 10;
+				getitembound2 1408,1,1,7,0,4035,4035,4092,4092,3;	// Pike Hydra/SkelWorker
+				getitembound2 1408,1,1,7,0,4004,4004,4004,4004,3;	// Pike Drops
+			}else if(BaseJob== Job_Assassin){
+				setarray .@items[0],			13534,13810,656,678;			
+				setarray .@amount[0],			   10,   10, 10,  3;
+				getitembound2 1251,1,1,7,0,4035,4035,4092,0,3;		// Jur Hydra/SkelWorker
+			}else if(BaseJob== Job_Rogue){
+				setarray .@items[0],			13534,13810,656;			
+				setarray .@amount[0],			   10,   10, 10;
+				getitembound2 1705,1,1,7,0,4035,4035,4092,4092,3;	// Composite Bow Hydra/SkelWorker
+				getitembound2 1208,1,1,7,0,4004,4004,4004,4004,3;	// Main Gauche Drops
+			}else if(BaseJob== Job_Hunter){
+				setarray .@items[0],			13534,13810,656,12009;			
+				setarray .@amount[0],			   10,   10, 10,    2;
+				getitembound2 1208,1,1,7,0,4004,4004,4004,4004,3;	// Main Gauche Drops
+				getitembound2 1705,1,1,7,0,4035,4035,4092,4092,3;	// Composite Bow Hydra/SkelWorker
+			}else if(BaseJob== Job_Bard){
+				setarray .@items[0],			13534,13810,656,12009;			
+				setarray .@amount[0],			   10,   10, 10,    2;
+				getitembound2 1902,2,1,7,0,4035,4035,4092,4092,3;	// Violin Hydra/SkelWorker
+				getitembound2 1705,1,1,7,0,4035,4035,4092,4092,3;	// Composite Bow Hydra/SkelWorker
+			}else if(BaseJob== Job_Dancer){
+				setarray .@items[0],			13534,13810,656,12009;			
+				setarray .@amount[0],			   10,   10, 10,    2;
+				getitembound2 1951,2,1,7,0,4035,4035,4092,4092,3;	// Rope Hydra/SkelWorker
+				getitembound2 1705,1,1,7,0,4035,4035,4092,4092,3;	// Composite Bow Hydra/SkelWorker
+			}else if(BaseJob== Job_Wizard || BaseJob== Job_Sage){
+				setarray .@items[0],			13534,13810,656,717,716,715;			
+				setarray .@amount[0],			   10,   10, 10, 50, 50 ,50;
+				getitembound2 1602,1,1,7,0,4004,4004,4004,4004,3;	// Rod Drops
+			}else if(BaseJob== Job_Priest){
+				setarray .@items[0],			13534,13810,645,717;			
+				setarray .@amount[0],			   10,   10, 10, 50;
+				getitembound2 1602,1,1,7,0,4004,4004,4004,4004,3;	// Rod Drops
+			}else if(BaseJob== Job_Monk){
+				setarray .@items[0],			13534,13810,656;			
+				setarray .@amount[0],			   10,   10, 10;
+				getitembound2 1802,2,1,7,0,4035,4035,4092,4092,3;	// Waghnak Hydra/SkelWorker
+			}else if(BaseJob== Job_Blacksmith){
+				setarray .@items[0],			13534,13810,657, 601;			
+				setarray .@amount[0],			   10,   10, 10,1600;
+				getitembound2 1302,2,1,7,0,4281,4281,4281,4281,3;	// Axe Zipper
+			}else if(BaseJob == Job_Alchemist){
+				setarray .@items[0],			13534,13810,657,7136,7135,547;			
+				setarray .@amount[0],			   10,   10, 10,   5,   5,150;
+				getitembound2 1208,1,1,7,0,4004,4004,4004,4004,3;	// Main Gauche Drops
+			}else{
+			setarray .@items[0],			13534,13810;
+			setarray .@amount[0],			   10,   10;			
+			}
+
+			getitembound2 5314,1,1,4,0,0,0,0,0,3;	// Hockey Mask
+			getitembound2 2285,1,1,4,0,0,0,0,0,3;	// Apple of Archer
+			getitembound2 5379,1,1,4,0,0,0,0,0,3;	// Baloon Hat
+			getitembound2 5325,1,1,4,0,0,0,0,0,3;	// Robo Eye
+			getitembound2 2289,1,1,4,0,0,0,0,0,3;	// Poo Poo Hat
+			getitembound2 5377,1,1,4,0,0,0,0,0,3;	// Gentleman's Pipe
+			getitembound2 5800,1,1,4,0,0,0,0,0,3;	// Blush of Groom
+			
+			getitembound2 2310,1,1,4,0,4031,0,0,0,3;	// Coat Pecopeco
+			getitembound2 2310,1,1,4,0,4337,0,0,0,3;	// Coat Porcellio
+			getitembound2 2404,1,1,4,0,4097,0,0,0,3;	// Shoes Matyr
+			getitembound2 2404,1,1,4,0,4100,0,0,0,3;	// Shoes Sohee
+			getitembound2 2102,1,1,4,0,4058,0,0,0,3;	// Guard Thara Frog
+			getitembound2 2102,1,1,4,0,4045,0,0,0,3;	// Guard Horn
+			getitembound2 2504,1,1,4,0,4133,0,0,0,3;	// Muffler Raydric
+			getitembound2 2504,1,1,4,0,4334,0,0,0,3;	// Muffler Noxious
+			getitembound2 2624,2,1,0,0,4064,0,0,0,3;	// Gloves Zerom
+			getitembound2 2621,2,1,0,0,4079,0,0,0,3;	// Ring Mantis
+			
+			if(BaseJob== Job_Whitesmith || BaseJob== Job_Creator){atcommand "@clearcart";}
+			for( set .@y, 0; .@y < getarraysize(.@items); set .@y, .@y + 1 ){
+						set .@count,countitem2(.@items[.@y],1,0,0,254,0,getbattleflag("woe_reserved_char_id")&0xffff,(getbattleflag("woe_reserved_char_id")>>16)&0xffff);
+						delitem2 .@items[.@y],.@count,1,0,0,254,0,getbattleflag("woe_reserved_char_id")&0xffff,(getbattleflag("woe_reserved_char_id")>>16)&0xffff;
+						getitembound2 .@items[.@y],.@amount[.@y],1,0,0,254,0,getbattleflag("woe_reserved_char_id")&0xffff,(getbattleflag("woe_reserved_char_id")>>16)&0xffff,.@boundtype;
+						
+			}
+			deletearray .@items,getarraysize(.@items);
+			deletearray .@amount,getarraysize(.@amount);
+
+		}
+		}
+
+
+	}
+
+			getpartymember $partyb, 1;
+			getpartymember $partyb, 2;
+	for( set .@o, 0; .@o < .MaxMembers; set .@o, .@o + 1 ){
+		if ( isloggedin( $@partymemberaid[.@o], $@partymembercid[.@o] ) ){
+		attachrid $@partymemberaid[.@o];
+		if(strcharinfo(3) == .Map$) {
+				nude;
+			for( set .@t, 0; .@t < getarraysize(.delitem); set .@t, .@t + 1 ){
+						set .@count,countitem(.delitem[.@t]);
+						delitem .delitem[.@t],.@count;
+			}
+			for( set .@l, 0; .@l < getarraysize(.delitems); set .@l, .@l + 1 ){
+						set .@count,countitem2(.delitems[.@l],1,0,0,254,0,getbattleflag("woe_reserved_char_id")&0xffff,(getbattleflag("woe_reserved_char_id")>>16)&0xffff);
+						delitem2 .delitems[.@l],.@count,1,0,0,254,0,getbattleflag("woe_reserved_char_id")&0xffff,(getbattleflag("woe_reserved_char_id")>>16)&0xffff;					
+			}
+			if (BaseJob== Job_Knight || BaseJob== Job_Crusader){
+				setarray .@items[0],			13534,13810,656;			
+				setarray .@amount[0],			   10,   10, 5;
+				getitembound2 1408,1,1,7,0,4035,4035,4092,4092,3;	// Pike Hydra/SkelWorker
+				getitembound2 1408,1,1,7,0,4004,4004,4004,4004,3;	// Pike Drops
+			}else if(BaseJob== Job_Assassin){
+				setarray .@items[0],			13534,13810,656,678;			
+				setarray .@amount[0],			   10,   10, 5,  3;
+				getitembound2 1251,1,1,7,0,4035,4035,4092,0,3;		// Jur Hydra/SkelWorker
+			}else if(BaseJob== Job_Rogue){
+				setarray .@items[0],			13534,13810,656;			
+				setarray .@amount[0],			   10,   10, 5;
+				getitembound2 1705,1,1,7,0,4035,4035,4092,4092,3;	// Composite Bow Hydra/SkelWorker
+				getitembound2 1208,1,1,7,0,4004,4004,4004,4004,3;	// Main Gauche Drops
+			}else if(BaseJob== Job_Hunter){
+				setarray .@items[0],			13534,13810,656,12009;			
+				setarray .@amount[0],			   10,   10, 5,    2;
+				getitembound2 1208,1,1,7,0,4004,4004,4004,4004,3;	// Main Gauche Drops
+				getitembound2 1705,1,1,7,0,4035,4035,4092,4092,3;	// Composite Bow Hydra/SkelWorker
+			}else if(BaseJob== Job_Bard){
+				setarray .@items[0],			13534,13810,656,12009;			
+				setarray .@amount[0],			   10,   10, 5,    2;
+				getitembound2 1902,2,1,7,0,4035,4035,4092,4092,3;	// Violin Hydra/SkelWorker
+				getitembound2 1705,1,1,7,0,4035,4035,4092,4092,3;	// Composite Bow Hydra/SkelWorker
+			}else if(BaseJob== Job_Dancer){
+				setarray .@items[0],			13534,13810,656,12009;			
+				setarray .@amount[0],			   10,   10, 5,    2;
+				getitembound2 1951,2,1,7,0,4035,4035,4092,4092,3;	// Rope Hydra/SkelWorker
+				getitembound2 1705,1,1,7,0,4035,4035,4092,4092,3;	// Composite Bow Hydra/SkelWorker
+			}else if(BaseJob== Job_Wizard || BaseJob== Job_Sage){
+				setarray .@items[0],			13534,13810,656,717,716,715;			
+				setarray .@amount[0],			   10,   10, 5, 50, 50 ,50;
+				getitembound2 1602,1,1,7,0,4004,4004,4004,4004,3;	// Rod Drops
+			}else if(BaseJob== Job_Priest){
+				setarray .@items[0],			13534,13810,645,717;			
+				setarray .@amount[0],			   10,   10, 5, 50;
+				getitembound2 1602,1,1,7,0,4004,4004,4004,4004,3;	// Rod Drops
+			}else if(BaseJob== Job_Monk){
+				setarray .@items[0],			13534,13810,656;			
+				setarray .@amount[0],			   10,   10, 5;
+				getitembound2 1802,2,1,7,0,4035,4035,4092,4092,3;	// Waghnak Hydra/SkelWorker
+			}else if(BaseJob== Job_Blacksmith){
+				setarray .@items[0],			13534,13810,657, 601;			
+				setarray .@amount[0],			   10,   10, 5,1600;
+				getitembound2 1302,2,1,7,0,4281,4281,4281,4281,3;	// Axe Zipper
+			}else if(BaseJob == Job_Alchemist){
+				setarray .@items[0],			13534,13810,657,7136,7135,547;			
+				setarray .@amount[0],			   10,   10, 5,   5,   5,150;
+				getitembound2 1208,1,1,7,0,4004,4004,4004,4004,3;	// Main Gauche Drops
+			}else{
+			setarray .@items[0],			13534,13810;
+			setarray .@amount[0],			   10,   10;			
+			}
+
+			getitembound2 5314,1,1,4,0,0,0,0,0,3;	// Hockey Mask
+			getitembound2 2285,1,1,4,0,0,0,0,0,3;	// Apple of Archer
+			getitembound2 5379,1,1,4,0,0,0,0,0,3;	// Baloon Hat
+			getitembound2 5325,1,1,4,0,0,0,0,0,3;	// Robo Eye
+			getitembound2 2289,1,1,4,0,0,0,0,0,3;	// Poo Poo Hat
+			getitembound2 5377,1,1,4,0,0,0,0,0,3;	// Gentleman's Pipe
+			getitembound2 5800,1,1,4,0,0,0,0,0,3;	// Blush of Groom
+			
+			getitembound2 2310,1,1,4,0,4031,0,0,0,3;	// Coat Pecopeco
+			getitembound2 2310,1,1,4,0,4337,0,0,0,3;	// Coat Porcellio
+			getitembound2 2404,1,1,4,0,4097,0,0,0,3;	// Shoes Matyr
+			getitembound2 2404,1,1,4,0,4100,0,0,0,3;	// Shoes Sohee
+			getitembound2 2102,1,1,4,0,4058,0,0,0,3;	// Guard Thara Frog
+			getitembound2 2102,1,1,4,0,4045,0,0,0,3;	// Guard Horn
+			getitembound2 2504,1,1,4,0,4133,0,0,0,3;	// Muffler Raydric
+			getitembound2 2504,1,1,4,0,4334,0,0,0,3;	// Muffler Noxious
+			getitembound2 2624,2,1,0,0,4064,0,0,0,3;	// Gloves Zerom
+			getitembound2 2621,2,1,0,0,4079,0,0,0,3;	// Ring Mantis
+			
+			if(BaseJob== Job_Whitesmith || BaseJob== Job_Creator){atcommand "@clearcart";}
+			for( set .@w, 0; .@w < getarraysize(.@items); set .@w, .@w + 1 ){
+						set .@count,countitem2(.@items[.@w],1,0,0,254,0,getbattleflag("woe_reserved_char_id")&0xffff,(getbattleflag("woe_reserved_char_id")>>16)&0xffff);
+						delitem2 .@items[.@w],.@count,1,0,0,254,0,getbattleflag("woe_reserved_char_id")&0xffff,(getbattleflag("woe_reserved_char_id")>>16)&0xffff;
+						getitembound2 .@items[.@w],.@amount[.@w],1,0,0,254,0,getbattleflag("woe_reserved_char_id")&0xffff,(getbattleflag("woe_reserved_char_id")>>16)&0xffff,.@boundtype;
+						
+			}
+			deletearray .@items,getarraysize(.@items);
+			deletearray .@amount,getarraysize(.@amount);
+
+		}
+		}
+
+
+	}
+
+			
+		}else if ( compare( .@atcmd_parameters$, "Timeroff" )) {
+					stopnpctimer;
+					goto OnDoCheck;
+		}
+			
+end;
+
+//===========================================================//
+
+OnDoStart:
+	
+	mapannounce ""+.Map$+"","Admin: You have 3 minutes to set-up your supplies and equipments.",0;
+	sleep 180000;
+	mapannounce ""+.Map$+"","Admin: Time's up.",0;
+	sleep 3000;
+	mapannounce ""+.Map$+"","Admin: You will warped now to the battle arena.",0;
+	goto S_warp;
+	end;
+
+
+	S_warp:
+		set .@bmap, rand(getarraysize(.BMap$));
+		set $TMap$, .BMap$[.@bmap];
+		set .@Xmapa, .Xa[.@bmap];
+		set .@Ymapa, .Ya[.@bmap];
+		set .@Xmapb, .Xb[.@bmap];
+		set .@Ymapb, .Yb[.@bmap];
+
+		warpchar $TMap$,50,49,151760;
+		areawarp .Map$,66,60,79,77,$TMap$,.@Xmapa,.@Ymapa;		// Team A
+		areawarp .Map$,120,60,133,77,$TMap$,.@Xmapb,.@Ymapb;	// Team B
+		goto T_count;
+	end;
+	
+	T_count:
+		sleep 5000;
+			mapannounce ""+$TMap$+"","Before we start you have 10 seconds to buffs",0;
+		sleep 10000;
+			mapannounce ""+$TMap$+"","Get ready at the count of 5 we will start the battle!!....",0;
+		sleep 3000;
+			mapannounce ""+$TMap$+"","5",0;
+		sleep 1000;
+			mapannounce ""+$TMap$+"","4",0;
+		sleep 1000;
+			mapannounce ""+$TMap$+"","3",0;
+		sleep 1000;
+			mapannounce ""+$TMap$+"","2",0;
+		sleep 1000;
+			mapannounce ""+$TMap$+"","1",0;
+		sleep 1000;
+			mapannounce ""+$TMap$+"","GO!",0;
+		sleep 2000;
+		donpcevent "mainevent::OnDoTimer";
+	end;
+			
+//===========================================================//
+
+OnDoTimer:
+			mapannounce ""+$TMap$+"","You have only 7 minutes to eliminate all your opponents.",0;
+			initnpctimer;
+			end;
+
+			OnTimer120000:
+			mapannounce ""+$TMap$+"","5 minutes left to eliminate all your opponents.",0;
+			end;
+
+			OnTimer240000:
+			mapannounce ""+$TMap$+"","3 minutes left to eliminate all your opponents.",0;
+			end;
+
+			OnTimer360000:
+			mapannounce ""+$TMap$+"","1 minute left to eliminate all your opponents.",0;
+			end;
+
+			OnTimer420000:
+			mapannounce ""+$TMap$+"","Time is up.",0;
+			stopnpctimer;
+			goto OnDoCheck;
+end;
+//===========================================================//
+OnDoCheck:
+
+		getpartymember $partya, 1;
+		getpartymember $partya, 2;
+
+	for ( set .@i, 0; .@i < .MaxMembers; set .@i, .@i +1 ){
+		if ( isloggedin( $@partymemberaid[.@i], $@partymembercid[.@i] ) ){
+			attachrid $@partymemberaid[.@i];
+			if(strcharinfo(3) == $TMap$) {set .count_online1, .count_online1 +1; atcommand "@die";}
+		}	
+	}
+
+
+		getpartymember $partyb, 1;
+		getpartymember $partyb, 2;
+
+	for ( set .@o, 0; .@o < .MaxMembers; set .@o, .@o +1 ){
+		if ( isloggedin( $@partymemberaid[.@o], $@partymembercid[.@o] ) ){
+			attachrid $@partymemberaid[.@o];
+			if(strcharinfo(3) == $TMap$) {set .count_online2, .count_online2 +1; atcommand "@die";}		
+		}	
+	}
+
+	if(.count_online1 == .count_online2){
+			announce ""+$teama$+"[A:"+.count_online1+"/D:"+(.MaxMembers - .count_online1)+"] Vs "+$teamb$+"[A:"+.count_online2+"/D:"+(.MaxMembers - .count_online2)+"] : The battle is draw!",0;
+	}else if(.count_online1 > .count_online2){
+			announce ""+$teama$+"[A:"+.count_online1+"/D:"+(.MaxMembers - .count_online1)+"] Vs "+$teamb$+"[A:"+.count_online2+"/D:"+(.MaxMembers - .count_online2)+"] : Winner "+$teama$+" Guild!",0;
+	}else if(.count_online1 < .count_online2){
+			announce ""+$teama$+"[A:"+.count_online1+"/D:"+(.MaxMembers - .count_online1)+"] Vs "+$teamb$+"[A:"+.count_online2+"/D:"+(.MaxMembers - .count_online2)+"] : Winner "+$teamb$+" Guild!",0;
+	}
+		set .count_online1,0;
+		set .count_online2,0;
+		end;
+		
+//===========================================================//
+
+OnDoDismiss:
+			getpartymember $partya, 2;
+			
+		for( set .@i, 0; .@i < .MaxMembers; set .@i, .@i + 1 ){
+			if ( isloggedin( $@partymemberaid[.@i]) ){
+			attachrid $@partymemberaid[.@i];
+			if( strcharinfo(3) == .Map$){
+			if(BaseJob== Job_Whitesmith || BaseJob== Job_Creator){atcommand "@clearcart";}
+			unequip EQI_HEAD_TOP;
+			unequip EQI_ARMOR;
+			unequip EQI_HAND_L;
+			unequip EQI_HAND_R;
+			unequip EQI_GARMENT;
+			unequip EQI_SHOES;
+			unequip EQI_ACC_L;
+			unequip EQI_ACC_R;
+			unequip EQI_HEAD_MID;
+			unequip EQI_HEAD_LOW;
+
+			for( set .@k, 0; .@k < getarraysize(.delitem); set .@k, .@k + 1 ){
+						set .@count,countitem(.delitem[.@k]);
+						delitem .delitem[.@k],.@count;
+			}
+			for( set .@p, 0; .@p < getarraysize(.delitems); set .@p, .@p + 1 ){
+						set .@count,countitem2(.delitems[.@p],1,0,0,254,0,getbattleflag("woe_reserved_char_id")&0xffff,(getbattleflag("woe_reserved_char_id")>>16)&0xffff);
+						delitem2 .delitems[.@p],.@count,1,0,0,254,0,getbattleflag("woe_reserved_char_id")&0xffff,(getbattleflag("woe_reserved_char_id")>>16)&0xffff;					
+			}
+
+	
+			savepoint "prontera", 156, 177;
+			warp "prontera", 156, 177;
+			}
+			}
+			}
+
+
+			getpartymember $partyb, 2;
+			
+		for( set .@i, 0; .@i < .MaxMembers; set .@i, .@i + 1 ){
+			if ( isloggedin( $@partymemberaid[.@i] )){
+			attachrid $@partymemberaid[.@i];
+			if(strcharinfo(3) == .Map$){
+			if(BaseJob== Job_Whitesmith || BaseJob== Job_Creator){atcommand "@clearcart";}
+			unequip EQI_HEAD_TOP;
+			unequip EQI_ARMOR;
+			unequip EQI_HAND_L;
+			unequip EQI_HAND_R;
+			unequip EQI_GARMENT;
+			unequip EQI_SHOES;
+			unequip EQI_ACC_L;
+			unequip EQI_ACC_R;
+			unequip EQI_HEAD_MID;
+			unequip EQI_HEAD_LOW;
+
+			for( set .@k, 0; .@k < getarraysize(.delitem); set .@k, .@k + 1 ){
+						set .@count,countitem(.delitem[.@k]);
+						delitem .delitem[.@k],.@count;
+			}
+			for( set .@p, 0; .@p < getarraysize(.delitems); set .@p, .@p + 1 ){
+						set .@count,countitem2(.delitems[.@p],1,0,0,254,0,getbattleflag("woe_reserved_char_id")&0xffff,(getbattleflag("woe_reserved_char_id")>>16)&0xffff);
+						delitem2 .delitems[.@p],.@count,1,0,0,254,0,getbattleflag("woe_reserved_char_id")&0xffff,(getbattleflag("woe_reserved_char_id")>>16)&0xffff;					
+			}
+
+			savepoint "prontera", 156, 177;
+			warp "prontera", 156, 177;
+			}
+			}
+			}
+			set $teama$,"Null";
+			set $teamb$,"Null";
+			set $partya,0;
+			set $partyb,0;
+end;
+	
+}
+
+06guild_r	mapflag	gvg
+06guild_r	mapflag	nocommand
+guild_vs1	mapflag	nocommand
+guild_vs2	mapflag	nocommand
+guild_vs3	mapflag	nocommand
+guild_vs4	mapflag	nocommand
+guild_vs5	mapflag	nocommand
+guild_vs1	mapflag	nodrop  
+guild_vs2	mapflag	nodrop  
+guild_vs3	mapflag	nodrop  
+guild_vs4	mapflag	nodrop  
+guild_vs5	mapflag	nodrop  
+guild_vs1	mapflag	notrade
+guild_vs2	mapflag	notrade
+guild_vs3	mapflag	notrade
+guild_vs4	mapflag	notrade
+guild_vs5	mapflag	notrade
+guild_vs1	mapflag	novending
+guild_vs2	mapflag	novending
+guild_vs3	mapflag	novending
+guild_vs4	mapflag	novending
+guild_vs5	mapflag	novending
+guild_vs1	mapflag	noteleport 
+guild_vs2	mapflag	noteleport 
+guild_vs3	mapflag	noteleport 
+guild_vs4	mapflag	noteleport 
+guild_vs5	mapflag	noteleport 
+guild_vs1	mapflag	partylock 
+guild_vs2	mapflag	partylock 
+guild_vs3	mapflag	partylock 
+guild_vs4	mapflag	partylock 
+guild_vs5	mapflag	partylock 

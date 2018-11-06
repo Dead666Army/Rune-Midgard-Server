@@ -1,0 +1,448 @@
+prontera,165,167,0	warp	Eden#1	2,2,moc_para01,30,15
+moc_para01,30,11,0	warp	Eden#2	2,2,prontera,161,167
+
+moc_para01,20,36,4	script	Kafra::kaf_moc_para	861,{
+	cutin "kafra_04",2;
+	callfunc "F_KafSet";
+	mes "[Kafra Employee]";
+	mes "Welcome!";
+	mes "The Kafra Corporation";
+	mes "will always support the";
+	mes "adventurers of Rune-Midgard";
+	mes "with its excellent service. So";
+	mes "what can I do for you today?";
+	callfunc "F_Kafra",5,6,1,100,0;
+	savepoint "morocc_mem",157,272,0,0;
+	callfunc "F_KafEnd",0,1,"in the city of Eden";
+}
+
+prontera,165,170,4	script	Eden#Guide	864,{
+	
+	end;
+
+OnInit:
+
+	waitingroom "Custom NPC | Hunting Quests",0;
+
+	end;
+}
+
+moc_para01,19,19,4	script	Mysterious Guy	456,{
+
+	set .@npc_name$,strnpcinfo(0);
+	
+	mes "[" + .@npc_name$ + "]";
+	if (#LANGUE ==1) {
+		mes "What's up kid, I traveled around Rune-Midgard for tens of years. Do you want me to tell you a story ?";
+		.@menu$ = "Sure!:I'm fine.";
+	}
+	else {
+		mes "Salut gamin, j'ai voyagé dans tout Rune-Midgard pendant des dizaines d'années. Tu veux que je te raconte une histoire ?";
+		.@menu$ = "Avec plaisir !:Non merci.";
+	}
+	switch(select(.@menu$)){
+		case 1:
+			if (#LANGUE ==1) {
+				.@menu$ = "I heard about a forest...:A lost soul story?:A Glast Heim story?:Celine's story?:None, have a nice day.";
+			} else {
+			.@menu$ = "J'ai entendu parlé d'une forêt...:Une histoire d'âme perdue ?:L'histoire de Glast Heim?:L'histoire de Celine?:Aucun, bonne journée.";
+			}
+			break;
+		case 2:
+			close;
+	}
+	next;
+	if (#LANGUE == 1 ) mes "What topic are you interested in?";
+	else mes "Quel sujet t'intéresse ?";
+	switch(select(.@menu$)){
+		case 1:
+			next;
+			if (#LANGUE == 1 ){
+				mes "[" + .@npc_name$ + "]";
+				mes "Hemet Nesingwary, a well-known explorer, discovered an hostile area deep inside the millenium tree.";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "While not being a fighting man, he still visited the place but never managed to make his way to the heart of the cursed forest, if there happens to be one...";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "Hemet started fetching for help from valorous adventurers. Unfortunately though, the curse got him; he is now destined to guard the entrance, rooted by the grove.";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "Despite all this, he managed to launch a call for help in the whole Rune Midgard, to anyone who would be courageous enough to meet the challenge of the forest.";
+			} else {
+				mes "[" + .@npc_name$ + "]";
+				mes "Hemet Nesingwary, un célèbre explorateur, a découvert une zone hostile au fin fond de l'arbre millénaire.";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "N'étant pas homme à se battre, il a déjà visité les lieux mais n'est jamais parvenu à se frayer un chemin jusqu'au fond de ce bosquet maudit, si tenté qu'il y en ait un...";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "Hemet s'est lancé à la recherche de valeureux aventuriers pour lui venir en aide, malheureusement la malédiction a eu raison de lui; le voilà  présent destiné à garder les lieux, enraciné par la sylve.";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "Il est tout de même parvenu à lancer un appel à l'aide dans tout Rune Midgard, à quiconque serait assez courageux pour relever le défi de la forêt.";
+			}
+			break;
+		case 2:
+			next;
+			if (#LANGUE == 0){
+				mes "[" + .@npc_name$ + "]";
+				mes "Il y a de ça cinq ans, un homme s'est aventuré dans un cimetière caché avec ses coéquipiers pour venir à bout d'une invasion de zombies.";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "On ne les a jamais vu revenir. La légende raconte que l'esprit de leur capitaine hante toujours les lieux.";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "Un message a été laissé aux aventuriers qui souhaiteraient percer le véritable dénouement de cette histoire;";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "de l'arbre tu sauteras, en suivant les lunes tu trouveras.";
+				} else {
+				mes "[" + .@npc_name$ + "]";
+				mes "Five years ago, a man ventured in a hidden cemetery with his teamates to get rid of a zombie invasion.";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "We've never seen them come back. Legend tells that their captain's spirit is still haunting the place.";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "A message was left to the adventurers who would wish to understand the truth of what really happened;";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "from the tree you'll jump, following the moons you will find.";
+				}
+			break;
+		case 3:
+			next;
+			if (#LANGUE == 0){
+				mes "[" + .@npc_name$ + "]";
+				mes "Glast Heim n'a pas toujours été une cité effrayante et dangereuse telle qu'on la connaît. Elle fut même autrefois la capitale de Rune-Midgard.";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "C'était une cité puissante et invaincue, jusqu'à ce que la source même de la corruption vint perturber son équilibre...";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "Retrouver Hugins pour revivre l'histoire maléfique de ces ruines.";
+			} else {
+				mes "[" + .@npc_name$ + "]";
+				mes "Glast Heim has not always been a frightening and perilous city as we know it today. Indeed, it was once the capital of Rune-Midgard.";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "Glast Heim was once a powerful and undefeated city, until the root of corruption happens to disturb its balance...";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "Meet Hugins to relive the sinister story of these ruins.";
+			}
+			break;
+		case 4:
+			next;
+			if (#LANGUE == 0){
+				mes "[" + .@npc_name$ + "]";
+				mes "Wilhelmy Grey est désespérément à la recherche d'aide. Ce majordome a perdu toute raison d'exister depuis que sa maîtresse est possédée...";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "Il a besoin de valeureux combattants assez puissants pour venir à bout les forces démoniaques qui ont pris le dessus sur l'atmosphère prospère qui jadis flottait sur le manoir.";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "Les rumeurs disent que Wilhelmy Grey est parti se mettre en sécurité dans les catacombes du Kiel Hyre's Cottage, vous pourrez peut-être le trouver là-bas.";
+
+			} else {
+				mes "[" + .@npc_name$ + "]";
+				mes "Wilhelmy Grey is desperately seeking for help. This butler lost any reason for living since his mistress is possessed...";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "He needs a group of brave warriors powerful enough to master the evil forces who took over the prosperous atmosphere which once flew over the mansion.";
+				next;
+				mes "[" + .@npc_name$ + "]";
+				mes "Rumours say that Wilhelmy Grey hid himself safe in the catacombs of Kiel Hyre's Cottage, you may perhaps find him there.";
+			}
+			break;
+		case 5:
+				break;
+		}
+	
+	close;
+}
+
+moc_para01,51,31,3	script	Donation Manager 	89,{
+
+	mes "[Jimmy John]";
+	if (#LANGUE == 1){
+		mes "Do you want to convert your Donation Credits into Cash Points?";
+		mes "Current rate :";
+	}else{
+		mes "Voulez-vous convertir vos Donation Credits en Cash Points ?";
+		mes "Taux actuel :";
+	}
+	mes "^0000FF1^000000 Donation Credit = ^00FF00"+.Ratio+"^000000 Cash Points";
+	next;
+	if (#LANGUE == 1){
+		mes "What do you want to do?";
+		next;
+		menu "Exchange my Donation credits",dpExc,"Check my points",checkPoints,"Quit",LeEnd;
+	}else{
+		mes "Que voulez-vous faire ?";
+		next;
+		menu "Echanger mes Donation credits",dpExc,"Consulter ma balance",checkPoints,"Quitter",LeEnd;
+	}
+	
+	dpExc:
+    query_sql("SELECT `balance` FROM cp_credits WHERE `account_id` = "+getcharid(3)+";",.@DCBal);
+		if (.@DCBal == 0) goto ENeedDcredits;
+		if (#LANGUE == 1){
+			mes "Donation credits to exchange: ^0000FF" + .@DCBal + "^000000";
+			next;
+			mes "How much ^FF0000Donation Credits ^000000do you want to exchange?";
+		}else{
+			mes "Donation credits à échanger : ^0000FF" + .@DCBal + "^000000";
+			next;
+			mes "Combien de ^FF0000Donation Credits ^000000voulez-vous échanger ?";
+		}
+		input .@DCDonated;
+    if (.@DCDonated == 0) goto LeEnd;
+		if (.@DCBal < .@DCDonated) goto ENeedDcredits;
+		set .@CPReceived, .@DCDonated*.Ratio;
+		if (#LANGUE == 1){
+			mes "That will be ^0000FF" + .@CPReceived + "^000000 Cash points!";
+			menu "Yes, I am sure",LEyesd,"I will decide later...^000000",LEno;
+		}else{
+			mes "Cela vous fera ^0000FF" + .@CPReceived + "^000000 Cash points !";
+			menu "Oui, je suis sûr.",LEyesd,"Je vais décider plus tard...^000000",LEno;
+		}
+    
+	LEyesd:
+		set .@DCNewBal,.@DCBal-.@DCDonated;
+		query_sql("UPDATE `cp_credits` SET `balance` = "+.@DCNewBal+" WHERE account_id = "+getcharid(3)+";");
+		set #CASHPOINTS,#CASHPOINTS+.@CPReceived;
+		next;
+		goto checkPoints;
+		close;	
+    
+	LEno:
+		if (#LANGUE == 1){
+			mes "Thank you ^0000FF" + strcharinfo(0) + "^000000!";
+			mes "And do come again!";
+		}else{
+			mes "Merci ^0000FF" + strcharinfo(0) + "^000000!";
+			mes "Et revenez plus tard !";
+		}
+		close;
+		
+	ENeedDcredits:
+		if (#LANGUE == 1){
+			mes "Sorry, you do not have enough Donation Credits.";
+		}else{
+			mes "Désolé, vous n'avez pas assez de Donation Credits.";
+		}
+		close;
+		
+	checkPoints:
+    query_sql("SELECT `balance` FROM cp_credits WHERE `account_id` = "+getcharid(3)+";",.@DCBal);
+		if (#LANGUE == 1){
+			mes "Your Donation Credits = ^0000FF" + .@DCBal + "^000000!";
+			mes "Your Cash Points = ^0000FF" + #CASHPOINTS + "^000000! ";
+		}else{
+			mes "Vos Donation Credits = ^0000FF" + .@DCBal + "^000000!";
+			mes "Vos Cash Points = ^0000FF" + #CASHPOINTS + "^000000! ";
+		}
+		close;
+
+	LeEnd:
+		close;	
+		
+		
+	OnInit:
+		set .Ratio,100;
+	end;
+
+}
+
+
+moc_para01,13,20,4	script	ChangeGM#prt	698,{
+    if(agitcheck() ){
+        mes "[ ChangeGM ]";
+        if (#LANGUE ==1){
+            mes "War is currently in progress";
+        } else {
+            mes "La War est en cours";
+        }
+    close;
+    }
+    if (!getcharid(2)){
+         mes "[ ChangeGM ]";
+        if (#LANGUE == 1){
+            mes "You're not in a guild!";
+        } else {
+            mes "Tu n'es pas dans une guilde!";
+        }
+        close;
+    }
+    if (getguildmaster(getcharid(2))!=strcharinfo(0)){
+        mes "[ ChangeGM ]";
+        if (#LANGUE == 1){
+            mes "I need you to bring me the leader of your guild if he want change the leader";
+        } else {
+            mes "J'ai besoin que tu m'am?nes le chef de ta guilde s'il veut que je change le chef";
+        }
+        close;
+    }
+
+    if (quest_changegm == 1){
+        mes "[ ChangeGM ]";
+        if (#LANGUE == 1){
+            mes "Did you bring me what I needed?";
+            .@menu$ = "No:Yes:Remember me what I need please";
+        } else {
+            mes "Tu m'as apport? ce qu'il faut ?";
+            .@menu$ = "Non:Oui:Rappelle moi ce dont j'ai besoin";
+        }
+        switch(select(.@menu$)){
+            case 1:
+                close;
+                break;
+            case 2:
+                if (countitem(35000) >= 5 && countitem(969) >= 3 && countitem(714) >= 1){
+                    next;
+                    mes "[ ChangeGM ]";
+                    if (#LANGUE == 1){
+                        .@msg1$ = "Great, we are going to begin!";
+                        .@msg2$ = "Before we start you need to make sure the person you want to delegate the guild to is online.";
+                        .@msg3$ = "Who do you want to delegate the guild to?";
+                        .@msg4$ = "Are you sure is online?";
+                        .@msg5$ = "No:Yes";
+                        .@msg6$ = "Alrighty then, I'll take your items.";
+                        .@msg7$ = "The transfer was a success!";
+                        .@msg8$ = "Have a nice day!";
+                        .@msg9$ = "The transfer was a failure!";
+                        .@msg10$ = "Next time, be sure he is online!";
+                    } else {
+                        .@msg1$ = "Bien, nous allons pouvoir commencer !";
+                        .@msg2$ = "Avant que nous commencions tu dois ?tre s?r que la personne ? qui tu veux d?leguer la guilde est en ligne.";
+                        .@msg3$ = "A qui veux-tu d?l?guer la guilde ?";
+                        .@msg4$ = "Tu es s?r qu'il est en ligne ?";
+                        .@msg5$ = "Non:Oui";
+                        .@msg6$ = "Tr?s bien je vais prendre tes items.";
+                        .@msg7$ = "Le transfert est un succ?s !";
+                        .@msg8$ = "Bonne journ?e !";
+                        .@msg9$ = "Le transfert est un ?chec !";
+                        .@msg10$ = "La prochaine fois, sois s?r qu'il est en ligne !";
+                    }
+                    mes .@msg1$;
+                    mes .@msg2$;
+                    next;
+                    mes "[ ChangeGM ]";
+                    mes .@msg3$;
+                    input .@new_gm$;
+                    next;
+                    mes "[ ChangeGM ]";
+                    mes .@msg4$;
+                    switch(select(.@msg5$)){
+                        case 1:
+                        break;
+                        case 2:
+                            next;
+                            mes "[ ChangeGM ]";
+                            mes .@msg6$;
+                            if (guildchangegm(getcharid(2), .@new_gm$) == 1){
+                                delitem 35000, 5;
+                                delitem 969, 3;
+                                delitem 714, 1;
+                                next;
+                                mes "[ ChangeGM ]";
+                                mes .@msg7$;
+                                mes .@msg8$;
+                                quest_changegm = 0;
+                            } else {
+                                next;
+                                mes "[ ChangeGM ]";
+                                mes "Oh, oh...";
+                                mes .@msg9$;
+                                mes .@msg10$;
+                            }
+                        close;
+                        break;
+                    }
+                } else {
+                    next;
+                    mes "[ ChangeGM ]";
+                    mes "Liar!";
+                    close;
+                }
+                break;
+            case 3:
+                if (#LANGUE == 1){
+                    mes "You need 5 Rune Coins, 3 Golds and 1 Emperium!";
+                } else {
+                    mes "Tu as besoin de 5 Rune Coins, 3 Golds et 1 Emperium !";
+                }
+                close;
+                break;
+        }
+    }
+
+    mes "[ ChangeGM ]";
+    if (#LANGUE ==1 ){
+        mes "I can change the leader of your guild.";
+        mes "It's not free of course.";
+        mes "You'll have to bring me items.";
+        next;
+        mes "[ ChangeGM ]";
+        mes "I want 5 Rune Coins, 3 Golds and 1 Emperium in order to do that.";
+    } else {
+        mes "Je peux changer le chef de ta guilde.";
+        mes "Ce n'est pas gratuit.";
+        mes "Tu vas devoir m'amener des objets.";
+        next;
+        mes "[ ChangeGM ]";
+        mes "Am?ne moi 5 Rune Coins, 3 Golds et 1 Emperium pour que je te fasse ?a.";
+    }
+    quest_changegm = 1;
+    close;
+}
+
+moc_para01,21,16,6	script	Branch Trader	120,{
+	.@DeadBranchAmount = 100; //Amount of DeadBranch for 1 BloodyBranch
+
+	mes "[Branch Trader]";
+	mes "I can give you a Bloody Branch in exchange of "+.@DeadBranchAmount+ " Dead Branches.";
+	next;
+	switch(select("Make Bloody Branches:Nothing")) {
+	case 1:
+		if (countitem(604) >= .@DeadBranchAmount) {
+			mes "[Branch Trader]";
+      mes "I can make ^FF0000" + countitem(604)/.@DeadBranchAmount + "^000000 Bloody Branches";
+      mes "from your ^0000FF" + countitem(604) + "^000000 Dead Branches.";
+			next;
+      switch (select("All","Just One","Cancel")) {
+				case 1:
+					set .@nbBB,countitem(604)/.@DeadBranchAmount;
+					delitem 604, .@nbBB * .@DeadBranchAmount;    //delete the Dead Branches
+					getitem 12103, .@nbBB;        //get Bloody Branch
+					mes "[Branch Trader]";
+					mes "Here's your Bloody Branches!";
+					mes "You're welcome to come";
+					mes "back whenever you want.";
+				case 2:
+					if (countitem(604) >= .@DeadBranchAmount) {
+						delitem 604,.@DeadBranchAmount;  //delete the Dead Branches
+						getitem 12103,1; // get Bloody Branch
+						mes "[Branch Trader]";
+						mes "Here's your Bloody Branch.";
+						mes "You're welcome to come";
+						mes "back whenever you want.";
+						close;
+					}
+				case 3:
+					close;
+      }
+      close;
+    }
+    else {
+      mes "[Branch Trader]";
+      mes "You're kidding me, right?";
+      mes "I just told you that I need "+.@DeadBranchAmount+ " Dead Branches to make a Bloody Branch.";
+      close;
+    }
+	case 2:
+		close;
+	}
+}

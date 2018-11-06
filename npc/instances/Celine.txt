@@ -1,0 +1,541 @@
+//===========================================================================================================
+//============================================= INSTANCE =======================================================
+//===========================================================================================================
+
+// Panneau Record
+yuno_fild02,79,232,4	script	Nightmare Record#Celine	835,{
+
+	set .@instance_name$,"Celine Dwelling";
+	
+	callfunc "F_Record_Instance",
+		.@instance_name$;
+		
+	end;
+}
+
+// Génére l'instance et téléporte l'équipe dans l'instance
+job3_arch01,30,33,4	script	Wilhelmy Grey	109,{
+	set .@instance_quest,66003;
+	set .@max_party,16;
+	set .@creditRequired,3;
+	set .@min_party,5;
+	set .@lvlrequired,80;
+	if (getgmlevel()>60)
+		set .@min_party,1;
+	if (getgmlevel()>60)
+		set .@creditRequired,0;
+	set .@instance_mapname$,"celin_dw";
+	set .@mapx,17;
+	set .@mapy,92;
+	set .@map_from$,"job3_arch01";
+	set .@instance_name$,"Celine's Dwelling";
+	set .@npc_name$,"Wilhelmy Grey";
+		
+	if (#LANGUE==1){
+		mes "["+.@npc_name$+"]";
+		mes "Greetings... I locked myself down there to be safe but I feel like a coward not to be able to do anything, I have to say the circumstances are pretty terrifying...";
+		next;
+		mes "["+.@npc_name$+"]";
+		mes "Anyways, I will tell you more on the way. If you came that far I imagine that you have a team? Are you ready to fight?";
+		next;
+	}	else {
+		mes "["+.@npc_name$+"]";
+		mes "Bonjour... Je me suis enfermé ici en pensant être en sécurité mais je me sens lâche de ne rien pouvoir faire, il faut dire que la situation est si terrifiante...";
+		next;
+		mes "["+.@npc_name$+"]";
+		mes "Enfn bref, je vous raconterai ça en chemin. Si vous êtes venus jusqu'ici je suppose que vous avez monté une équipe ? Vous êtes prêts ?";
+		next;
+	}
+		
+	callfunc "F_TP_INSTANCE",
+		.@creditRequired,
+		.@lvlrequired,
+		.@min_party,
+		.@max_party,
+		.@instance_mapname$,
+		.@mapx,
+		.@mapy,
+		.@map_from$,
+		.@instance_quest,
+		.@instance_name$,
+		.@npc_name$;
+		
+	end;
+}
+
+// NPC Reward
+celin_dw,278,34,4	script	Wilhelmy Grey#Reward	109,{
+
+	set .@Reward,80;
+	set .@npc_name$,"Wilhelmy Grey";
+	set .@map_warp$,"yuno_fild02";
+	set .@mapx,80;
+	set .@mapy,230;
+	set .@etoile,3;
+	
+	callfunc "F_Instance_Reward",
+		.@Reward,
+		.@npc_name$,
+		.@map_warp$,
+		.@mapx,
+		.@mapy,
+		.@etoile;
+		
+	end;
+OnInstanceInit:
+
+	hideonnpc instance_npcname(strnpcinfo(0));
+	
+	end;
+}
+
+
+// Celine pop à la mort de Celine le MvP
+celin_dw,280,34,4	script	Celine	511,{
+	mes "[Celine]";
+	mes "...";
+	close;
+}
+
+
+//Warps
+celin_dw,27,143,0	warp	celin_dw_01b	1,1,celin_dw,35,94
+celin_dw,35,87,0	warp	celin_dw_02a	1,1,celin_dw,27,37
+celin_dw,27,42,0	warp	celin_dw_02b	1,1,celin_dw,35,91
+celin_dw,63,87,0	warp	celin_dw_03a	1,1,celin_dw,99,38
+celin_dw,99,42,0	warp	celin_dw_03b	1,1,celin_dw,63,91
+celin_dw,90,87,0	warp	celin_dw_04a	1,1,celin_dw,168,30
+celin_dw,168,34,0	warp	celin_dw_04b	1,1,celin_dw,90,90
+celin_dw,35,98,0	warp	celin_dw_05a	1,1,celin_dw,27,147
+celin_dw,90,101,0	warp	celin_dw_06a	1,1,celin_dw,282,64
+celin_dw,42,26,0	warp	celin_dw_06b	1,1,celin_dw,92,25
+celin_dw,87,25,0	warp	celin_dw_07a	1,1,celin_dw,36,26
+celin_dw,282,60,0	warp	celin_dw_07b	1,1,celin_dw,90,96
+celin_dw,222,68,0	warp	celin_dw_08a	1,1,celin_dw,22,277
+celin_dw,22,273,0	warp	celin_dw_08b	1,1,celin_dw,222,64
+celin_dw,248,68,0	warp	celin_dw_09a	1,1,celin_dw,88,277
+celin_dw,88,273,0	warp	celin_dw_09b	1,1,celin_dw,248,64
+celin_dw,222,25,0	warp	celin_dw_10a	1,1,celin_dw,22,219
+celin_dw,22,222,0	warp	celin_dw_10b	1,1,celin_dw,222,29
+celin_dw,248,25,0	warp	celin_dw_11a	1,1,celin_dw,88,217
+celin_dw,88,222,0	warp	celin_dw_11b	1,1,celin_dw,248,29
+celin_dw,259,46,0	warp	celin_dw_12a	1,1,celin_dw,224,234
+celin_dw,228,234,0	warp	celin_dw_12b	1,1,celin_dw,263,46
+celin_dw,220,231,0	warp	celin_dw_13a	1,1,celin_dw,260,186
+celin_dw,260,190,0	warp	celin_dw_13b	1,1,celin_dw,220,234
+celin_dw,204,231,0	warp	celin_dw_14a	1,1,celin_dw,204,186
+celin_dw,204,190,0	warp	celin_dw_14b	1,1,celin_dw,204,234
+celin_dw,188,231,0	warp	celin_dw_15a	1,1,celin_dw,148,186
+celin_dw,148,190,0	warp	celin_dw_15b	1,1,celin_dw,188,234
+celin_dw,188,238,0	warp	celin_dw_16a	1,1,celin_dw,148,283
+celin_dw,148,279,0	warp	celin_dw_16b	1,1,celin_dw,188,235
+celin_dw,204,238,0	warp	celin_dw_17a	1,1,celin_dw,204,283
+celin_dw,204,279,0	warp	celin_dw_17b	1,1,celin_dw,204,235
+celin_dw,220,238,0	warp	celin_dw_18a	1,1,celin_dw,261,283
+celin_dw,260,279,0	warp	celin_dw_18b	1,1,celin_dw,220,235
+//Téléportation dans la salle d'attente
+yuno_fild02,83,230	warp	celin_dw_yuno	1,2,job3_arch01,30,27
+
+// Initialise tout ce qu'il faut pour l'instance
+celin_dw,21,101,1	script	Init#Celine	844,{
+	end;
+OnInstanceInit:
+	enablenpc instance_npcname("celin_dw_01b");
+	enablenpc instance_npcname("celin_dw_02a");
+	enablenpc instance_npcname("celin_dw_02b");
+	enablenpc instance_npcname("celin_dw_03a");
+	enablenpc instance_npcname("celin_dw_03b");
+	enablenpc instance_npcname("celin_dw_04a");
+	enablenpc instance_npcname("celin_dw_04b");
+	enablenpc instance_npcname("celin_dw_05a");
+	enablenpc instance_npcname("celin_dw_02a");
+	enablenpc instance_npcname("celin_dw_06a");
+	enablenpc instance_npcname("celin_dw_06b");
+	enablenpc instance_npcname("celin_dw_07a");
+	enablenpc instance_npcname("celin_dw_07b");
+	enablenpc instance_npcname("celin_dw_08a");
+	enablenpc instance_npcname("celin_dw_08b");
+	enablenpc instance_npcname("celin_dw_09a");
+	enablenpc instance_npcname("celin_dw_09b");
+	enablenpc instance_npcname("celin_dw_10a");
+	enablenpc instance_npcname("celin_dw_10b");
+	enablenpc instance_npcname("celin_dw_11a");
+	enablenpc instance_npcname("celin_dw_11b");
+	enablenpc instance_npcname("celin_dw_12a");
+	enablenpc instance_npcname("celin_dw_12b");
+	enablenpc instance_npcname("celin_dw_13a");
+	enablenpc instance_npcname("celin_dw_13b");
+	enablenpc instance_npcname("celin_dw_14a");
+	enablenpc instance_npcname("celin_dw_14b");
+	enablenpc instance_npcname("celin_dw_15a");
+	enablenpc instance_npcname("celin_dw_15b");
+	enablenpc instance_npcname("celin_dw_16a");
+	enablenpc instance_npcname("celin_dw_16b");
+	enablenpc instance_npcname("celin_dw_17a");
+	enablenpc instance_npcname("celin_dw_17b");
+	enablenpc instance_npcname("celin_dw_18a");
+	enablenpc instance_npcname("celin_dw_18b");
+	disablenpc(instance_npcname("Celine"));
+	
+	hideonnpc instance_npcname("Hell#celin_dw");
+	hideonnpc instance_npcname(strnpcinfo(0));
+	'celine_summon = 0;
+	
+	setcell instance_mapname("celin_dw"),24,93,24,97,cell_walkable,0; // 1ere ligne
+	set .@npc_name$,"Wilhelmy Grey";
+	
+	//FR
+	sleep 5000;
+	mapannounce instance_mapname("celin_dw"),.@npc_name$+" :	Bienvenue dans le manoir de madame ! Du moins ce qu'il en reste... Laissez-moi vous raconter ce qu'il s'est passé ici...",0;
+	sleep 5000;
+	mapannounce instance_mapname("celin_dw"),.@npc_name$+" :  J'étais parti faire deux trois courses, c'est sur le chemin du retour que j'ai entendu des cris d'épouvante. En me précipitant à l'intérieur, j'ai découvert les monstres qui hantent à présent la bâtisse.",0;
+	sleep 5000;
+	mapannounce instance_mapname("celin_dw"),.@npc_name$+" : 	Avant de m'enfuir cependant, j'ai fait un peu de repérage. Si j'en crois mon intuition, l'âme de madame a été scellée dans une statue à l'étage. Toutefois j'ignore comment lever les sceaux...",0;
+	sleep 5000;
+	mapannounce instance_mapname("celin_dw"),.@npc_name$+" :  Ah ! Et il y avait aussi quelques choses à propos des sentinelles dans les couloirs... mais je crois bien que j'ai oublié. Quoi qu'il en soit, bon courage !",0;
+	sleep 5000;
+	
+	//EN
+	mapannounce instance_mapname("celin_dw"),.@npc_name$+" : Welcome in madame's mansion! At least in what's left of it... Let me tell you what happened here...",0;
+	sleep 5000;
+	mapannounce instance_mapname("celin_dw"),.@npc_name$+" : I went to run an errand, on my way back I could hear awful screams of horror. As I scurried inside to check what was up, I found the monsters that are still haunting the dwelling as we're talking.",0;
+	sleep 5000;
+	mapannounce instance_mapname("celin_dw"),.@npc_name$+" : Though before running for my life, I managed to identify stuff. If I believe my intuition, madame's soul has been sealed in a statue upstairs. Nonetheless I have no clue how to break the seals.",0;
+	sleep 5000;
+	mapannounce instance_mapname("celin_dw"),.@npc_name$+" : Wait ! There was also something about those Sentries in the corridors... I'm afraid I forgot what it was about. Anyways, I wish you good luck!",0;
+	sleep 5000;
+	
+	set $start_time_celine[instance_id()],gettimetick(2);
+	setcell instance_mapname("celin_dw"),24,93,24,97,cell_walkable,1;
+	
+	callfunc "F_Room_Monster#Celine",
+		instance_npcname(strnpcinfo(0))+"::OnMyMobDead";
+		
+	callfunc "F_Corridor_Monster#Celine",
+		instance_npcname(strnpcinfo(0))+"::OnSummonMiniBoss";
+		
+	callfunc "F_MVP_Monster#Celine",
+		instance_npcname(strnpcinfo(0))+"::OnMobDead";
+	end;
+OnSummonMiniBoss:
+	callfunc "F_Random_Monster#Celine",
+		instance_npcname(strnpcinfo(0))+"::OnMobDead";
+	end;
+OnMobDead:
+	'celine_summon--;
+	if ('celine_summon>0){
+		mapannounce instance_mapname("celin_dw"),"Un des sceaux a été levé, il en reste " + 'celine_summon + ".",0;			
+		mapannounce instance_mapname("celin_dw"),"A seal was broken, there are " + 'celine_summon + " seals left.",0;		
+	} else {
+		mapannounce instance_mapname("celin_dw"),"Tous les sceaux ont été levés.",0;			
+		mapannounce instance_mapname("celin_dw"),"All the seals have been broken.",0;	
+	}
+OnMyMobDead:
+
+	.@ok = rand(100);
+	if (.@ok < 20){
+		getpartymember getcharid(1),2;
+		.@rand = rand($@partymembercount);
+		if (attachrid($@partymemberaid[.@rand])) {
+			if (strcharinfo(3) == instance_mapname("celin_dw")) {
+				getitem 35003,1;
+			}
+			detachrid;
+		}
+	}
+	.@mob_dead_num = mobcount(instance_mapname("celin_dw"),instance_npcname(strnpcinfo(0))+"::OnMyMobDead") + mobcount(instance_mapname("celin_dw"),instance_npcname(strnpcinfo(0))+"::OnSummonMiniBoss") + mobcount(instance_mapname("celin_dw"),instance_npcname(strnpcinfo(0))+"::OnMobDead");
+	if (.@mob_dead_num < 1){
+		mapannounce instance_mapname("celin_dw"),"Vous entendez un bruit sourd en provenance de l'entrée du manoir.",0;
+		mapannounce instance_mapname("celin_dw"),"You're hearing a muffled sound from the entrance.",0;
+		areamonster instance_mapname("celin_dw"),13,93,13,93,"Pyuriel Grey",2249,1,instance_npcname(strnpcinfo(0))+"::OnStudentDead",2;
+	}
+	end;
+	
+OnStudentDead:
+
+	mapannounce instance_mapname("celin_dw"),"Pyuriel ! Lora !! Mes enfants, que vous est-il arrivé ? ...",0;
+	mapannounce instance_mapname("celin_dw"),"Pyuriel ! Lora !! My children, what happened to you? ...",0;
+	
+	getpartymember getcharid(1),2;
+		freeloop(1);
+		for (.@i = 0 ; .@i < $@partymembercount ; .@i++ ){
+			if (attachrid($@partymemberaid[.@i])) {
+				if (strcharinfo(3) == instance_mapname("celin_dw")) {
+					getitem 35003,30;
+				}
+				detachrid;
+			}
+		}
+		freeloop(0);
+	end;
+}
+
+celin_dw,21,101,0	duplicate(Hell#anexus)	Hell#celin_dw	45,300,300
+
+// Switch pour invoquer le MvP final
+celin_dw,284,32,1	script	Switch#Celine	844,{
+
+	mes "[Switch]";
+	
+
+	if (getcharid(0) != getpartyleader(getcharid(1),2)){
+		if (#LANGUE == 1 ) {
+			mes "You see a beautiful switch.";
+		}
+		else {
+			mes "Vous voyez un interrupteur magnifique.";
+		}
+		close;
+	}
+	
+	if (#LANGUE == 1){
+		.@menu$ = "Activate:Do not activate";
+	} else {
+		.@menu$ = "Activer:Ne pas activer";
+	}
+	
+	switch(select(.@menu$)){
+	case 1:
+		if ('celine_summon == 0){
+			areamonster instance_mapname("celin_dw"),283,22,283,22,"Celine Kimi",2996,1,instance_npcname(strnpcinfo(0))+"::OnMyMobDead",2;
+			hideonnpc instance_npcname(strnpcinfo(0));
+		} else {
+		mes "Nothing happened";
+		}
+	}
+	close;
+	end;
+OnMyMobDead:
+	
+	mapannounce instance_mapname("celin_dw"),"Madame, madame ! Ressaisissez-vous ! ... Je vais rester un peu avec elle, en attendant venez me parler pour que je vous emmène en dehors de cet enfer.",0;									
+	mapannounce instance_mapname("celin_dw"),"My lady! My lady!! Please pull yourself together! ... I will stay with her, come talk to me if you want to get out of here.",0;
+	
+	hideoffnpc instance_npcname("Wilhelmy Grey#Reward");
+	enablenpc(instance_npcname("Celine"));
+	set .@end_time,gettimetick(2);
+	set .@start_time, $start_time_celine[instance_id()];
+	set .@instance_name$,"Celine Dwelling";
+	set .@difficulty, #TFDif;
+
+	callfunc "F_SQL_RECORD",
+		.@end_time,
+		.@start_time,
+		.@instance_name$,
+		.@difficulty;
+	
+	end;
+}
+
+
+//===========================================================================================================
+//============================================= FONCTIONS ======================================================
+//===========================================================================================================
+
+/**
+*	Invoque les monstres dans les 14 salles de l'instance
+*	@label$				:	Nom de l'evenement attaché aux monstres dans les salles
+*/
+function	script	F_Room_Monster#Celine	{
+
+	set .@label$,getarg(0);
+
+	//1er etage
+	
+	//Salle 1
+	areamonster instance_mapname("celin_dw"),12,163,39,144,"Death Word",1698,25,.@label$;
+	areamonster instance_mapname("celin_dw"),12,163,39,144,"Mysteltainn",1203,3,.@label$;
+	areamonster instance_mapname("celin_dw"),12,163,39,144,"Elder",1377,10,.@label$;
+	
+	//Salle 2
+	areamonster instance_mapname("celin_dw"),12,39,39,12,"Banshee",1867 ,15,.@label$;
+	areamonster instance_mapname("celin_dw"),12,39,39,12,"Seeker ",1774,15,.@label$;
+	areamonster instance_mapname("celin_dw"),12,39,39,12,"Owl Baron",1295 ,5,.@label$;
+	areamonster instance_mapname("celin_dw"),12,39,39,12,"Rideword ",1195,20,.@label$;
+	
+	//Salle 3
+	areamonster instance_mapname("celin_dw"),88,39,112,12,"Ancient Mimic",1699,20,.@label$;
+	areamonster instance_mapname("celin_dw"),88,39,112,12,"Owl Baron",1295,5,.@label$;
+	areamonster instance_mapname("celin_dw"),88,39,112,12,"Alicel",1735,10,.@label$;
+	
+	//Salle 4
+	areamonster instance_mapname("celin_dw"),158,31,173,12,"Constant",1738,40,.@label$;
+	
+	//2eme etage
+	
+	//Salle 5
+	areamonster instance_mapname("celin_dw"),78,287,99,274,"Banshee Master",1974,4,.@label$;
+	areamonster instance_mapname("celin_dw"),78,287,99,274,"Banshee",1867,10,.@label$;
+	areamonster instance_mapname("celin_dw"),78,287,99,274,"Tirfing",1204,5,.@label$;
+	
+	//Salle 6
+	areamonster instance_mapname("celin_dw"),12,287,35,274,"Mangkukulam",2312,10,.@label$;
+	areamonster instance_mapname("celin_dw"),12,287,35,274,"Seeker",1774,10,.@label$;
+	areamonster instance_mapname("celin_dw"),12,287,35,274,"Aliot",1736,2,.@label$;
+	
+	//Salle 7
+	areamonster instance_mapname("celin_dw"),254,287,267,280,"Constant",1738,20,.@label$;
+	
+	//Salle 8
+	areamonster instance_mapname("celin_dw"),254,189,267,182,"Aliot",1736,5,.@label$;
+	areamonster instance_mapname("celin_dw"),254,189,267,182,"Rideword",1195,15,.@label$;
+	
+	//Salle 9
+	areamonster instance_mapname("celin_dw"),198,287,211,280,"Deathword",1698,10,.@label$;
+	areamonster instance_mapname("celin_dw"),198,287,211,280,"Executionner",1205,1,.@label$;
+	areamonster instance_mapname("celin_dw"),198,287,211,280,"Tirfing",1204,1,.@label$;
+	areamonster instance_mapname("celin_dw"),198,287,211,280,"Mysteltainn",1203,1,.@label$;
+	
+	//Salle 10
+	areamonster instance_mapname("celin_dw"),198,189,211,182,"Aliot",1736,2,.@label$;
+	areamonster instance_mapname("celin_dw"),198,189,211,182,"Elder",1377,5,.@label$;
+	areamonster instance_mapname("celin_dw"),198,189,211,182,"Mangkukulam",2312,8,.@label$;
+	
+	//Salle 11
+	areamonster instance_mapname("celin_dw"),142,287,155,280,"Owl Baron",1295,5,.@label$;
+	areamonster instance_mapname("celin_dw"),142,189,155,182,"Deathword",1698,10,.@label$;
+	
+	//Salle 12
+	areamonster instance_mapname("celin_dw"),142,189,155,182,"Executionner",1205,3,.@label$;
+	areamonster instance_mapname("celin_dw"),142,189,155,182,"Alicel",1735,8,.@label$;
+	
+	//Salle 13
+	areamonster instance_mapname("celin_dw"),78,221,99,208,"Aliot",1736,15,.@label$;
+	areamonster instance_mapname("celin_dw"),78,221,99,208,"Seeker",1774,10,.@label$;
+	areamonster instance_mapname("celin_dw"),78,221,99,208,"Constant",1738,5,.@label$;
+	
+	//Salle 14
+	areamonster instance_mapname("celin_dw"),12,221,35,210,"Banshee Master",1974,3,.@label$;
+	areamonster instance_mapname("celin_dw"),12,221,35,210,"Ancient Mimic",1699,10,.@label$;
+	areamonster instance_mapname("celin_dw"),12,221,35,210,"Mangkukulam",2312,5,.@label$;
+	
+	return;
+}
+
+/**
+* Invoque les Sentry dans les couloirs de l'instance
+*	@label$			:	Nom de l'evenement attaché aux Sentry
+*/
+function	script	F_Corridor_Monster#Celine	{
+
+	set .@label$,getarg(0);
+
+	//Couloir 1
+	areamonster instance_mapname("celin_dw"),95,97,40,88,"Sentry",1975,5,.@label$;
+	
+	//Couloir 2
+	areamonster instance_mapname("celin_dw"),220,12,287,83,"Sentry",1975,13,.@label$;
+	
+	//Couloir 3
+	areamonster instance_mapname("celin_dw"),182,237,225,232,"Sentry",1975,2,.@label$;
+	
+	return;
+}
+
+/**
+* Invoque les 5 Twisted Soul, mob que l'on compte pour invoquer le MvP final grace au switch
+*	@label$				:	Nom de l'evenement attaché aux Twisted Soul
+*/
+function	script	F_MVP_Monster#Celine	{
+
+	set .@label$,getarg(0);
+	'celine_summon+=5;
+	
+	//Salle 3
+	areamonster instance_mapname("celin_dw"),88,39,112,12,"Twisted Soul",2282,1,.@label$;
+	
+	//Salle 7
+	areamonster instance_mapname("celin_dw"),254,287,267,280,"Twisted Soul",2282,1,.@label$;
+	
+	//Salle 10
+	areamonster instance_mapname("celin_dw"),198,189,211,182,"Twisted Soul",2282,1,.@label$;
+	
+	//Salle 12
+	areamonster instance_mapname("celin_dw"),142,189,155,182,"Twisted Soul",2282,1,.@label$;
+	
+	//Salle 14
+	areamonster instance_mapname("celin_dw"),12,221,35,210,"Twisted Soul",2282,1,.@label$;
+	
+	return;
+}
+
+/**
+* Invoque un Twisted Soul dans l'une des salles de l'instance
+*	@label$			:	Nom de l'evenement attaché au Twisted Soul
+*/
+function	script	F_Random_Monster#Celine	{
+
+	set .@label$,getarg(0);
+	'celine_summon++;
+	
+	mapannounce instance_mapname("celin_dw"),"Vous sentez une présence maléfique qui vient se rajouter à l'ambiance déjà macabre.",0;									
+	mapannounce instance_mapname("celin_dw"),"You feel an evil presence adding up to the already ghoulish atmosphere.",0;									
+	
+	setarray .@map_x,
+		12,39,		// Salle 1
+		12,39,		// Salle 2
+		88,112 ,	// Salle 3
+		158,173,	// Salle 4
+		78,99,		// Salle 5
+		12,35,		// Salle 6
+		254,267,	// Salle 7	
+		254,267,	// Salle 8
+		198,211,	// Salle 9
+		198,211,	// Salle 10
+		142,155,	// Salle 11
+		142,155,	// Salle 12
+		78,99,		// Salle 13
+		12,35;		// Salle 14
+	
+	setarray .@map_y,
+		163,144,	// Salle 1	
+		39,12,		// Salle 2
+		39,12 ,		// Salle 3	
+		31,12,		// Salle 4
+		287,274,	// Salle 5
+		287,274,	// Salle 6
+		287,280,	// Salle 7
+		189,182,	// Salle 8
+		287,280,	// Salle 9
+		189,182,	// Salle 10
+		287,280,	// Salle 11
+		189,182,	// Salle 12
+		221,208,	// Salle 13
+		221,210;	// Salle 14
+		
+	.@rand = rand(1,14);
+	if (.@rand%2 == 1){
+		.@room = .@rand-1;
+	} else {
+		.@room = .@rand;
+	}
+	
+	areamonster instance_mapname("celin_dw"),.@map_x[.@room],.@map_y[.@room],.@map_x[.@room+1],.@map_y[.@room+1],"Twisted Soul",2282,1,.@label$;
+	
+	return;
+}
+
+-	duplicate(pevent_instance#anexus)	pevent_instance#celin_dw	-1
+
+//===========================================================================================================
+//============================================= MAPFLAGS =======================================================
+//===========================================================================================================
+
+job3_arch01	mapflag	nowarpto
+job3_arch01	mapflag	noteleport
+job3_arch01	mapflag	nosave
+job3_arch01	mapflag	nomemo
+job3_arch01	mapflag	nobranch
+job3_arch01	mapflag	noloot
+job3_arch01	mapflag	nopenalty
+
+celin_dw	mapflag	nowarp
+celin_dw	mapflag	noicewall
+celin_dw	mapflag	nowarpto
+celin_dw	mapflag	noteleport
+celin_dw	mapflag	nosave
+celin_dw	mapflag	nomemo
+celin_dw	mapflag	nobranch
+celin_dw	mapflag	noloot
+celin_dw	mapflag	nopenalty
+celin_dw	mapflag	monster_noteleport
+celin_dw	mapflag	partylock

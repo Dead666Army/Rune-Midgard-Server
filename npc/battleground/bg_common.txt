@@ -1,0 +1,469 @@
+// ==============================================================================
+// BattleGround System - Common NPCs
+// ==============================================================================
+
+// Battleground Queue Handler
+// *********************************************************************
+-	script	BG_Queue_Join	-1,{
+	end;
+
+OnInit:
+	// Configuration
+	// *****************************************************
+	set .@min_bg,5;
+	setbattleflag "bg_eAmod_mode", 0;
+	// Battleground Rotation - Main NPC name
+	setarray .BG_Arenas$[0],	"Tierra_DOM"	,	"Flavius_TD",		/**	"Conquest",		"Rush",	*/	"Tierra_TI",			"Tierra_EOS",		"Flavius_CTF";//,		"Tierra_Boss",	"Flavius_SC";
+	// Battleground Arena Name - for announcements
+	setarray .BG_Names$[0],		"Domination"  ,	"Team DeathMatch",	/**	"Conquest",		"Rush",	*/	"Triple Inferno",		"Eye of Storm",		"Capture the Flag";//,		"Bossnia",		"Stone Control";
+	// Minimum Players to start the BG
+	setarray .BG_Min[0],	        .@min_bg,             .@min_bg,       /**         .@min_bg,           .@min_bg,   */      3,          .@min_bg,           .@min_bg;//,          .@min_bg,         .@min_bg;
+	// Maximum Players per Team
+	setarray .BG_Max[0],	             50,              50,           /**    50,           50,   */        50,                  50,            50,           50,          50;
+	// BG Message Colors
+	setarray .BG_Color[0],	                0xA0522D,    0x808000,   /**   0xFFA500,       0xDDA0DD,	*/	0x696969,		0x4169E1,		0x4169E1;//,		0x3399FF,		0x9ACD32;
+	setarray .BG_Color2[0],	                0xA0522D,    0x808000,   /**   0xFFA500,       0xDDA0DD,	*/	0x696969,		0x4169E1,		0x4169E1;//,		0x3399FF,		0x9ACD32;
+	// Team Building Mode : 0 = Lineal | 1 = Random | 2 = Class Priority | 3 = Faction Mode | 4 = Team Color ( by script set Bat_Team,N; )
+	set .TeamMode, 2;
+	// Main Code
+	// *****************************************************
+	set .BG_Count, getarraysize(.BG_Arenas$);
+	set .BG_Queue, bg_queue_create("Battleground Arena","BG_Queue_Join::OnJoinEvent",80);
+	// Move to Next Arena
+	if( $BG_Index >= .BG_Count ) set $BG_Index,0; // Restart Rotation
+	set .TotalArenas, getarraysize(.BG_Arenas$);
+	set .BG_Arena$,.BG_Arenas$[$BG_Index];
+	set .Ready, 1;
+	initnpctimer; // Rotation if BG don't start... Comment if you don't want to use this method
+	// Comment the next two lines if you don't want to allow @joinbg and @leavebg commands.
+	/* Commands */
+	// Admin/GM Commands
+	bindatcmd "bgstart","BG_Queue_Join::OnBGStartCommand",99,99;
+	bindatcmd "bgstop","BG_Queue_Join::OnBGStopCommand",99,99;
+	bindatcmd "bgmode","BG_Queue_Join::OnBGModeCommand",99,99;	// [Easycore]
+	bindatcmd "bgsize","BG_Queue_Join::OnBGSizeCommand",99,99;		// [Easycore]
+	// Player Commands
+	bindatcmd "joinbg","BG_Queue_Join::OnDoJoin",0,99;
+	bindatcmd "leavebg","BG_Queue_Join::OnDoLeave",0,99;
+	end;
+
+OnDoJoin: // @joinbg
+	if (getbattleflag("bg_eAmod_mode") == 0) {
+		message strcharinfo(0),"Battlegrounds are currently disabled.";
+		end;
+	} else if( agitcheck() || agitcheck2() ) {
+		dispbottom "[Battleground is currently disabled due to War of Emperium.]";
+		end;
+	} else if( checkquest(8600,PLAYTIME) == 2 ) {
+		erasequest 8600;
+	} else if( checkquest(8600,PLAYTIME) == 0 ) {
+		dispbottom "[You are a Deserter. You can't participate until the indicator goes off]";
+		end;
+	}
+
+	bg_queue_join .BG_Queue;
+	end;
+
+OnDoLeave: // @leavebg
+	bg_queue_leave .BG_Queue;
+	end;
+// Easycore
+// @bgmode <1-10>
+OnBGModeCommand:
+	.@x = atoi(.@atcmd_parameters$[0]);
+	if (.@x <= .TotalArenas+1 && .@x > 0) {
+		if (.@x == 1)
+			set $BG_Index, rand(.TotalArenas)-1;
+		else
+			set $BG_Index, .@x-3;
+		message strcharinfo(0),"["+.BG_Names$[$BG_Index+1]+"] has been set.";
+		donpcevent "BG_Queue_Join::OnRotate";
+		end;
+	} else {
+		message strcharinfo(0), "Usage: @bgmode <1-"+(.TotalArenas+1)+">";
+		dispbottom "#1 - Random",0xFFFFFF;
+		for (.@i = 0; .@i<.TotalArenas; .@i++)
+			dispbottom "#"+(.@i+2)+" - "+.BG_Names$[.@i],.BG_Color2[.@i];			
+		end;
+	}
+		
+// @bgsize <1-10> <min> <max>
+OnBGSizeCommand:
+	.@x = atoi(.@atcmd_parameters$[0]);
+	.@x2 = atoi(.@atcmd_parameters$[1]);
+	.@x3 = atoi(.@atcmd_parameters$[2]);
+	if (.@x2 == 0 || .@x3 == 0) {
+		message strcharinfo(0), "Usage: @bgsize <0-"+.TotalArenas+"> <min players> <max players>";
+		dispbottom "#0 - All Arenas",0xFFFFFF;
+		for (.@i = 0; .@i<.TotalArenas; .@i++)
+			dispbottom "#"+(.@i+1)+" - "+.BG_Names$[.@i],.BG_Color2[.@i];			
+		end;
+	} else if (.@x2 > .@x3) {
+		message strcharinfo(0), "@bgsize failed: min players is higher than max players. ";
+		end;
+	}	
+	if (.@x <= .TotalArenas && .@x > 0) {
+		message strcharinfo(0),"["+.BG_Names$[.@x-1]+"] min players is <"+.@x2+"> and max players is <"+.@x3+">.";
+		setarray .BG_Min[.@x-1],.@x2;
+		setarray .BG_Max[.@x-1],.@x3;
+	} else {
+		message strcharinfo(0),"[All Arenas] min players is <"+.@x2+"> and max players is <"+.@x3+">.";
+		setarray .BG_Min[0],.@x2,.@x2,.@x2,.@x2,.@x2,.@x2,.@x2,.@x2,.@x2;
+		setarray .BG_Max[0],.@x3,.@x3,.@x3,.@x3,.@x3,.@x3,.@x3,.@x3,.@x3;
+	}
+	end;
+OnBGStartCommand:
+	$@bg_menu$ = "Warp to Battle Room:^FFA500Battleground Arenas^000000";
+	announce "Le Battleground a commencé !",0;
+	announce "Battleground has started!",0;
+	setbattleflag "bg_eAmod_mode", 1;
+	donpcevent "BG_Queue_Join::OnRotate";
+	callsub OnEndArena;
+	end;
+OnBGStopCommand:
+	$@bg_menu$ = "Warp to Battle Room";
+	setbattleflag "bg_eAmod_mode", 0;
+	announce "La file d'attente pour le Battleground est arrêtée !",0;
+	announce "Queuing for Battleground has been disabled !",0;
+	end;
+OnEndArena:
+	set $@BG_Status, 0;
+	if ($@BG_Team1 == 0 && $@BG_Team2 == 0 && $@BG_Team3 == 0)
+		end;
+	// Warps Teams
+	bg_warp $@BG_Team1,"bat_room",155,150;
+	bg_warp $@BG_Team2,"bat_room",155,150;
+	if ($@BG_Team3 != 0 ) bg_warp $@BG_Team3,"bat_room",155,150;
+	// Destroy Teams
+	bg_destroy $@BG_Team1; set $@BG_Team1, 0;
+	bg_destroy $@BG_Team2; set $@BG_Team2, 0;
+	if ($@BG_Team3 != 0 ) bg_destroy $@BG_Team3; set $@BG_Team3, 0;
+OnRotate:
+OnTimer60000: // Rotation if BG don't start... Comment if you don't want to use this method. 120 = 2 Minutes
+	// Check if BG is enabled/disabled [Easycore]
+	if (getbattleflag("bg_eAmod_mode") == 0) end;
+
+	// Move to Next Arena
+	if( set($BG_Index,$BG_Index + 1) >= .BG_Count )
+		set $BG_Index,0; // Restart Rotation
+
+	set .BG_Arena$,.BG_Arenas$[$BG_Index];
+	initnpctimer; // Rotation if BG don't start... Comment if you don't want to use this method
+OnJoinEvent:
+	if( $@BG_Status == 2 )
+		end; // BG Ending... Must wait until OnRotate is called
+
+	set .@Queue_Count, bg_queue_data(.BG_Queue,0);
+	switch( $@BG_Status )
+	{
+	case 0: // Idle - Ready to Start
+		if( .BG_Arena$ == "Tierra_TI" )
+			set .@Req, .BG_Min[$BG_Index] * 3;
+		else
+			set .@Req, .BG_Min[$BG_Index] * 2;
+
+		if( bg_queue_checkstart(.BG_Queue,.TeamMode,( (.BG_Arena$ == "Tierra_TI") ? 3 : 2 ),.BG_Min[$BG_Index]) )
+		{
+			donpcevent .BG_Arena$ + "::OnBuildTeams";
+
+			// Fill Teams with Queue Members			
+			if( .BG_Arenas$[$BG_Index] == "Tierra_TI" )
+				bg_queue2teams .BG_Queue,.BG_Min[$BG_Index],.BG_Max[$BG_Index],.TeamMode,$@BG_Team1,$@BG_Team2,$@BG_Team3;
+			else
+				bg_queue2teams .BG_Queue,.BG_Min[$BG_Index],.BG_Max[$BG_Index],.TeamMode,$@BG_Team1,$@BG_Team2;
+
+			stopnpctimer; // Rotation if BG don't start... Comment if you don't want to use this method
+
+			set $@BG_Status,1;
+			set .@msg$, "Battleground -- " + .BG_Names$[$BG_Index] + " -- Begining";
+			bgannounce .@msg$,.BG_Color[$BG_Index];
+
+			donpcevent .BG_Arena$ + "::OnReady";
+		}
+		else
+		{
+			set .@msg$, "Battleground -- " + .BG_Names$[$BG_Index] + " -- " + (.@Req - .@Queue_Count) + " more players to start.";
+			bgannounce .@msg$,.BG_Color[$BG_Index];
+		}
+		break;
+	case 1: // Running - Others can join
+		if( .@Queue_Count > 0 )
+		{
+			if( .BG_Arena$ == "Tierra_TI" )
+			{
+				bg_balance_teams .BG_Queue,.BG_Max[$BG_Index],.TeamMode,$@BG_Team1,$@BG_Team2,$@BG_Team3;
+				set .@BG_Count1, bg_get_data($@BG_Team1,0);
+				set .@BG_Count2, bg_get_data($@BG_Team2,0);
+				set .@BG_Count3, bg_get_data($@BG_Team3,0);
+				set .@msg$, "Battleground -- " + .BG_Names$[$BG_Index] + " -- B: " + .@BG_Count1 + "/" + .BG_Max[$BG_Index] + ", R: " + .@BG_Count2 + "/" + .BG_Max[$BG_Index] + ", G: " + .@BG_Count3 + "/" + .BG_Max[$BG_Index] + " (Playing)";
+			}
+			else
+			{
+				bg_balance_teams .BG_Queue,.BG_Max[$BG_Index],.TeamMode,$@BG_Team1,$@BG_Team2;
+				set .@BG_Count1, bg_get_data($@BG_Team1,0);
+				set .@BG_Count2, bg_get_data($@BG_Team2,0);
+				set .@msg$, "Battleground -- " + .BG_Names$[$BG_Index] + " -- B: " + .@BG_Count1 + "/" + .BG_Max[$BG_Index] + ", R: " + .@BG_Count2 + "/" + .BG_Max[$BG_Index] + " (Playing)";
+			}
+
+			bgannounce .@msg$,.BG_Color[$BG_Index];
+		}
+		break;
+	}
+	end;
+	
+OnClock0800:
+	if (getbattleflag("bg_eAmod_mode") == 0) 
+		callsub OnBGStartCommand;
+	
+	end;
+
+OnTue2100:
+OnThu2100:
+OnSat2100:
+	callsub OnDoHappyHour;
+	end;
+	
+OnTue2300:
+OnThu2300:
+OnSat2300:
+	callsub OnDoHappyHour;
+	end;
+
+OnSun2100:
+	callsub OnBGStopCommand;
+	end;
+	
+OnSun2300:
+	callsub OnBGStartCommand;
+	end;
+
+	
+//BattleGround Happy Hour
+OnDoHappyHour:
+		if( gettime(3) >= 21 && gettime(3) < 23 )
+		{
+			announce "-- Les Happy hours Battleground ont commencées --",0,0x00FF00;
+			announce "-- Battleground Happy Hour has begun --",0,0x00FF00;
+			setbattleflag "bg_reward_rates",150; // +50% Reward Rates
+			//setbattleflag "bg_ranked_mode",1;
+			end;
+		}
+		if( gettime(3) == 23 )
+		{
+			announce "-- Les Happy hours Battleground sont terminées --",0,0x00BFFF;
+			announce "-- Battleground Happy Hour is over --",0,0x00BFFF;
+			setbattleflag "bg_reward_rates",100; // Normal Rates
+			//setbattleflag "bg_ranked_mode",0;
+			end;
+		}
+	end;
+}
+
+// Badges Repairman
+// *********************************************************************
+
+bat_room,144,147,5	script	Repairman#bg	99,{
+	callfunc "repairmain","Repairman";
+	end;
+}
+
+// Registration NPC
+// *********************************************************************
+prontera,145,172,3	script	Battle Recruiter#prt	4_F_JOB_KNIGHT,{
+
+	if( getvariableofnpc(.Ready,"BG_Queue_Join") == 0 )
+		donpcevent "BG_Queue_Join::OnInit";
+
+	mes "[^FFA500Battle Recruiter^000000]";
+	mes "This is the Battleground Information and Registration service.";
+	mes "What do you want to do?";
+	next;
+	switch( select($@bg_menu$) )
+	{
+	case 2:
+		mes "[^FFA500Battle Recruiter^000000]";
+		mes "Battlegrounds Arena are different kinds of games where Teams fight for victory.";
+		mes "What do you want to do?";
+		next;
+		switch( select("Register:Party Register:Leave Queue:Battleground Help") )
+		{
+		case 1:
+			if( BaseLevel < 80 )
+			{
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "Min required level to join a battleground is 80.";
+				close;
+			}
+			if( checkquest(8600,PLAYTIME) == 2 )
+				erasequest 8600;
+			if( checkquest(8600,PLAYTIME) == 1 )
+			{
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "You are a Deserter. You can't participate until the indicator goes off";
+				close;
+			}
+
+			mes "[^FFA500Battle Recruiter^000000]";
+			mes "Let's proceed with the registration...";
+			mes "You must wait on any City until BG starts.";
+			mes "Close this window to continue...";
+			close2;
+			bg_queue_join getvariableofnpc(.BG_Queue,"BG_Queue_Join");
+			end;
+		case 2:
+			if( getcharid(1) == 0 )
+				{
+					mes "[^FFA500Battle Recruiter^000000]";
+					mes "You are not on a Party.";
+					close;
+				}
+
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "Let's proceed with the registration...";
+				mes "You must wait on any City until BG starts.";
+				mes "Close this window to continue...";
+				close2;
+				bg_queue_partyjoin getcharid(1),getvariableofnpc(.BG_Queue,"BG_Queue_Join");
+				end;
+		case 3:
+			mes "[^FFA500Battle Recruiter^000000]";
+				mes "If you are registered, you will be removed.";
+				mes "Are you sure?";
+				next;
+				if( select("Yes, leave queue:No, I will stay") == 2 )
+				{
+					mes "[^FFA500Battle Recruiter^000000]";
+					mes "Ok, nothing to change.";
+					close;
+				}
+
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "Close this window to continue...";
+				close2;
+				bg_queue_leave getvariableofnpc(.BG_Queue,"BG_Queue_Join");
+				end;
+		case 4:
+			mes "[^FFA500Battle Recruiter^000000]";
+			mes "Tell me... what battleground you don't understand?";
+			next;
+			switch( select("Capture the Flag:Team DeathMatch:Eye of Storm:Domination:Triple Inferno") )
+			{
+			case 1://Capture the Flag
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "The objective of the Flavius Battle CTF is to score 3 points before your enemy, by capture their Flag.";
+				next;
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "To capture a Flag you need to take the enemy flag, and bring it to your base flag.";
+				next;
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "If your base flag is captured too, you need to kill the enemy flag carrier and take the flag back to your base.";
+				break;
+			case 2://Team DeathMatch
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "Kill all the enemy players to let their Team without points.";
+				mes "Protect our army.";
+				break;
+			case 3://Eye of Storm
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "There are two bases, North and South which teams can capture by holding position on the Base with more players than the other team.";
+				next;
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "Each base will give you 1 points every 5 seconds.";
+				next;
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "To get aditional points, in the middle there is a Flag spawn, capture it and put it on any of your team Bases.";
+				next;
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "The first Team to reach 49 points wins the match.";
+				break;
+			case 4://Domination
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "There are three bases, North, Center and South which teams can capture by holding position on the Base with more players than the other team.";
+				next;
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "Each base will give you 1 points every 5 seconds.";
+				next;
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "The first Team to reach 49 points wins the match.";
+				break;
+			case 5://Triple Inferno
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "There are 3 teams in the battlefield, your team and 2 other enemy teams.";
+				next;
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "Kill the enemy players, collect their skull and bring them to the Sacrifice Totem to win points.";
+				next;
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "You can collect your own team skulls and bring them to your Sacrifice Totem to avoid other teams to score.";
+				next;
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "If you get killed, all your skulls will be dropped to the floor, including your own skull. First Team to get 40 points wins the battle.";
+				break;
+			case 6://Conquest
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "If you are Attacking, destroy the enemy defenses and it's Flag.";
+				next;
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "If you are Defending, protect your castle defenses and the Flag.";
+				break;
+			case 7://Rush
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "Fight to capture the Castle and organize your team to defend it.";
+				next;
+				mes "[^FFA500Battle Recruiter^000000]";
+				mes "If you fail on the first capture, kill the defenders and take it for your team.";
+				break;
+			}
+			break;
+		}
+		close;
+	case 1:
+		mes "[^FFA500Battle Recruiter^000000]";
+		mes "May the War God bless you.";
+		close2;
+		warp "bat_room",155,150;
+		end;
+	}
+	end;
+OnInit:
+	$@bg_menu$ = "Warp to Battle Room";
+	end;
+}
+
+//bat_room,160,150,3	duplicate(BG_Register)	Battle Recruiter#bat	4_F_JOB_KNIGHT
+
+// Flags
+// *********************************************************************
+
+-	script	Base Flag#bg	FAKE_NPC,{ end; }
+
+// BattleGround Warper - Exit
+// *********************************************************************
+
+bat_room,148,150,4	script	Teleporter#bat	4_F_TELEPORTER,{
+	mes "[Teleporter]";
+	mes "Do you wish to leave the battlefield? Use my service to return to town.";
+	next;
+	if( select("Leave:Don't Leave") == 2 )
+	{
+		mes "[Teleporter]";
+		mes "I'll be here whenever you're in need of my service.";
+		close;
+	}
+		set .@spoint$, getsavepoint(0);
+		set .@x, getsavepoint(1);
+		set .@y, getsavepoint(2);
+		mes "[Teleporter]";
+		mes "You will be sent back to " + .@spoint$ + ".";
+		close2;
+		warp .@spoint$, .@x, .@y;
+	end;
+}
+
+// Kafra
+// *********************************************************************
+bat_room,148,147,4	script	Kafra Staff::kaf_bat	4_F_KAFRA9,{
+	cutin "kafra_09",2;
+	callfunc "F_Kafra",0,2,1,150,0;
+}
+
