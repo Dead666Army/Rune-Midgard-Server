@@ -1,11 +1,11 @@
 /**
-*   Fonction qui distribue la récompense en expérience et en Shards et supprime la quête
-*   @quest_id           :   Id de la quête à supprimer
-*   @exp_base           :   Exp base à distribuer
-*   @exp_job            :   Exp job à distribuer
-*   @reward             :   Nombre de reward à donner
-*   @reward_id          :   ID de la reward à donner
-*   @reward_name        :   Nom de la reward à donner
+*   Fonction qui distribue la rï¿½compense en expï¿½rience et en Shards et supprime la quï¿½te
+*   @quest_id           :   Id de la quï¿½te ï¿½ supprimer
+*   @exp_base           :   Exp base ï¿½ distribuer
+*   @exp_job            :   Exp job ï¿½ distribuer
+*   @reward             :   Nombre de reward ï¿½ donner
+*   @reward_id          :   ID de la reward ï¿½ donner
+*   @reward_name        :   Nom de la reward ï¿½ donner
 */
 function	script	F_HUNTING_REWARD	{
 
@@ -22,9 +22,9 @@ function	script	F_HUNTING_REWARD	{
         next;
         mes "I hope to see you soon!";
     } else {
-        mes "Bravo ! Pour récompenser ton travail, voici de l'expérience et quelques "+.@reward_name$+".";
+        mes "Bravo ! Pour rï¿½compenser ton travail, voici de l'expï¿½rience et quelques "+.@reward_name$+".";
         next;
-        mes "J'espère te revoir bientôt !";
+        mes "J'espï¿½re te revoir bientï¿½t !";
     }
 
     erasequest(.@quest_id);
@@ -35,16 +35,16 @@ function	script	F_HUNTING_REWARD	{
 }
 
 /**
-*   Fonction qui set la quête de hunt au joueur et qui lui prend ses crédits
-*   @quest_id           :   Id de la quête
-*   @credits_required   :   Nombre de crédit à prendre
+*   Fonction qui set la quï¿½te de hunt au joueur et qui lui prend ses crï¿½dits
+*   @quest_id           :   Id de la quï¿½te
+*   @credits_required   :   Nombre de crï¿½dit ï¿½ prendre
 */
 function	script	F_HUNTING_QUEST	{
 
     set .@quest_id, getarg(0);
     set .@credits_required, getarg(1);
 
-    callfunc "F_NO_DOUBLE_ACCOUNT_QUEST";
+    //callfunc "F_NO_DOUBLE_ACCOUNT_QUEST";
     setquest(.@quest_id);
     query_sql("select `value` from `acc_reg_num` WHERE `account_id` = "+getcharid(3)+" and `key` = '#credits';",.@credits);
     .@credits += .@credits_required;
@@ -56,7 +56,7 @@ function	script	F_HUNTING_QUEST	{
 }
 
 /**
-*   Fonction qui empêche l'abus des huntings quest pour avoir plein de Shards of Potential
+*   Fonction qui empï¿½che l'abus des huntings quest pour avoir plein de Shards of Potential
 */
 function	script	F_NO_DOUBLE_ACCOUNT_QUEST	{
 		
@@ -68,7 +68,7 @@ function	script	F_NO_DOUBLE_ACCOUNT_QUEST	{
         if (#LANGUE  == 1 ){
             mes "It seems an other character that you own has already a quest.";
         } else {
-            mes "Il semblerait qu'un autre personnage que tu possèdes à déjà une quête.";
+            mes "Il semblerait qu'un autre personnage que tu possï¿½des ï¿½ dï¿½jï¿½ une quï¿½te.";
         }
 				next;
 				mes "[" + strnpcinfo(0) + "]";
@@ -76,7 +76,7 @@ function	script	F_NO_DOUBLE_ACCOUNT_QUEST	{
             mes "Do you want to start a new quest on this character? This will delete the quest on the other character.";
 						.@menu_giveup$ = "No:Yes";
         } else {
-            mes "Voulez-vous recommencer une quête sur ce personnage ? Cela supprimera la quête sur l'autre personnage.";
+            mes "Voulez-vous recommencer une quï¿½te sur ce personnage ? Cela supprimera la quï¿½te sur l'autre personnage.";
 						.@menu_giveup$ = "Non:Oui";
         }
 				switch(select(.@menu_giveup$)){
@@ -107,16 +107,16 @@ function	script	F_NO_DOUBLE_ACCOUNT_QUEST	{
 
 
 /**
-*   Fonction qui vérifie que le joueur à le bon level, les credits requis et pas déjà une quête
-*   Si le joueur à déjà une quête il vérifie si la quête est terminée ou non
-*   Si la quête est terminée distribue l'exp et les Shards (Pas de vérification de niveau pour la distribution des rewards)
-*   Sinon il dit au joueur de continuer sa quête
-*   @min_level          :   Niveau minimum pour prendre les quêtes
-*   @max_level          :   Niveau maximum pour prendre les quêtes
-*   @credits_required   :   Nombre de crédits requis pour prendre les quêtes
-*   @reward_id          :   Item à donner, par défaut, des shards
-*   @reward_name        :   Nom de la reward à donner
-*		@speechPerso$				: 	Texte à afficher (format : "Texte_EN:texte_FR")
+*   Fonction qui vï¿½rifie que le joueur ï¿½ le bon level, les credits requis et pas dï¿½jï¿½ une quï¿½te
+*   Si le joueur ï¿½ dï¿½jï¿½ une quï¿½te il vï¿½rifie si la quï¿½te est terminï¿½e ou non
+*   Si la quï¿½te est terminï¿½e distribue l'exp et les Shards (Pas de vï¿½rification de niveau pour la distribution des rewards)
+*   Sinon il dit au joueur de continuer sa quï¿½te
+*   @min_level          :   Niveau minimum pour prendre les quï¿½tes
+*   @max_level          :   Niveau maximum pour prendre les quï¿½tes
+*   @credits_required   :   Nombre de crï¿½dits requis pour prendre les quï¿½tes
+*   @reward_id          :   Item ï¿½ donner, par dï¿½faut, des shards
+*   @reward_name        :   Nom de la reward ï¿½ donner
+*		@speechPerso$				: 	Texte ï¿½ afficher (format : "Texte_EN:texte_FR")
 */
 function	script	F_VERIF_HUNTING	{
 
@@ -137,13 +137,13 @@ function	script	F_VERIF_HUNTING	{
 					if (#LANGUE == 1){
 							mes "You can give back this quest here.";
 					} else {
-							mes "Tu ne peux pas rendre cette quête ici.";
+							mes "Tu ne peux pas rendre cette quï¿½te ici.";
 					}
 					close;
 				}
         if (checkquest(quest_id,HUNTING) == 2){
             callfunc "F_HUNTING_REWARD",
-                quest_id, // ID DE LA QUETE QU IL A TERMINEE (à erasequest)
+                quest_id, // ID DE LA QUETE QU IL A TERMINEE (ï¿½ erasequest)
                 exp_base, // EXP BASE TOTALE A DONNER
                 exp_job, // EXP JOB TOTALE A DONNER
                 reward,	// NOMBRE DE REWARD A DONNER
@@ -161,7 +161,7 @@ function	script	F_VERIF_HUNTING	{
                 mes "Do you wish to give up already?";
                 .@menu_giveup$ = "No:Yes";
             } else {
-                mes "Tu abandonnes déjà ?";
+                mes "Tu abandonnes dï¿½jï¿½ ?";
                 .@menu_giveup$ = "Non:Oui";
             }
             switch(select(.@menu_giveup$)){
@@ -184,7 +184,7 @@ function	script	F_VERIF_HUNTING	{
     }
 
 
-    callfunc "F_NO_DOUBLE_ACCOUNT_QUEST";
+    //callfunc "F_NO_DOUBLE_ACCOUNT_QUEST";
 
     mes "[" + strnpcinfo(0) + "]";
 
@@ -218,11 +218,11 @@ function	script	F_VERIF_HUNTING	{
         }
     } else {
         if (BaseLevel<.@min_level || BaseLevel>.@max_level){
-            mes "Je ne gére que les quêtes de level "+.@min_level+" à "+.@max_level+".";
+            mes "Je ne gï¿½re que les quï¿½tes de level "+.@min_level+" ï¿½ "+.@max_level+".";
             close;
         }
         if (.@credits < .@credits_required){
-            mes "Tu n'as pas assez de crédits pour me payer. Reviens quand tu en auras plus !";
+            mes "Tu n'as pas assez de crï¿½dits pour me payer. Reviens quand tu en auras plus !";
             close;
         }
     }
@@ -232,12 +232,12 @@ function	script	F_VERIF_HUNTING	{
 }
 
 /**
-*   Fonction qui gère la selection des monstres, le nombre de monstres à tuer, la quête à appliquer
+*   Fonction qui gï¿½re la selection des monstres, le nombre de monstres ï¿½ tuer, la quï¿½te ï¿½ appliquer
 *   @MobMenu$           :   Menu de selection des mobs
-*   @index_to_start     :   Index où démarrer pour choisir les bons monstres dans $Mob_List[0] , les bonnes exp_base dans $Mob_BaseExp[0] et dans $Mob_JobExp[0]
-*   @credits_required   :   Nombre de crédits requis pour prendre la quête
-*   @npc_number         :   Numéro du NPC concerné pour set les quêtes (commence à 0)
-*		@reward_name				:		Nom de la reward à donner
+*   @index_to_start     :   Index oï¿½ dï¿½marrer pour choisir les bons monstres dans $Mob_List[0] , les bonnes exp_base dans $Mob_BaseExp[0] et dans $Mob_JobExp[0]
+*   @credits_required   :   Nombre de crï¿½dits requis pour prendre la quï¿½te
+*   @npc_number         :   Numï¿½ro du NPC concernï¿½ pour set les quï¿½tes (commence ï¿½ 0)
+*		@reward_name				:		Nom de la reward ï¿½ donner
 */
 function	script	F_APPLY_QUEST_MENU	{
 
@@ -262,11 +262,11 @@ function	script	F_APPLY_QUEST_MENU	{
         set .@menu$, "Hunting Quests:Rien";
         set .@monster_speech$, "Choisis entre ces monstres.";
         set .@level_speech$, "Choisis combien de monstres tu veux chasser.";
-        set .@come_back_soon$, "N'hésites pas à revenir si tu en as besoin !";
+        set .@come_back_soon$, "N'hï¿½sites pas ï¿½ revenir si tu en as besoin !";
         set .@isCorrect$, "Oui:Non";
-        set .@verify_speech1$, "Es-tu sûr de vouloir tuer ";
+        set .@verify_speech1$, "Es-tu sï¿½r de vouloir tuer ";
         set .@verify_speech2$, "pour ";
-        set .@verify_speech3$, "(Les credits ne sont pas remboursés)";
+        set .@verify_speech3$, "(Les credits ne sont pas remboursï¿½s)";
     }
    
 
@@ -276,7 +276,7 @@ function	script	F_APPLY_QUEST_MENU	{
             mes "[" + strnpcinfo(0) + "]";
             mes .@monster_speech$;
             set .@case,0;
-            set .@quest_id, 70000 + .@npc_number * 1000; // Première HUNTING Quest du NPC @npc_number + 1
+            set .@quest_id, 70000 + .@npc_number * 1000; // Premiï¿½re HUNTING Quest du NPC @npc_number + 1
             switch(select(.@MobMenu$)){
                 case 14:
                     .@case++;
@@ -339,7 +339,7 @@ function	script	F_APPLY_QUEST_MENU	{
             switch(select(.@isCorrect$)){
                 case 1:
                     next;
-                    callfunc "F_NO_DOUBLE_ACCOUNT_QUEST";
+                    //callfunc "F_NO_DOUBLE_ACCOUNT_QUEST";
                     exp_base = .@exp_base;
                     exp_job = .@exp_job;
                     quest_id = .@quest_id;
