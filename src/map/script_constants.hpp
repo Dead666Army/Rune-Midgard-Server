@@ -460,6 +460,7 @@
 	export_constant(MF_BG_CONSUME);
 	export_constant(MF_WOE_CONSUME);
 	export_constant(MF_BG_TOPSCORE);
+	export_constant(MF_SKILL_DURATION);
 
 	/* setcell types */
 	export_constant(CELL_WALKABLE);
