@@ -67,7 +67,6 @@ unsigned long loginlog_failedattempts(uint32 ip, unsigned int minutes) {
  * @param rcode:
  * @param message:
  */
-
 void login_log(uint32 ip, const char* username, int rcode, const char* message) {
 	char esc_username[NAME_LENGTH*2+1];
 	char esc_message[255*2+1];
@@ -156,7 +155,6 @@ bool loginlog_config_read(const char* key, const char* value) {
  * Launched at login-serv start, create db or other long scope variable here.
  * @return true if success else exit execution
  */
-
 bool loginlog_init(void) {
 	const char* username;
 	const char* password;

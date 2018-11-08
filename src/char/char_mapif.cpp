@@ -1425,7 +1425,6 @@ int chmapif_parse(int fd){
 	while(RFIFOREST(fd) >= 2){
 		int next=1;
 		switch(RFIFOW(fd,0)){
-
 			case 0x2afa: next=chmapif_parse_getmapname(fd,id); break;
 			case 0x2afc: next=chmapif_parse_askscdata(fd); break;
 			case 0x2afe: next=chmapif_parse_getusercount(fd,id); break; //get nb user

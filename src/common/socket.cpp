@@ -797,7 +797,6 @@ int WFIFOSET(int fd, size_t len)
 		}
 
 	}
-
 	s->wdata_size += len;
 #ifdef SHOW_SERVER_STATS
 	socket_data_qo += len;
