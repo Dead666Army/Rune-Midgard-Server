@@ -78,7 +78,7 @@ moc_para01,14,32,5	script	Aperture#acolytewarp	90,{
 			case 1: warp "izlude",128,98; break;
 			case 2: warp "geffen",120,39; break;
 			case 3: warp "payon",161,58; break;
-			case 4: warp "morocc_mem",156,46; break;
+			case 4: warp "morocc",156,46; break;
 			case 5: warp "alberta",117,56; break;
 			case 6: warp "aldebaran",168,112; break;
 			case 7: warp "comodo",209,143; break;

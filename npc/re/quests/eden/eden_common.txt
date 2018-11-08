@@ -307,7 +307,7 @@ OnTouch:
 		case 26: warp "moscovia",218,198; end;
 		case 27: warp "brasilis",190,220; end;
 		case 28: warp "dewata",192,182; end;
-		case 29: warp "morocc_mem",161,97; end;
+		case 29: warp "morocc",161,97; end;
 		case 30: warp "izlude",134,118; end;	// Old coordinates: (127,142)
 		case 31: warp "umbala",94,154; end;
 		case 32: warp "malaya",234,199; end;

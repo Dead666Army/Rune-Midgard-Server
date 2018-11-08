@@ -179,8 +179,8 @@ new_5-1,53,114,3	duplicate(NvSprakkiA)	Sprakki#nv5a	90
 				warp "prontera",273,354;
 				break;
 			case 2:
-				savepoint "morocc_mem",160,94,1,1;
-				warp "morocc_mem",160,94;
+				savepoint "morocc",160,94,1,1;
+				warp "morocc",160,94;
 				break;
 			case 3:
 				savepoint "geffen",120,100,1,1;
@@ -856,8 +856,8 @@ new_5-2,33,172,4	duplicate(NvChocolat)	Chocolat#nv5	96
 				mes "Do not lose the dream in your heart right now.";
 				callfunc "F_NvErase";
 				close2;
-				savepoint "morocc_mem",150,99,1,1;
-				warp "morocc_mem",155,110;
+				savepoint "morocc",150,99,1,1;
+				warp "morocc",155,110;
 				end;
 			case 3:
 				mes "[Kafra Employee]";
@@ -1270,8 +1270,8 @@ new_5-2,36,176,4	duplicate(NvGuide)	Guide#nv5	105
 				mes "Take care.";
 				callfunc "F_NvErase";
 				close2;
-				savepoint "morocc_mem",150,99,1,1;
-				warp "morocc_mem",155,110;
+				savepoint "morocc",150,99,1,1;
+				warp "morocc",155,110;
 				end;
 			case 3:
 				mes "[Brade]";
@@ -1645,7 +1645,7 @@ new_5-3,101,41,3	duplicate(NvAcolyte)	Acolyte Guide#nv5	95
 			mes "Welcome. Then your Novice training is totally complete and you will be sent to the Thief Guild immediately.";
 			callfunc "F_NvErase",1;
 			close2;
-			savepoint "morocc_mem",150,99,1,1;
+			savepoint "morocc",150,99,1,1;
 			warp "moc_prydb1",99,185;
 			end;
 		}
@@ -2524,7 +2524,7 @@ function	script	F_NvErase	{
 				mes "The Thief guild is in the underground 1st floor of a pyramid which is North-West of town. Please remember this.";
 				next;
 				callsub L_Supplies;
-				savepoint "morocc_mem",150,99,1,1;
+				savepoint "morocc",150,99,1,1;
 				warp "moc_ruins",155,44;
 				end;
 			case 4:
@@ -2636,8 +2636,8 @@ L_Warp:
 	case 3:
 		mes "I will send you to Morroc, the Desert Town.";
 		close2;
-		savepoint "morocc_mem",150,99,1,1;
-		warp "morocc_mem",155,110;
+		savepoint "morocc",150,99,1,1;
+		warp "morocc",155,110;
 		end;
 	case 4:
 		mes "I will send you to Payon, the Mountain Village.";
@@ -3359,7 +3359,7 @@ new_5-4,100,29,1	duplicate(NvHanson)	Final Tester#nv5	46
 		mes .@str$;
 		mes "Good bye.";
 		close2;
-		savepoint "morocc_mem",150,99,1,1;
+		savepoint "morocc",150,99,1,1;
 		warp "moc_prydb1",99,185;
 		end;
 	case 6:
