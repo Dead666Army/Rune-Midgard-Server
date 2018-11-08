@@ -4116,27 +4116,25 @@ ACMD_FUNC(mapinfo) {
 	}
 
 	/* Skill damage adjustment info [Cydh] */
-#ifdef ADJUST_SKILL_DAMAGE
-	if (map_getmapflag(m_id, MF_SKILL_DAMAGE)) {
+	if (mapdata->flag[MF_SKILL_DAMAGE]) {
 		clif_displaymessage(fd,msg_txt(sd,1052));	// Skill Damage Adjustments:
-		sprintf(atcmd_output," > [Map] %d%%, %d%%, %d%%, %d%% | Caster:%d"
-			,map[m_id].damage_adjust.rate[SKILLDMG_PC]
-			,map[m_id].damage_adjust.rate[SKILLDMG_MOB]
-			,map[m_id].damage_adjust.rate[SKILLDMG_BOSS]
-			,map[m_id].damage_adjust.rate[SKILLDMG_OTHER]
-			,map[m_id].damage_adjust.caster);
+		sprintf(atcmd_output," > [Map] %d%%, %d%%, %d%%, %d%% | Caster:%d",
+			mapdata->damage_adjust.rate[SKILLDMG_PC],
+			mapdata->damage_adjust.rate[SKILLDMG_MOB],
+			mapdata->damage_adjust.rate[SKILLDMG_BOSS],
+			mapdata->damage_adjust.rate[SKILLDMG_OTHER],
+			mapdata->damage_adjust.caster);
 		clif_displaymessage(fd, atcmd_output);
-		if (map[m_id].skill_damage.size()) {
+		if (!mapdata->skill_damage.empty()) {
 			clif_displaymessage(fd," > [Map Skill] Name : Player, Monster, Boss Monster, Other | Caster");
-			for (j = 0; j < map[m_id].skill_damage.count; j++) {
-				sprintf(atcmd_output,"     %d. %s : %d%%, %d%%, %d%%, %d%% | %d"
-					,j+1
-					,skill_get_name(map[m_id].skill_damage[j].skill_id)
-					,map[m_id].skill_damage[j].rate[SKILLDMG_PC]
-					,map[m_id].skill_damage[j].rate[SKILLDMG_MOB]
-					,map[m_id].skill_damage[j].rate[SKILLDMG_BOSS]
-					,map[m_id].skill_damage[j].rate[SKILLDMG_OTHER]
-					,map[m_id].skill_damage[j].caster);
+			for (auto skilldmg : mapdata->skill_damage) {
+				sprintf(atcmd_output,"     %s : %d%%, %d%%, %d%%, %d%% | %d",
+					skill_get_name(skilldmg.first),
+					skilldmg.second.rate[SKILLDMG_PC],
+					skilldmg.second.rate[SKILLDMG_MOB],
+					skilldmg.second.rate[SKILLDMG_BOSS],
+					skilldmg.second.rate[SKILLDMG_OTHER],
+					skilldmg.second.caster);
 				clif_displaymessage(fd,atcmd_output);
 			}
 		}
