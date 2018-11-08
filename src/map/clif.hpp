@@ -216,7 +216,7 @@ enum send_target : uint8_t {
 	BG_SAMEMAP_WOS,
 	BG_AREA,
 	BG_AREA_WOS,
-  BG_LISTEN,
+	BG_LISTEN,
 
 	CLAN,				// Clan System
 };
@@ -808,14 +808,14 @@ void clif_bg_updatescore_single(struct map_session_data *sd);
 void clif_sendbgemblem_area(struct map_session_data *sd);
 void clif_sendbgemblem_single(int fd, struct map_session_data *sd);
 // BG eAmod [Easycore]
-void clif_bg_belonginfo (struct map_session_data *sd);
-int clif_visual_guild_id (struct block_list *bl);
-int clif_visual_emblem_id (struct block_list *bl);
-void clif_bg_emblem (struct map_session_data *sd, struct guild *g);
-void clif_bg_memberlist (struct map_session_data *sd);
-void clif_bg_leave_single (struct map_session_data *sd, const char *name, const char *mes);
-void clif_bg_expulsion_single (struct map_session_data *sd, const char *name, const char *mes);
-void clif_bg_updatescore_team (struct battleground_data *bg);
+void clif_bg_belonginfo(struct map_session_data *sd);
+int clif_visual_guild_id(struct block_list *bl);
+int clif_visual_emblem_id(struct block_list *bl);
+void clif_bg_emblem(struct map_session_data *sd, struct guild *g);
+void clif_bg_memberlist(struct map_session_data *sd);
+void clif_bg_leave_single(struct map_session_data *sd, const char *name, const char *mes);
+void clif_bg_expulsion_single(struct map_session_data *sd, const char *name, const char *mes);
+void clif_bg_updatescore_team(struct battleground_data *bg);
 
 // Instancing
 void clif_instance_create(unsigned short instance_id, int num);

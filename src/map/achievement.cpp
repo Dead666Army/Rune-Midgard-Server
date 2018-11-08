@@ -576,26 +576,6 @@ static int achievement_update_objectives(struct map_session_data *sd, std::share
 					return 0; // Failed to add achievement, fall out
 			}
 			break;
-		// Extended Features BG [Easycore]
-		case AG_BG_WIN:
-		case AG_BG_LOSE:
-		case AG_BG_TIE:
-		case AG_BG_KILL:
-		case AG_BG_DIE:
-		case AG_BG_DAMAGE:
-		case AG_BG_HEAL:
-			if (group == AG_BG_DAMAGE)
-				objective_count[0] = update_count[0];
-			else
-				objective_count[0] += update_count[0];
-			changed = true;
-			if (objective_count[0] >= ad->targets[0].count)
-				complete = true;
-			if (isNew) {
-				if ((entry = achievement_add(sd, ad->achievement_id)) == NULL)
-					return 0; // Failed to add achievement, fall out}
-			}
-			break;
 		case AG_CHAT:
 			if (!ad->targets.size())
 				break;

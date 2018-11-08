@@ -280,7 +280,7 @@ struct map_session_data {
 		bool mail_writing; // Whether the player is currently writing a mail in RODEX or not
 		bool cashshop_open;
 		bool sale_open;
-    // BG eAmod [Easycore]
+		// BG eAmod [Easycore]
 		unsigned bg_afk : 1;
 		unsigned int bg_listen : 1;
 		unsigned int only_walk : 1;
@@ -641,8 +641,8 @@ struct map_session_data {
 	const char* debug_file;
 	int debug_line;
 	const char* debug_func;
-  
-  //======================
+
+	//======================
 	//BG eAmod [Easycore]
 	//======================
 	struct battleground_data *bmaster_flag;
@@ -986,7 +986,7 @@ short pc_maxaspd(struct map_session_data *sd);
 	#define pc_rightside_def(sd) ((sd)->battle_status.def)
 	#define pc_leftside_mdef(sd) ((sd)->battle_status.mdef2)
 	#define pc_rightside_mdef(sd) ((sd)->battle_status.mdef)
-	#define pc_leftside_matk(sd) (status_base_matk(&(sd)->bl, status_get_status_data(&(sd)->bl), (sd)->status.base_level))
+	#define pc_leftside_matk(sd) (status_base_matk_min(&(sd)->bl, status_get_status_data(&(sd)->bl), (sd)->status.base_level))
 	#define pc_rightside_matk(sd) ((sd)->battle_status.rhw.matk+(sd)->battle_status.lhw.matk+(sd)->bonus.ematk)
 #else
 	#define pc_leftside_atk(sd) ((sd)->battle_status.batk + (sd)->battle_status.rhw.atk + (sd)->battle_status.lhw.atk)
@@ -1090,7 +1090,7 @@ void pc_cart_delitem(struct map_session_data *sd,int n,int amount,int type,e_log
 void pc_putitemtocart(struct map_session_data *sd,int idx,int amount);
 void pc_getitemfromcart(struct map_session_data *sd,int idx,int amount);
 int pc_cartitem_amount(struct map_session_data *sd,int idx,int amount);
-int pc_getitem_map(struct map_session_data *sd,struct item it,int amt,int count,e_log_pick_type log_type); // [Xantara]
+int pc_getitem_map(struct map_session_data *sd, struct item it, int amt, int count, e_log_pick_type log_type); // [Xantara]
 
 bool pc_takeitem(struct map_session_data *sd,struct flooritem_data *fitem);
 bool pc_dropitem(struct map_session_data *sd,int n,int amount);

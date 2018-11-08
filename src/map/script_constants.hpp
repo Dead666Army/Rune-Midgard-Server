@@ -455,8 +455,8 @@
 	export_constant(MF_NOEXP);
 	export_constant(MF_PRIVATEAIRSHIP_SOURCE);
 	export_constant(MF_PRIVATEAIRSHIP_DESTINATION);
-  // Battleground eAmod [Easycore]
-	script_set_constant("mf_noemergencycall",MF_NOECALL,false,false);
+	// Battleground eAmod [Easycore]
+	script_set_constant("mf_noemergencycall", MF_NOECALL, false, false);
 	export_constant(MF_BG_CONSUME);
 	export_constant(MF_WOE_CONSUME);
 	export_constant(MF_BG_TOPSCORE);

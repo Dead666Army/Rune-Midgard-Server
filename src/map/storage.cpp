@@ -773,11 +773,10 @@ bool storage_guild_additem(struct map_session_data* sd, struct s_storage* stor, 
 		clif_displaymessage(sd->fd, msg_txt(sd,294));
 		return false;
 	}
-  
-  //Brian Bg Items - updated by [AnubisK]
-	if( item_data->card[0]==CARD0_CREATE && (MakeDWord(item_data->card[2],item_data->card[3]) == (battle_config.bg_reserved_char_id || battle_config.woe_reserved_char_id)  && !battle_config.bg_can_trade))
+
+	if (item_data->card[0] == CARD0_CREATE && (MakeDWord(item_data->card[2], item_data->card[3]) == (battle_config.bg_reserved_char_id || battle_config.woe_reserved_char_id) && !battle_config.bg_can_trade))
 	{	// "Battleground's Items"
-		clif_displaymessage (sd->fd, msg_txt(sd,264));
+		clif_displaymessage(sd->fd, msg_txt(sd, 264));
 		return 1;
 	}
 

@@ -391,11 +391,11 @@ void trade_tradeadditem(struct map_session_data *sd, short index, short amount)
 		clif_tradeitemok(sd, index+2, 1);
 		return;
 	}
-  
-  if( item->card[0]==CARD0_CREATE && (MakeDWord(item->card[2],item->card[3])== (battle_config.bg_reserved_char_id || battle_config.woe_reserved_char_id )&& !battle_config.bg_can_trade) )
+
+	if (item->card[0] == CARD0_CREATE && (MakeDWord(item->card[2], item->card[3]) == (battle_config.bg_reserved_char_id || battle_config.woe_reserved_char_id) && !battle_config.bg_can_trade))
 	{	// "Battleground's Items"
-		clif_displaymessage (sd->fd, msg_txt(sd,260));
-		clif_tradeitemok(sd, index+2, 1);
+		clif_displaymessage(sd->fd, msg_txt(sd, 260));
+		clif_tradeitemok(sd, index + 2, 1);
 		return;
 	}
 

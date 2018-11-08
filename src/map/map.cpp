@@ -1912,13 +1912,13 @@ void map_reqnickdb(struct map_session_data * sd, int charid)
 		clif_solved_charname(sd->fd, charid, "Battleground");
 		return;
 	}
- 
+
 	if (battle_config.woe_reserved_char_id && battle_config.woe_reserved_char_id == charid)
 	{
 		clif_solved_charname(sd->fd, charid, "WoE");
 		return;
 	}
-	
+
 	tsd = map_charid2sd(charid);
 	if( tsd )
 	{
@@ -2102,14 +2102,6 @@ int map_quit(struct map_session_data *sd) {
 			status_change_end(&sd->bl, SC_PRESERVE, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_KAAHI, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_SPIRIT, INVALID_TIMER);
-			status_change_end(&sd->bl, SC_SCRESIST, INVALID_TIMER);
-			status_change_end(&sd->bl, SC_INCMHPRATE, INVALID_TIMER);
-			status_change_end(&sd->bl, SC_INCMSPRATE, INVALID_TIMER);
-			status_change_end(&sd->bl, SC_INCALLSTATUS, INVALID_TIMER);
-			status_change_end(&sd->bl, SC_INCDEFRATE, INVALID_TIMER);
-			status_change_end(&sd->bl, SC_INCATKRATE, INVALID_TIMER);
-			status_change_end(&sd->bl, SC_INCHIT, INVALID_TIMER);
-			status_change_end(&sd->bl, SC_INCFLEE, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_HEAT_BARREL, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_P_ALTER, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_E_CHAIN, INVALID_TIMER);
@@ -3861,7 +3853,7 @@ int map_readallmaps (void)
 		ShowNotice("Maps removed: '" CL_WHITE "%d" CL_RESET "'" CL_CLL ".\n", maps_removed);
 
 	// finished map loading
-	ShowInfo("Successfully loaded '" CL_WHITE "%d" CL_RESET "' maps." CL_CLL "\n", map_num);
+	ShowInfo("Successfully loaded '" CL_WHITE "%d" CL_RESET "' maps." CL_CLL "\n",map_num);
 
 	return 0;
 }
@@ -4667,8 +4659,9 @@ bool map_setmapflag_sub(int16 m, enum e_mapflag mapflag, bool status, union u_ma
 			mapdata->flag[mapflag] = status; // Must come first to properly set map property
 			if (!status) {
 				clif_map_property_mapall(m, MAPPROPERTY_NOTHING);
-			}
-			else {
+				map_foreachinmap(map_mapflag_pvp_stop_sub, m, BL_PC);
+				map_foreachinmap(unit_stopattack, m, BL_CHAR, 0);
+			} else {
 				if (!battle_config.pk_mode) {
 					clif_map_property_mapall(m, MAPPROPERTY_FREEPVPZONE);
 					map_foreachinmap(map_mapflag_pvp_start_sub, m, BL_PC);
@@ -4705,8 +4698,7 @@ bool map_setmapflag_sub(int16 m, enum e_mapflag mapflag, bool status, union u_ma
 			if (!status) {
 				clif_map_property_mapall(m, MAPPROPERTY_NOTHING);
 				map_foreachinmap(unit_stopattack, m, BL_CHAR, 0);
-			}
-			else {
+			} else {
 				clif_map_property_mapall(m, MAPPROPERTY_AGITZONE);
 				if (mapdata->flag[MF_PVP]) {
 					mapdata->flag[MF_PVP] = false;

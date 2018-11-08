@@ -41,14 +41,6 @@ enum e_achievement_group {
 	AG_SEE,
 	AG_SPEND_ZENY,
 	AG_TAMING,
-	// Extended Features BG [Easycore]
-	AG_BG_WIN,
-	AG_BG_LOSE,
-	AG_BG_TIE,
-	AG_BG_KILL,
-	AG_BG_DIE,
-	AG_BG_DAMAGE,
-	AG_BG_HEAL,
 	AG_MAX
 };
 

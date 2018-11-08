@@ -1786,7 +1786,6 @@ int chrif_parse(int fd) {
 
 	while ( RFIFOREST(fd) >= 2 ) {
 		int cmd = RFIFOW(fd,0);
-
 		if (cmd < 0x2af8 || cmd >= 0x2af8 + ARRAYLENGTH(packet_len_table) || packet_len_table[cmd-0x2af8] == 0) {
 			int r = intif_parse(fd); // Passed on to the intif
 
@@ -2018,5 +2017,3 @@ void do_init_chrif(void) {
 	// send the user count every 10 seconds, to hide the charserver's online counting problem
 	add_timer_interval(gettick() + 1000, send_usercount_tochar, 0, 0, UPDATE_INTERVAL);
 }
-
-

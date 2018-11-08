@@ -3286,7 +3286,7 @@ static void battle_calc_skill_base_damage(struct Damage* wd, struct block_list *
 				if(sd->status.party_id && (skill=pc_checkskill(sd,TK_POWER)) > 0) {
 					if( (i = party_foreachsamemap(party_sub_count, sd, 0)) > 1 ) { // exclude the player himself [Inkfish]
 						if (i > 11) i = 11;
-						ATK_ADDRATE(wd.damage, wd.damage2, 2*skill*i);
+						ATK_ADDRATE(wd->damage, wd->damage2, 2*skill*i);
 						RE_ALLATK_ADDRATE(wd, 2*skill*i);
 					}
 				}
@@ -5094,8 +5094,8 @@ static void battle_calc_weapon_final_atk_modifiers(struct Damage* wd, struct blo
 		rnd()%100 < tsc->data[SC_REJECTSWORD]->val2
 		)
 	{
-		ATK_RATER(wd.damage, 50)
-		status_fix_damage(target,src,wd.damage,clif_damage(target,src,gettick(),0,0,min(status_get_max_hp(target),wd.damage),0,DMG_NORMAL,0,false));
+		ATK_RATER(wd->damage, 50)
+		status_fix_damage(target,src,wd->damage,clif_damage(target,src,gettick(),0,0,min(status_get_max_hp(target), wd->damage),0,DMG_NORMAL,0,false));
 		clif_skill_nodamage(target,target,ST_REJECTSWORD,tsc->data[SC_REJECTSWORD]->val1,1);
 		if( --(tsc->data[SC_REJECTSWORD]->val3) <= 0 )
 			status_change_end(target, SC_REJECTSWORD, INVALID_TIMER);
@@ -7993,7 +7993,7 @@ static const struct _battle_data {
 	{ "enable_critical",                    &battle_config.enable_critical,                 BL_PC,  BL_NUL, BL_ALL,         },
 	{ "mob_critical_rate",                  &battle_config.mob_critical_rate,               100,    0,      INT_MAX,        },
 	{ "critical_rate",                      &battle_config.critical_rate,                   100,    0,      INT_MAX,        },
-	{ "enable_baseatk",                     &battle_config.enable_baseatk,                  BL_PC|BL_HOM, BL_NUL, BL_ALL,   },
+	{ "enable_baseatk",                     &battle_config.enable_baseatk,                  BL_CHAR|BL_NPC, BL_NUL, BL_ALL,   },
 	{ "enable_perfect_flee",                &battle_config.enable_perfect_flee,             BL_PC|BL_PET, BL_NUL, BL_ALL,   },
 	{ "casting_rate",                       &battle_config.cast_rate,                       100,    0,      INT_MAX,        },
 	{ "delay_rate",                         &battle_config.delay_rate,                      100,    0,      INT_MAX,        },
@@ -8379,12 +8379,12 @@ static const struct _battle_data {
 	{ "bg_misc_attack_damage_rate",         &battle_config.bg_misc_damage_rate,             60,     0,      INT_MAX,        },
 	{ "bg_flee_penalty",                    &battle_config.bg_flee_penalty,                 20,     0,      INT_MAX,        },
 // rAthena
-	{ "max_third_parameter",				        &battle_config.max_third_parameter,				      135,	10,		    SHRT_MAX,		},
-	{ "max_baby_third_parameter",			      &battle_config.max_baby_third_parameter,		    108,	10,		    SHRT_MAX,		},
-	{ "max_trans_parameter",				        &battle_config.max_trans_parameter,				      99,		10,		    SHRT_MAX,		},
-	{ "max_third_trans_parameter",			    &battle_config.max_third_trans_parameter,		    135,	10,		    SHRT_MAX,		},
-	{ "max_extended_parameter",				      &battle_config.max_extended_parameter,			    125,	10,		    SHRT_MAX,		},
-	{ "max_summoner_parameter",				      &battle_config.max_summoner_parameter,			    120,	10,		    SHRT_MAX,		},
+	{ "max_third_parameter",				&battle_config.max_third_parameter,				135,	10,		SHRT_MAX,		},
+	{ "max_baby_third_parameter",			&battle_config.max_baby_third_parameter,		108,	10,		SHRT_MAX,		},
+	{ "max_trans_parameter",				&battle_config.max_trans_parameter,				99,		10,		SHRT_MAX,		},
+	{ "max_third_trans_parameter",			&battle_config.max_third_trans_parameter,		135,	10,		SHRT_MAX,		},
+	{ "max_extended_parameter",				&battle_config.max_extended_parameter,			125,	10,		SHRT_MAX,		},
+	{ "max_summoner_parameter",				&battle_config.max_summoner_parameter,			120,	10,		SHRT_MAX,		},
 	{ "skill_amotion_leniency",             &battle_config.skill_amotion_leniency,          0,      0,      300             },
 	{ "mvp_tomb_enabled",                   &battle_config.mvp_tomb_enabled,                1,      0,      1               },
 	{ "mvp_tomb_delay",                     &battle_config.mvp_tomb_delay,                  9000,   0,      INT_MAX,        },
@@ -8422,18 +8422,18 @@ static const struct _battle_data {
 	{ "homunculus_S_growth_level",          &battle_config.hom_S_growth_level,             99,      0,      MAX_LEVEL,      },
 	{ "emblem_woe_change",                  &battle_config.emblem_woe_change,               0,      0,      1,              },
 	{ "emblem_transparency_limit",          &battle_config.emblem_transparency_limit,      80,      0,      100,            },
-	{ "discount_item_point_shop",			      &battle_config.discount_item_point_shop,		    0,		  0,		  3,				      },
-	{ "update_enemy_position",				      &battle_config.update_enemy_position,			      0,		  0,		  1,				      },
-	{ "devotion_rdamage",					          &battle_config.devotion_rdamage,				        0,		  0,		  100,			      },
-	{ "feature.autotrade",					        &battle_config.feature_autotrade,				        1,		  0,		  1,				      },
-	{ "feature.autotrade_direction",		    &battle_config.feature_autotrade_direction,		  4,		  -1,		  7,				      },
-	{ "feature.autotrade_head_direction",	  &battle_config.feature_autotrade_head_direction,0,		  -1,		  2,				      },
-	{ "feature.autotrade_sit",				      &battle_config.feature_autotrade_sit,			      1,		  -1,		  1,				      },
-	{ "feature.autotrade_open_delay",		    &battle_config.feature_autotrade_open_delay,	  5000,	  1000,	  INT_MAX,	      },
-	{ "disp_servervip_msg",					        &battle_config.disp_servervip_msg,				      0,		  0,		  1,				      },
+	{ "discount_item_point_shop",			&battle_config.discount_item_point_shop,		0,		0,		3,				},
+	{ "update_enemy_position",				&battle_config.update_enemy_position,			0,		0,		1,				},
+	{ "devotion_rdamage",					&battle_config.devotion_rdamage,				0,		0,		100,			},
+	{ "feature.autotrade",					&battle_config.feature_autotrade,				1,		0,		1,				},
+	{ "feature.autotrade_direction",		&battle_config.feature_autotrade_direction,		4,		-1,		7,				},
+	{ "feature.autotrade_head_direction",	&battle_config.feature_autotrade_head_direction,0,		-1,		2,				},
+	{ "feature.autotrade_sit",				&battle_config.feature_autotrade_sit,			1,		-1,		1,				},
+	{ "feature.autotrade_open_delay",		&battle_config.feature_autotrade_open_delay,	5000,	1000,	INT_MAX,		},
+	{ "disp_servervip_msg",					&battle_config.disp_servervip_msg,				0,		0,		1,				},
 	{ "warg_can_falcon",                    &battle_config.warg_can_falcon,                 0,      0,      1,              },
 	{ "path_blown_halt",                    &battle_config.path_blown_halt,                 1,      0,      1,              },
-	{ "rental_mount_speed_boost",           &battle_config.rental_mount_speed_boost,        25,     0,      100,        	  },
+	{ "rental_mount_speed_boost",           &battle_config.rental_mount_speed_boost,        25,     0,      100,        	},
 	{ "feature.warp_suggestions",           &battle_config.warp_suggestions_enabled,        0,      0,      1,              },
 	{ "taekwon_mission_mobname",            &battle_config.taekwon_mission_mobname,         0,      0,      2,              },
 	{ "teleport_on_portal",                 &battle_config.teleport_on_portal,              0,      0,      1,              },
@@ -8484,21 +8484,21 @@ static const struct _battle_data {
 	{ "exp_cost_inspiration",               &battle_config.exp_cost_inspiration,            1,      0,      100,            },
 	{ "mvp_exp_reward_message",             &battle_config.mvp_exp_reward_message,          0,      0,      1,              },
 	{ "can_damage_skill",                   &battle_config.can_damage_skill,                1,      0,      BL_ALL,         },
-	{ "atcommand_levelup_events",			      &battle_config.atcommand_levelup_events,		    0,		  0,		  1,				      },
-	{ "block_account_in_same_party",		    &battle_config.block_account_in_same_party,		  1,		  0,		  1,				      },
+	{ "atcommand_levelup_events",			&battle_config.atcommand_levelup_events,		0,		0,		1,				},
+	{ "block_account_in_same_party",		&battle_config.block_account_in_same_party,		1,		0,		1,				},
 	{ "tarotcard_equal_chance",             &battle_config.tarotcard_equal_chance,          0,      0,      1,              },
 	{ "change_party_leader_samemap",        &battle_config.change_party_leader_samemap,     1,      0,      1,              },
 	{ "dispel_song",                        &battle_config.dispel_song,                     0,      0,      1,              },
-	{ "guild_maprespawn_clones",			      &battle_config.guild_maprespawn_clones,			    0,		  0,		  1,				      },
-	{ "hide_fav_sell", 			                &battle_config.hide_fav_sell,			              0,      0,      1,              },
-	{ "mail_daily_count",					          &battle_config.mail_daily_count,				        100,	  0,		  INT32_MAX,		  },
-	{ "mail_zeny_fee",						          &battle_config.mail_zeny_fee,					          2,		  0,		  100,			      },
-	{ "mail_attachment_price",				      &battle_config.mail_attachment_price,			      2500,	  0,		  INT32_MAX,		  },
-	{ "mail_attachment_weight",				      &battle_config.mail_attachment_weight,			    2000,	  0,		  INT32_MAX,		  },
-	{ "banana_bomb_duration",				        &battle_config.banana_bomb_duration,			      0,		  0,		  UINT16_MAX,		  },
-	{ "guild_leaderchange_delay",			      &battle_config.guild_leaderchange_delay,		    1440,	  0,		  INT32_MAX,		  },
-	{ "guild_leaderchange_woe",				      &battle_config.guild_leaderchange_woe,			    0,		  0,		  1,				      },
-	{ "guild_alliance_onlygm",              &battle_config.guild_alliance_onlygm,           0,      0,      1,              },
+	{ "guild_maprespawn_clones",			&battle_config.guild_maprespawn_clones,			0,		0,		1,				},
+	{ "hide_fav_sell", 			&battle_config.hide_fav_sell,			0,      0,      1,              },
+	{ "mail_daily_count",					&battle_config.mail_daily_count,				100,	0,		INT32_MAX,		},
+	{ "mail_zeny_fee",						&battle_config.mail_zeny_fee,					2,		0,		100,			},
+	{ "mail_attachment_price",				&battle_config.mail_attachment_price,			2500,	0,		INT32_MAX,		},
+	{ "mail_attachment_weight",				&battle_config.mail_attachment_weight,			2000,	0,		INT32_MAX,		},
+	{ "banana_bomb_duration",				&battle_config.banana_bomb_duration,			0,		0,		UINT16_MAX,		},
+	{ "guild_leaderchange_delay",			&battle_config.guild_leaderchange_delay,		1440,	0,		INT32_MAX,		},
+	{ "guild_leaderchange_woe",				&battle_config.guild_leaderchange_woe,			0,		0,		1,				},
+	{ "guild_alliance_onlygm",              &battle_config.guild_alliance_onlygm,           0,      0,      1, },
 	{ "feature.achievement",                &battle_config.feature_achievement,             1,      0,      1,              },
 	{ "allow_bound_sell",                   &battle_config.allow_bound_sell,                0,      0,      0xF,            },
 	{ "event_refine_chance",                &battle_config.event_refine_chance,             0,      0,      1,              },
@@ -8513,21 +8513,21 @@ static const struct _battle_data {
 	{ "feature.privateairship",             &battle_config.feature_privateairship,          1,      0,      1,              },
 	{ "rental_transaction",                 &battle_config.rental_transaction,              1,      0,      1,              },
 
-	{ "bg_eAmod_mode",                      &battle_config.bg_eAmod_mode,                   1,      0,      1,              },
-	{ "bg_idle_announce",                   &battle_config.bg_idle_announce,                0,      0,      INT_MAX,        },
-	{ "bg_idle_autokick",                   &battle_config.bg_idle_autokick,                0,      0,      INT_MAX,        },
-	{ "bg_reward_rates",                    &battle_config.bg_reward_rates,                 100,    0,      INT_MAX,        },
-	{ "bg_reportafk_leaderonly",            &battle_config.bg_reportafk_leaderonly,         1,      0,      1,              },
-	{ "bg_queue2team_balanced",             &battle_config.bg_queue2team_balanced,          1,      0,      1,              },
-	{ "bg_queue_onlytowns",                 &battle_config.bg_queue_onlytowns,              1,      0,      1,              },
-	{ "bg_order_behavior",                  &battle_config.bg_order_behavior,               1,      0,      1,              },
-	{ "bg_reserved_char_id",                &battle_config.bg_reserved_char_id,             999996, 0,      INT_MAX,        },
-	{ "woe_reserved_char_id",				&battle_config.woe_reserved_char_id,            999997, 0,      INT_MAX,        },
-	{ "bg_can_trade",				        &battle_config.bg_can_trade,                    1,      0,      1,              },
-	//Custom rune-Midgard
+	{ "bg_eAmod_mode",                      &battle_config.bg_eAmod_mode,                   1,      0,      1,				},
+	{ "bg_idle_announce",                   &battle_config.bg_idle_announce,                0,      0,      INT_MAX,		},
+	{ "bg_idle_autokick",                   &battle_config.bg_idle_autokick,                0,      0,      INT_MAX,		},
+	{ "bg_reward_rates",                    &battle_config.bg_reward_rates,                 100,    0,      INT_MAX,		},
+	{ "bg_reportafk_leaderonly",            &battle_config.bg_reportafk_leaderonly,         1,      0,      1,				},
+	{ "bg_queue2team_balanced",             &battle_config.bg_queue2team_balanced,          1,      0,      1,				},
+	{ "bg_queue_onlytowns",                 &battle_config.bg_queue_onlytowns,              1,      0,      1,				},
+	{ "bg_order_behavior",                  &battle_config.bg_order_behavior,               1,      0,      1,				},
+	{ "bg_reserved_char_id",                &battle_config.bg_reserved_char_id,             999996, 0,      INT_MAX,		},
+	{ "woe_reserved_char_id",				&battle_config.woe_reserved_char_id,            999997, 0,      INT_MAX,		},
+	{ "bg_can_trade",				        &battle_config.bg_can_trade,                    1,      0,      1,				},
+		//Custom rune-Midgard
 	{ "bg_base_exp",						&battle_config.bg_base_exp,						0,      0,      INT_MAX,		},
 	{ "bg_job_exp",							&battle_config.bg_job_exp,						0,      0,      INT_MAX,		},
-  
+
 #include "../custom/battle_config_init.inc"
 };
 

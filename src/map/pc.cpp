@@ -4289,7 +4289,7 @@ int pc_identifyall(struct map_session_data *sd, bool identify_item)
 		if (sd->inventory.u.items_inventory[i].nameid > 0 && sd->inventory.u.items_inventory[i].identify != 1) {
 			if (identify_item == true) {
 				sd->inventory.u.items_inventory[i].identify = 1;
-				clif_item_identified(sd, i, 0);
+				clif_item_identified(sd,i,0);
 			}
 			unidentified_count++;
 		}
@@ -4872,21 +4872,21 @@ bool pc_takeitem(struct map_session_data *sd,struct flooritem_data *fitem)
 /*------------------------------------------
  * pc_getitem_map [Xantara]
  *------------------------------------------*/
-int pc_getitem_map(struct map_session_data *sd,struct item it,int amt,int count,e_log_pick_type log_type)
+int pc_getitem_map(struct map_session_data *sd, struct item it, int amt, int count, e_log_pick_type log_type)
 {
 	int i, flag;
 
 	nullpo_ret(sd);
 
-	for ( i = 0; i < amt; i += count )
+	for (i = 0; i < amt; i += count)
 	{
-		if ( !pet_create_egg(sd,it.nameid) )
+		if (!pet_create_egg(sd, it.nameid))
 		{ // if not pet egg
-			if ( flag = pc_additem(sd,&it,count,log_type) )
+			if (flag = pc_additem(sd, &it, count, log_type))
 			{
 				clif_additem(sd, 0, 0, flag);
-				if( pc_candrop(sd,&it) )
-					map_addflooritem(&it,count,sd->bl.m,sd->bl.x,sd->bl.y,0,0,0,0,0);
+				if (pc_candrop(sd, &it))
+					map_addflooritem(&it, count, sd->bl.m, sd->bl.x, sd->bl.y, 0, 0, 0, 0, 0);
 			}
 		}
 	}
@@ -4918,9 +4918,10 @@ bool pc_isUseitem(struct map_session_data *sd,int n)
 		return false;
 	if (pc_has_permission(sd,PC_PERM_ITEM_UNCONDITIONAL))
 		return true;
+
 	struct map_data *mapdata = map_getmapdata(sd->bl.m);
 
-	if (mapdata->flag[MF_NOITEMCONSUMPTION])
+	if(mapdata->flag[MF_NOITEMCONSUMPTION]) //consumable but mapflag prevent it
 		return false;
 	//Prevent mass item usage. [Skotlex]
 	if( DIFF_TICK(sd->canuseitem_tick,gettick()) > 0 ||
@@ -4945,7 +4946,7 @@ bool pc_isUseitem(struct map_session_data *sd,int n)
 		case ITEMID_WING_OF_FLY:
 		case ITEMID_GIANT_FLY_WING:
 		case ITEMID_N_FLY_WING:
-			if (mapdata->flag[MF_NOTELEPORT] || mapdata_flag_gvg2(mapdata)) {
+			if( mapdata->flag[MF_NOTELEPORT] || mapdata_flag_gvg2(mapdata) ) {
 				clif_skill_teleportmessage(sd,0);
 				return false;
 			}
@@ -4986,7 +4987,7 @@ bool pc_isUseitem(struct map_session_data *sd,int n)
 				clif_displaymessage(sd->fd, msg_txt(sd,663));
 				return false;
 			}
-			if (mapdata->flag[MF_NORETURN] && nameid != ITEMID_WING_OF_FLY && nameid != ITEMID_GIANT_FLY_WING && nameid != ITEMID_N_FLY_WING)
+			if( mapdata->flag[MF_NORETURN] && nameid != ITEMID_WING_OF_FLY && nameid != ITEMID_GIANT_FLY_WING && nameid != ITEMID_N_FLY_WING )
 				return false;
 			break;
 		case ITEMID_MERCENARY_RED_POTION:
@@ -5005,7 +5006,7 @@ bool pc_isUseitem(struct map_session_data *sd,int n)
 			break;
 
 		case ITEMID_NEURALIZER:
-			if (!mapdata->flag[MF_RESET])
+			if( !mapdata->flag[MF_RESET] )
 				return false;
 			break;
 	}
@@ -5105,7 +5106,6 @@ int pc_useitem(struct map_session_data *sd,int n)
 	if (item.nameid == 0 || item.amount <= 0)
 		return 0;
 
-
 	if( !pc_isUseitem(sd,n) )
 		return 0;
 
@@ -5141,8 +5141,8 @@ int pc_useitem(struct map_session_data *sd,int n)
 		}
 		return 0;/* regardless, effect is not run */
 	}
-  
-  if( sd->inventory.u.items_inventory[n].card[0] == CARD0_CREATE) {
+
+	if (sd->inventory.u.items_inventory[n].card[0] == CARD0_CREATE) {
 		if (MakeDWord(sd->inventory.u.items_inventory[n].card[2], sd->inventory.u.items_inventory[n].card[3]) == battle_config.bg_reserved_char_id && !map_getmapflag(sd->bl.m, MF_BG_CONSUME))
 			return 0;
 		if (MakeDWord(sd->inventory.u.items_inventory[n].card[2], sd->inventory.u.items_inventory[n].card[3]) == battle_config.woe_reserved_char_id && !map_getmapflag(sd->bl.m, MF_WOE_CONSUME))
@@ -5552,7 +5552,6 @@ enum e_setpos pc_setpos(struct map_session_data* sd, unsigned short mapindex, in
 	}
 
 	int16 m = map_mapindex2mapid(mapindex);
-
 	struct map_data *mapdata = map_getmapdata(m);
 
 	sd->state.changemap = (sd->mapindex != mapindex);
@@ -5686,7 +5685,7 @@ enum e_setpos pc_setpos(struct map_session_data* sd, unsigned short mapindex, in
 	sd->bl.x = sd->ud.to_x = x;
 	sd->bl.y = sd->ud.to_y = y;
 
-	if (sd->status.guild_id > 0 && mapdata->flag[MF_GVG_CASTLE])
+	if( sd->status.guild_id > 0 && mapdata->flag[MF_GVG_CASTLE] )
 	{	// Increased guild castle regen [Valaris]
 		struct guild_castle *gc = guild_mapindex2gc(sd->mapindex);
 		if(gc && gc->guild_id == sd->status.guild_id)
@@ -6902,21 +6901,21 @@ void pc_gainexp(struct map_session_data *sd, struct block_list *src, unsigned in
  **/
 void pc_gainexp_percent(struct map_session_data *sd, struct block_list *src, unsigned int base_exp_percent, unsigned int job_exp_percent, uint8 exp_flag)
 {
-	unsigned int base=0,job=0;
-	int baseprct=0,jobprct=0;
+	unsigned int base = 0, job = 0;
+	int baseprct = 0, jobprct = 0;
 	double calc;
 
 
-	if(base_exp_percent<0 || job_exp_percent<0)
+	if (base_exp_percent < 0 || job_exp_percent < 0)
 		return;
-	if(base_exp_percent==0 && job_exp_percent==0)
+	if (base_exp_percent == 0 && job_exp_percent == 0)
 		return;
 
-	if (base_exp_percent){
+	if (base_exp_percent) {
 		calc = base_exp_percent * pc_nextbaseexp(sd) / 100;
 		base = cap_value(calc, 0, UINT_MAX);
 	}
-	if (job_exp_percent){
+	if (job_exp_percent) {
 		calc = job_exp_percent * pc_nextjobexp(sd) / 100;
 		job = cap_value(calc, 0, UINT_MAX);
 	}
@@ -7842,7 +7841,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 			if(battle_config.pc_invincible_time)
 				pc_setinvincibletimer(sd, battle_config.pc_invincible_time);
 			sc_start(&sd->bl,&sd->bl,status_skill2sc(MO_STEELBODY),100,5,skill_get_time(MO_STEELBODY,5));
-			if (mapdata_flag_gvg2(mapdata))
+			if(mapdata_flag_gvg2(mapdata))
 				pc_respawn_timer(INVALID_TIMER, gettick(), sd->bl.id, 0);
 			return 0;
 		}
@@ -7863,7 +7862,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 
 	if(sd->status.pet_id > 0 && sd->pd) {
 		struct pet_data *pd = sd->pd;
-		if (!mapdata->flag[MF_NOEXPPENALTY]) {
+		if( !mapdata->flag[MF_NOEXPPENALTY] ) {
 			pet_set_intimate(pd, pd->pet.intimate - pd->get_pet_db()->die);
 			if( pd->pet.intimate < 0 )
 				pd->pet.intimate = 0;
@@ -7994,10 +7993,8 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 		}
 	}
 
-	
-
 	if(battle_config.bone_drop==2
-		|| (battle_config.bone_drop == 1 && mapdata->flag[MF_PVP]))
+		|| (battle_config.bone_drop==1 && mapdata->flag[MF_PVP]))
 	{
 		struct item item_tmp;
 		memset(&item_tmp,0,sizeof(item_tmp));
@@ -8064,14 +8061,14 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 		if (base_penalty || job_penalty)
 			pc_lostexp(sd, base_penalty, job_penalty);
 
-		if (zeny_penalty > 0 && !mapdata->flag[MF_NOZENYPENALTY]) {
+		if( zeny_penalty > 0 && !mapdata->flag[MF_NOZENYPENALTY]) {
 			zeny_penalty = (uint32)( sd->status.zeny * ( zeny_penalty / 10000. ) );
 			if(zeny_penalty)
 				pc_payzeny(sd, zeny_penalty, LOG_TYPE_PICKDROP_PLAYER, NULL);
 		}
 	}
 
-	if (mapdata->flag[MF_PVP_NIGHTMAREDROP]) { // Moved this outside so it works when PVP isn't enabled and during pk mode [Ancyker]
+	if( mapdata->flag[MF_PVP_NIGHTMAREDROP] ) { // Moved this outside so it works when PVP isn't enabled and during pk mode [Ancyker]
 		for (const auto &it : mapdata->drop_list) {
 			int id = it.drop_id, per = it.drop_per;
 			enum e_nightmare_drop_type type = it.drop_type;
@@ -8121,7 +8118,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 	}
 	// pvp
 	// disable certain pvp functions on pk_mode [Valaris]
-	if (!battle_config.pk_mode && mapdata->flag[MF_PVP] && !mapdata->flag[MF_PVP_NOCALCRANK]) {
+	if( !battle_config.pk_mode && mapdata->flag[MF_PVP] && !mapdata->flag[MF_PVP_NOCALCRANK] ) {
 		sd->pvp_point -= 5;
 		sd->pvp_lost++;
 		if( src && src->type == BL_PC ) {
@@ -8135,7 +8132,7 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 		}
 	}
 	//GvG
-	if (mapdata_flag_gvg2(mapdata)) {
+	if( mapdata_flag_gvg2(mapdata) ) {
 		add_timer(tick+1000, pc_respawn_timer, sd->bl.id, 0);
 		return 1|8;
 	}
@@ -9235,7 +9232,7 @@ bool pc_candrop(struct map_session_data *sd, struct item *item)
 		return false;
 	if( !pc_can_give_items(sd) || sd->sc.cant.drop) //check if this GM level can drop items
 		return false;
-  if( item->card[0] == CARD0_CREATE) {
+	if (item->card[0] == CARD0_CREATE) {
 		if (MakeDWord(item->card[2], item->card[3]) == battle_config.bg_reserved_char_id)
 			return false;
 		if (MakeDWord(item->card[2], item->card[3]) == battle_config.woe_reserved_char_id)
